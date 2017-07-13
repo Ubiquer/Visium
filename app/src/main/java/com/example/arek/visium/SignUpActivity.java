@@ -118,7 +118,6 @@ public class SignUpActivity extends AppCompatActivity {
 
                         Log.i(TAG, "post submitted to API." + response.body().toString());
                     }
-
                     Toast.makeText(getBaseContext(), "token received", Toast.LENGTH_LONG).show();
                 }
 

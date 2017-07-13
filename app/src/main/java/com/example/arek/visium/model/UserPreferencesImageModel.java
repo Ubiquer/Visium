@@ -8,6 +8,21 @@ public class UserPreferencesImageModel {
 
     private String imageName;
     private int imageId;
+    private boolean isSelected;
+
+//    public UserPreferencesImageModel(String imageName, int imageId, boolean isSelected) {
+//        this.imageName = imageName;
+//        this.imageId = imageId;
+//        this.isSelected = isSelected;
+//    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getImageName() {
         return imageName;

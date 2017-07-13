@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ActionMode;
@@ -24,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class UserPreferencesActivity extends Activity implements RecyclerView.OnItemTouchListener,View.OnClickListener, android.view.ActionMode.Callback {
+public class UserPreferencesActivity extends Activity implements RecyclerView.OnItemTouchListener,View.OnClickListener {
 
 
     @BindView(R.id.preferences_recyclerview)
@@ -61,13 +62,10 @@ public class UserPreferencesActivity extends Activity implements RecyclerView.On
         recyclerViewAdapter = new UserPreferencesViewAdapter(context, imageArrayList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addOnItemTouchListener(this);
 
-        gestureDetector = new GestureDetectorCompat(this, new RecyclerViewDemoOnGestureListener());
-
-//        recyclerView.addOnItemTouchListener(new UserPreferencesViewAdapter.);
-
-//        numOfCategories
+//        numOfCategories.setText((CharSequence) recyclerViewAdapter.getSelectedItem());
 
     }
 
@@ -88,45 +86,6 @@ public class UserPreferencesActivity extends Activity implements RecyclerView.On
 
     }
 
-//    private void creatingObserable() {
-//        final Observable<List<String>> listObserable= Observable.just(getNameList());
-//        listObserable.subscribe(new Observer<List<String>>() {
-//            @Override
-//            public void onCompleted() {
-//                Log.d(TAG, "onCompleted()");
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.d(TAG, "onError()",e);
-//            }
-//
-//            @Override
-//            public void onNext(List<String> data) {
-//                myAdapter.setData(data);
-//            }
-//        });
-
-//    }
-
-    public void onLongPress(MotionEvent event){
-
-        View view = recyclerView.findChildViewUnder(event.getX(), event.getY());
-
-        if(actionMode != null){
-            return;
-        }
-
-        actionMode = startActionMode(UserPreferencesActivity.this);
-        int idx = recyclerView.getChildAdapterPosition(view);
-
-    }
-
-    private void myToggleSelection(int idx){
-
-        recyclerViewAdapter.toggleSelection(idx);
-
-    }
 
 
     @Override
@@ -147,63 +106,8 @@ public class UserPreferencesActivity extends Activity implements RecyclerView.On
     @Override
     public void onClick(View v) {
 
-        numOfCategories.setText(recyclerViewAdapter.getItemCount());
+        numOfCategories.setText((CharSequence) recyclerViewAdapter.getSelectedItem());
 
-    }
-
-    @Override
-    public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-
-        switch(item.getItemId()){
-            case R.id.confirmation_button:
-                List<Integer> selectedItemPositions = recyclerViewAdapter.getSelectedItems();
-                //TODO: write to user preferences to sharedPreferences
-                actionMode.finish();
-
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
-    public void onDestroyActionMode(android.view.ActionMode mode) {
-
-        this.actionMode = null;
-        recyclerViewAdapter.clearSelections();
-    }
-
-    private class RecyclerViewDemoOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-            onClick(view);
-            numOfCategories.setText(recyclerViewAdapter.getItemCount());
-            Log.d("tap", view.toString());
-            return super.onSingleTapConfirmed(e);
-        }
-
-        public void onLongPress(MotionEvent e) {
-            View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-            if (actionMode != null) {
-                return;
-            }
-            // Start the CAB using the ActionMode.Callback defined above
-            actionMode = startActionMode(UserPreferencesActivity.this);
-            int idx = recyclerView.getChildAdapterPosition(view);
-            myToggleSelection(idx);
-            super.onLongPress(e);
-        }
     }
 
 }

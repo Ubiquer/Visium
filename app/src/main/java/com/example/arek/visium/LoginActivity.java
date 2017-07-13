@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +19,15 @@ import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
 
+import java.io.File;
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     TextView singUpTextView;
     @BindView(R.id.btn_get_secret)
     Button secretButton;
+
+    @BindView(R.id.btn_upload_image)
+    Button uploadActivity;
 
     public static final String DEFAULT = "N/A";
     private String email;
@@ -75,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
 //            passwordText.setText(password);
 //
 //        }
-
+//        mApiInterface = ApiAdapter.getAPIService();
 //        openSingInActivity();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +99,16 @@ public class LoginActivity extends AppCompatActivity {
                 getSecret();
             }
         });
+
+        uploadActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 //        getSecret();
 //        if (shared)
 

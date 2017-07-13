@@ -26,6 +26,9 @@ public interface ApiInterface {
 
 //    "api/Account/Authenticate"
 //    /1m5n0xt1/
+//    /api/User/AddImage
+//    /17pdghz1
+
     @Headers("Content-Type:application/json")
     @POST("/Account/RestRegister")
     Call<UserRegistration> registerUser(@Body UserRegistration userRegistration);
@@ -38,11 +41,10 @@ public interface ApiInterface {
     @GET("/api/Account/ValidateToken")
     Call<String> validateToken(@Header("Authorization") String authToken);
 
-
     @Multipart
-    @Headers("Content-Type:application/json")
-    @POST("")
-    Call<ImageView> uploadImage(@Part MultipartBody.Part image, @Part("name")RequestBody name);
+    @POST("api/Upload/PostUserImage")
+    Call<ResponseBody> uploadImage(@Part("description") RequestBody description,
+                             @Part MultipartBody.Part photo);
 
 //    Call<ServerRes>
 //    Observable<Example> getExample();
