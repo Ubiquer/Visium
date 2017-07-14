@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/confirmColors"
+    tools:context="com.example.arek.visium.BaseOptionsActivity">
+
+
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/app_logo"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Visium"
+        android:textSize="20dp"
+        android:onClick="true"
+        android:gravity="center"
+        android:textColor="@color/light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="218dp"
+        tools:layout_editor_absoluteX="169dp"
+        android:id="@+id/app_name_textView"
+        android:layout_below="@id/app_logo"
+        android:layout_above="@+id/evaluatiion_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp" />
+
+    <TextView
+        android:textColor="@color/light"
+        android:text="Competition"
+        android:textSize="20dp"
+        android:id="@+id/competition_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="308dp"
+        tools:layout_editor_absoluteX="216dp"
+        android:layout_marginBottom="36dp"
+        android:layout_above="@+id/rankings_textview"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:textColor="@color/light"
+        android:text="Evaluation"
+        android:textSize="20dp"
+        android:id="@+id/evaluatiion_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="345dp"
+        tools:layout_editor_absoluteX="216dp"
+        android:layout_marginBottom="34dp"
+        android:layout_above="@+id/competition_textview"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:textColor="@color/light"
+        android:text="Rankings"
+        android:textSize="20dp"
+        android:id="@+id/rankings_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="382dp"
+        tools:layout_editor_absoluteX="216dp"
+        android:layout_marginBottom="81dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/evaluatiion_textview" />
+
+</RelativeLayout>

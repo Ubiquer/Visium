@@ -23,9 +23,13 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -47,26 +51,26 @@ public class SignUpActivity extends AppCompatActivity {
     EditText confirmPasswordText;
     @BindView(R.id.have_an_account_text_view)
     TextView haveAccountTextView;
-    //    private Handler handler;
-//    private int progressStatus = 0;
+
     private ProgressDialog progressDialog;
-    private String email;
-    private String password;
-    private String confirmPassword;
+    private String email, password, confirmPassword;
     private Intent loginActivityIntent;
     private final int REQUEST_LOGIN = 0;
     private ApiInterface mApiInterface;
-    private UserRegistration userRegistration;
-
+//    private UserRegistration userRegistration;
+    Context context;
+    Realm realm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-//        progressDialog = new ProgressDialog(this);
-        ButterKnife.bind(this);
+//        Realm.init(context);
+//        realm = Realm.getDefaultInstance();
 
-//        mApiInterface = ApiAdapter.getAPIService();
+        mApiInterface = ApiAdapter.getAPIService();
+
+        ButterKnife.bind(this);
 
         haveAccountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +78,6 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
-
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,37 +87,49 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-//    public void logInActivity(View view){
-//
-////        loginActivityIntent = new Intent(getApplicationContext(),LoginActivity.class);
-//        startActivity(new Intent(getApplicationContext(),LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-//    }
 
     public void sign() {
 
         SharedPreferences userSettings = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userSettings.edit();
 
-        if(validate() == true){
+//        if(validate() == true){
 
-            progressDialog.setMessage("Registering User...");
-            progressDialog.show();
+//            email = emailText.getText().toString().trim();
+//            password = passwordText.getText().toString().trim();
+//            confirmPassword = confirmPasswordText.getText().toString().trim();
 
-            email = emailText.getText().toString().trim();
-            password = passwordText.getText().toString().trim();
-            confirmPassword = confirmPasswordText.getText().toString().trim();
+            email= "elo2@elo2.pl";
+            password= "Mistrz123;";
+            confirmPassword= "Mistrz123;";
+//            try {
+//
+//                realm.beginTransaction();
+//                userRegistration = realm.createObject(UserRegistration.class);
+//                userRegistration.setmEmail(email);
+//                userRegistration.setmPassword(password);
+//                userRegistration.setmConfirmPassword(confirmPassword);
+//                realm.commitTransaction();
+//
+//            }catch (RealmPrimaryKeyConstraintException e){
+//
+//                e.printStackTrace();
+//                Toast.makeText(getBaseContext(), "User found on db ", Toast.LENGTH_SHORT).show();
+//            }
+//            progressDialog.setMessage("Registering User...");
+//            progressDialog.show();
 
             editor.putString("email", email);
             editor.putString("password", password);
             editor.apply();
+            final UserRegistration userRegistration = new UserRegistration(email, password, confirmPassword);
 
-            userRegistration = new UserRegistration(email, password, confirmPassword);
-
-            mApiInterface.registerUser(userRegistration).enqueue(new Callback<UserRegistration>() {
+        try {
+            mApiInterface.registerUser(userRegistration).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<UserRegistration> call, Response<UserRegistration> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
 
-                    if(response.isSuccessful()) {
+                    if (response.isSuccessful()) {
 
                         Log.i(TAG, "post submitted to API." + response.body().toString());
                     }
@@ -122,20 +137,22 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<UserRegistration> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     Log.e(TAG, "Unable to submit post to API.");
                 }
             });
-
+        }catch(Exception e){
+            Log.d("Exception", e.getMessage());
+        }
             Toast.makeText(this, "correct", Toast.LENGTH_LONG).show();
             onSignUpSuccess();
         }
 
-        if(!validate()){
-            onSignUpFailed();
-            return;
-        }
-    }
+//        if(!validate()){
+//            onSignUpFailed();
+//            return;
+//        }
+//    }
 
 //    public void registerUser(UserRegistration userRegistration){
 //
@@ -154,13 +171,6 @@ public class SignUpActivity extends AppCompatActivity {
 //        });
 //
 //    }
-
-    public void backToLoginActivity(){
-
-        loginActivityIntent = new Intent(getBaseContext(),LoginActivity.class);
-        startActivity(loginActivityIntent);
-
-    }
 
     private boolean validate() {
 
@@ -194,7 +204,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
-            emailText.setError("enter a valid email address");
+            emailText.setError("Enter a valid email address");
             valid = false;
 
         } else {
@@ -207,7 +217,6 @@ public class SignUpActivity extends AppCompatActivity {
     public void onSignUpSuccess(){
 
         setResult(RESULT_OK, null);
-
         finish();
     }
 

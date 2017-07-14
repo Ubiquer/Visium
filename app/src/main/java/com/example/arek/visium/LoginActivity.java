@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.arek.visium.model.TokenAuth;
 import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.model.UserRegistration;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
 
@@ -25,6 +26,8 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -35,7 +38,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String TAG = "LoginActivity";
+//    public static final String TAG = "LoginActivity";
     public static final int REQUEST_SIGNUP = 0;
 
     @BindView(R.id.btn_login)
@@ -52,17 +55,17 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.btn_upload_image)
     Button uploadActivity;
 
+
     public static final String DEFAULT = "N/A";
-    private String email;
-    private String password;
-    private String emailStored;
-    private String passwordStored;
-    private SharedPreferences userSettings;
-    private Intent signInActivity;
-    private Intent userPrefActivity;
+    private String email, password, emailStored, passwordStored, token;
+    private Intent signInActivity, userPrefActivity;
     private ProgressDialog progressDialog;
     private ApiInterface mApiInterface;
+    boolean Registered;
+    private static final String TAG = "HOME";
     Context context;
+    Realm realm;
+    private UserRegistration userRegistration;
 
 
     @Override
@@ -73,63 +76,33 @@ public class LoginActivity extends AppCompatActivity {
 
         mApiInterface = ApiAdapter.getAPIService();
 
-//        userSettings = context.getSharedPreferences("MyData", MODE_PRIVATE);
-
-//        if (userSettings != null){
-//
-//            email = userSettings.getString("email","");
-//            password = userSettings.getString("password", "");
-//            emailText.setText(email);
-//            passwordText.setText(password);
-//
-//        }
-//        mApiInterface = ApiAdapter.getAPIService();
-//        openSingInActivity();
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-
-        secretButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSecret();
-            }
-        });
-
-        uploadActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-//        getSecret();
-//        if (shared)
-
-//        loginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                login();
-//            }
-//        });
-
-//        singUpTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                openSingInActivity();
-//            }
-//        });
+        try{
+            realm = Realm.getDefaultInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
-    private static String token;
 
-//    @OnClick(R.id.btn_login)
+
+    //log in locally
+//    private boolean checkUser(String email, String password){
+//
+//        RealmResults<UserRegistration> realmRegistrationObjects = realm.where(UserRegistration.class).findAll();
+//
+//        for(UserRegistration userRegistration : realmRegistrationObjects){
+//
+//            if (email.equals(userRegistration.getmEmail()) && password.equals(userRegistration.getmPassword())){
+//                Log.e(TAG, userRegistration.getmEmail());
+//            }
+//        }
+//
+//        Log.e(TAG, String.valueOf(realm.where(UserRegistration.class).contains("Email", email)));
+//        return false;
+//
+//    }
+
+    @OnClick(R.id.btn_login)
     public void login(){
         Log.d(TAG, "Log in");
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme);
@@ -146,44 +119,30 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                     token ="Bearer " + response.body().toString();
 
-
                 }else {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Incorrect login ", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 progressDialog.dismiss();
                 Toast.makeText(LoginActivity.this, "error: ", Toast.LENGTH_SHORT).show();
             }
-
-//            @Override
-//            public void onFailure(Call<TokenAuth> call, Throwable t) {
-//                progressDialog.dismiss();
-//                Toast.makeText(LoginActivity.this, "error: ", Toast.LENGTH_SHORT).show();
-//
-//                t.getMessage();
-//
-//            }
         });
 
-//        if (!validate()) {
-//
-//            onLoginFailed();
-//            progressDialog.dismiss();
-//            return;
-//
-//        }else{
-//
-//            onLoginSuccess();
-//
-//        }
+        if (!validate()) {
+
+            onLoginFailed();
+            progressDialog.dismiss();
+            return;
+        }else{
+
+            onLoginSuccess();
+        }
     }
 
-
-//    @OnClick(R.id.btn_get_secret)
+    @OnClick(R.id.btn_get_secret)
     public void getSecret(){
         mApiInterface.validateToken(token).enqueue(new Callback<String>() {
             @Override
@@ -210,7 +169,6 @@ public class LoginActivity extends AppCompatActivity {
 
         signInActivity = new Intent(getApplicationContext(),SignUpActivity.class);
         startActivityForResult(signInActivity, REQUEST_SIGNUP);
-
     }
 
     private void onLoginFailed(){
@@ -232,4 +190,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+
+
 }

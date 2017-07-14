@@ -46,7 +46,6 @@ import retrofit2.Response;
 public class TestActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST = 100;
-    private int PICK_IMAGE_FROM_GALLERY_REQUEST = 1;
     private static final int REQUEST_CODE = 6384;
     private String TAG = "TestActivity";
 

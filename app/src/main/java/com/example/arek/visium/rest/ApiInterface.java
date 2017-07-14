@@ -30,8 +30,8 @@ public interface ApiInterface {
 //    /17pdghz1
 
     @Headers("Content-Type:application/json")
-    @POST("/Account/RestRegister")
-    Call<UserRegistration> registerUser(@Body UserRegistration userRegistration);
+    @POST("/api/Account/register")
+    Call<String> registerUser(@Body UserRegistration userRegistration);
 
     @Headers("Content-Type:application/json")
     @POST("api/Account/Authenticate")

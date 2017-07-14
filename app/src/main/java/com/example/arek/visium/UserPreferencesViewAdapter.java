@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.example.arek.visium.model.UserPreferencesImageModel;
@@ -53,37 +54,28 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
                 .centerInside()
                 .into(holder.image);
 
-        holder.itemView.setBackgroundColor(model.isSelected() ? Color.CYAN : Color.WHITE);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.setSelected(!model.isSelected());
-//                notifyDataSetChanged();
-                holder.itemView.setBackgroundColor(model.isSelected() ? Color.CYAN : Color.WHITE);
-            }
-        });
-//        holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+//        holder.itemView.setBackgroundColor(model.isSelected() ? Color.CYAN : Color.WHITE);
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                model.setSelected(!model.isSelected());
+////                notifyDataSetChanged();
+//                holder.itemView.setBackgroundColor(model.isSelected() ? Color.CYAN : Color.WHITE);
+//            }
+//        });
+////        holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
 
     }
-
-//    @Override
-//    public int getItemViewType(int position) {
-//        final UserPreferencesImageModel model = itemModel.get(position);
-//
-//        return model.isSelected() ? TYPE_ACTIVE : TYPE_INACTIVE;
-//    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
         @BindView(R.id.item_img)
         ImageView image;
-        @BindView(R.id.item_checkbox)
-        CheckBox checkBox;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
+            this.setIsRecyclable(false);
         }
 
         @Override

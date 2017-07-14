@@ -41,7 +41,7 @@ public class UserPreferencesActivity extends Activity implements RecyclerView.On
     UserPreferencesViewAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recyclerViewLayoutManager;
     private Context context;
-    private static final int itemsInRowNumber = 3;
+    private static final int itemsInRowNumber = 2;
     ArrayList<UserPreferencesImageModel> imageArrayList;
 
     private final Integer image_ids[] = {R.drawable.architecture, R.drawable.bird, R.drawable.moto,
@@ -79,7 +79,6 @@ public class UserPreferencesActivity extends Activity implements RecyclerView.On
             UserPreferencesImageModel imageModel = new UserPreferencesImageModel();
             imageModel.setImageId(image_ids[i]);
             imageModels.add(imageModel);
-
         }
 
         return imageModels;
