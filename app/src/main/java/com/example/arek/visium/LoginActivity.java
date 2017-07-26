@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.arek.visium.model.TokenAuth;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.model.UserRegistration;
+import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
 
@@ -36,10 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
-
-//    public static final String TAG = "LoginActivity";
-    public static final int REQUEST_SIGNUP = 0;
+public class LoginActivity extends AppCompatActivity implements LoginActivityView {
 
     @BindView(R.id.btn_login)
     Button loginButton;
@@ -49,39 +47,26 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordText;
     @BindView(R.id.sing_up_text)
     TextView singUpTextView;
-    @BindView(R.id.btn_get_secret)
-    Button secretButton;
 
-    @BindView(R.id.btn_upload_image)
-    Button uploadActivity;
-
-
-    public static final String DEFAULT = "N/A";
-    private String email, password, emailStored, passwordStored, token;
-    private Intent signInActivity, userPrefActivity;
     private ProgressDialog progressDialog;
-    private ApiInterface mApiInterface;
-    boolean Registered;
+    private String email, password, emailStored, passwordStored, token;
+    private Intent userPrefActivity;
     private static final String TAG = "HOME";
-    Context context;
-    Realm realm;
-    private UserRegistration userRegistration;
-
+    private LoginActivityPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        mApiInterface = ApiAdapter.getAPIService();
-
-        try{
-            realm = Realm.getDefaultInstance();
-        }catch (Exception e){
-            e.printStackTrace();
+        if (BuildConfig.DEBUG){
+            emailText.setText("admin@visium.io");
+            passwordText.setText("Qwe[]123");
         }
 
+        presenter = new LoginActivityPresenter(this);
     }
 
 
@@ -104,92 +89,36 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_login)
     public void login(){
-        Log.d(TAG, "Log in");
+
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
+        email = emailText.getText().toString();
+        password = passwordText.getText().toString();
+        presenter.attemptLogin(email, password);
 
-        final UserLogin userLogin = new UserLogin("w@w.pl", "Mistrz123;");
-        mApiInterface.loginUser(userLogin).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
-                    token ="Bearer " + response.body().toString();
-
-                }else {
-                    progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Incorrect login ", Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(LoginActivity.this, "error: ", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        if (!validate()) {
-
-            onLoginFailed();
-            progressDialog.dismiss();
-            return;
-        }else{
-
-            onLoginSuccess();
-        }
     }
 
-    @OnClick(R.id.btn_get_secret)
-    public void getSecret(){
-        mApiInterface.validateToken(token).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()){
-                    Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
-                    token = response.toString();
-                    Log.d("response", token);
-
-                }else {
-                    Toast.makeText(LoginActivity.this, "Incorrect login !", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Error !", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @OnClick(R.id.sing_up_text)
-    public void openSingInActivity(){
-
-        signInActivity = new Intent(getApplicationContext(),SignUpActivity.class);
-        startActivityForResult(signInActivity, REQUEST_SIGNUP);
-    }
-
-    private void onLoginFailed(){
-
+    @Override
+    public void onLoginFailed() {
+        progressDialog.dismiss();
         Toast.makeText(getBaseContext(), "Failed logging in", Toast.LENGTH_LONG).show();
         loginButton.setEnabled(true);
     }
 
-    private void onLoginSuccess(){
-
+    @Override
+    public void onLoginSuccess() {
         userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
         startActivity(userPrefActivity);
-
     }
 
-    private boolean validate(){
-
-        boolean valid = true;
-
-        return valid;
-    }
+//    public boolean validate(){
+//
+//        boolean valid = true;
+//
+//        return valid;
+//    }
 
 
 }

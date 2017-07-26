@@ -10,7 +10,8 @@ import io.realm.annotations.PrimaryKey;
  * Created by Arek on 2017-06-25.
  */
 
-public class UserRegistration  {
+public class UserRegistration {
+
 
     @SerializedName("Email")
     @Expose

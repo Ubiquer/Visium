@@ -3,4 +3,21 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <TextView
+        android:paddingTop="16dp"
+        android:textSize="20sp"
+        android:text="You have chosen current sections:"
+        android:id="@+id/id_preferences_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
+    <TextView
+        android:paddingTop="12dp"
+        android:id="@+id/id_number_of_preferences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
 </LinearLayout>

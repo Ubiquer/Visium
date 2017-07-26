@@ -14,4 +14,9 @@
     <dimen name="card_album_radius">0dp</dimen>
     <dimen name="album_cover_height">160dp</dimen>
     <dimen name="album_title_padding">10dp</dimen>
+
+    <!--TEXT SIZES-->
+
+    <dimen name="txt_size_button_standard">14sp</dimen>
+
 </resources>

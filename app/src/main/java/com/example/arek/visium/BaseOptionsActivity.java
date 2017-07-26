@@ -13,7 +13,7 @@ import butterknife.OnClick;
 
 public class BaseOptionsActivity extends AppCompatActivity {
 
-    private static final int DUEL_REQUEST_CODE = 6465;
+    private static final int SELECTION_REQUEST_CODE = 6465;
 
     @BindView(R.id.app_logo)
     ImageView logoImage;
@@ -24,8 +24,7 @@ public class BaseOptionsActivity extends AppCompatActivity {
     @BindView(R.id.rankings_textview)
     TextView rankingsTextView;
 
-    private Intent imageDuelActivity;
-
+    private Intent imageSelectionActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +34,11 @@ public class BaseOptionsActivity extends AppCompatActivity {
 
         logoImage.setImageResource(R.drawable.logo1);
 
-        competitionTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        competitionTextView.setOnClickListener(v -> {
 
-                imageDuelActivity = new Intent(getApplicationContext(), ImageDuelActivity.class);
-                startActivityForResult(imageDuelActivity, DUEL_REQUEST_CODE);
+            imageSelectionActivity = new Intent(getApplicationContext(), TestActivity.class);
+            startActivityForResult(imageSelectionActivity, SELECTION_REQUEST_CODE);
 
-            }
         });
 
 

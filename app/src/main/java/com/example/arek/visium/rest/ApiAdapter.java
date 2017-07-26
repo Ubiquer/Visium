@@ -1,5 +1,7 @@
 package com.example.arek.visium.rest;
 
+import com.example.arek.visium.rest.Services.ServiceGenerator;
+
 /**
  * Created by Arek on 2017-06-25.
  */
@@ -7,22 +9,10 @@ package com.example.arek.visium.rest;
 public class ApiAdapter {
 
     private ApiAdapter() {}
-//    "http://cleanidentity20170624060141.azurewebsites.net/
-//    http://cleanidentity20170624060141.azurewebsites.net/"
-//    "http://visiumapp.azurewebsites.net/"
-
-    public static final String BASE_URL = "http://visiumapp.azurewebsites.net/";
-//    public static final String BASE_URL = "https://requestb.in/";
 
     public static ApiInterface getAPIService() {
 
-        return ServiceGenerator.getClient(BASE_URL).create(ApiInterface.class);
+        return ServiceGenerator.getClient(IntentKeys.BASE_URL).create(ApiInterface.class);
     }
-
-//    public static ApiInterface getApiServiceWithOkHttp(){
-//
-//        return ServiceGenerator.postImage(BASE_URL).create(ApiInterface.class);
-//
-//    }
 
 }

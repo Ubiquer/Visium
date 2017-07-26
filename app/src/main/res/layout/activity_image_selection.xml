@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.arek.visium.ImageSelectionActivity">
+
+    <ImageView
+        android:id="@+id/carousel_selected_image"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/image_carousel_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="235dp"
+        tools:layout_editor_absoluteX="172dp">
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btn_confirm_duel_image"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/txt_size_button_standard"
+        android:text="@string/confirm_selection"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="427dp"
+        tools:layout_editor_absoluteX="148dp" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,10 +1,10 @@
 package com.example.arek.visium.rest;
 
-import android.widget.ImageView;
-
-import com.example.arek.visium.model.TokenAuth;
 import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.example.arek.visium.model.UserRegistration;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -17,17 +17,13 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * Created by Arek on 2017-06-25.
  */
 
 public interface ApiInterface {
-
-//    "api/Account/Authenticate"
-//    /1m5n0xt1/
-//    /api/User/AddImage
-//    /17pdghz1
 
     @Headers("Content-Type:application/json")
     @POST("/api/Account/register")
@@ -42,10 +38,11 @@ public interface ApiInterface {
     Call<String> validateToken(@Header("Authorization") String authToken);
 
     @Multipart
-    @POST("api/Upload/PostUserImage")
-    Call<ResponseBody> uploadImage(@Part("description") RequestBody description,
-                             @Part MultipartBody.Part photo);
+    @POST(IntentKeys.UPLOAD_IMAGE)
+    Call<ResponseBody> uploadImage(@Header("Authorization") String token, @Query("category") String category,
+                                   @Part MultipartBody.Part photo);
 
-//    Call<ServerRes>
-//    Observable<Example> getExample();
+    @GET(IntentKeys.GET_ALL_CATEGORIES)
+    Call<List<UserPreferencesWithImage>> getUserPreferences();
+
 }

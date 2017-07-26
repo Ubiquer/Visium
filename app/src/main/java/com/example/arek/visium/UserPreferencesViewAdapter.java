@@ -3,15 +3,15 @@ package com.example.arek.visium;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.arek.visium.model.UserPreferencesImageModel;
+import com.example.arek.visium.rest.IntentKeys;
+import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -26,15 +26,16 @@ import java.util.List;
 
 public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPreferencesViewAdapter.MyViewHolder>{
 
-    private Context context;
-    private ArrayList<UserPreferencesImageModel> itemModel;
-    private static final int TYPE_INACTIVE = 0;
-    private static final int TYPE_ACTIVE = 1;
+    private Context mContext;
+    private ArrayList<UserPreferencesWithImage> mPreferenceItems;
 
 
-    public UserPreferencesViewAdapter(Context context, ArrayList<UserPreferencesImageModel> data) {
-        this.context = context;
-        this.itemModel = data;
+    public UserPreferencesViewAdapter(Context context){
+
+    }
+
+    public UserPreferencesViewAdapter(final ArrayList<UserPreferencesWithImage> preferenceItem){
+        mPreferenceItems = preferenceItem;
     }
 
     @Override
@@ -44,71 +45,65 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        final UserPreferencesImageModel model = itemModel.get(position);
-
+        final UserPreferencesWithImage preferenceItem = mPreferenceItems.get(position);
+        holder.preferenceName.setText(preferenceItem.getCategoryName());
         Picasso.with(holder.image.getContext())
-                .load(itemModel.get(position).getImageId())
-                .resize(320, 320)
+                .load(IntentKeys.BASE_URL + preferenceItem.getImagePath())
+                .resize(330, 330)
                 .centerInside()
                 .into(holder.image);
 
-//        holder.itemView.setBackgroundColor(model.isSelected() ? Color.CYAN : Color.WHITE);
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                model.setSelected(!model.isSelected());
-////                notifyDataSetChanged();
-//                holder.itemView.setBackgroundColor(model.isSelected() ? Color.CYAN : Color.WHITE);
-//            }
-//        });
-////        holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+        holder.image.setSelected(false);
+        holder.image.setOnClickListener(v -> {
+            if (preferenceItem.isSelected()){
+                preferenceItem.setSelected(false);
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                Log.d("Item disabled: ", String.valueOf(preferenceItem));
+                getSelectedItems();
+
+            }else {
+                preferenceItem.setSelected(true);
+                holder.itemView.setBackgroundColor(Color.CYAN);
+                Log.d("Item enabled: ", String.valueOf(preferenceItem));
+                getSelectedItems();
+            }
+        });
 
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    @Override
+    public int getItemCount() {
+        return mPreferenceItems.size();
+    }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.item_img)
         ImageView image;
+        @BindView(R.id.preference_name)
+        TextView preferenceName;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            this.setIsRecyclable(false);
         }
 
-        @Override
-        public void onClick(View v) {
-
-
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            return false;
-        }
     }
 
-
-    @Override
-    public int getItemCount() {
-        return itemModel.size();
-    }
-
-    public List getSelectedItem(){
+    public List getSelectedItems() {
 
         List itemModelList = new ArrayList<>();
-        for (int i =0; i< getItemCount(); i++){
-            UserPreferencesImageModel item = itemModel.get(i);
-
-            if (item.isSelected()){
-                itemModelList.add(itemModel);
+        for (int i = 0; i < getItemCount(); i++) {
+            String preferenceName;
+            UserPreferencesWithImage item = mPreferenceItems.get(i);
+            preferenceName = item.getCategoryName();
+            if (item.isSelected()) {
+                itemModelList.add(preferenceName);
             }
         }
-
         return itemModelList;
-
     }
 
 }

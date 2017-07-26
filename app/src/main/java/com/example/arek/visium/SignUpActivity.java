@@ -3,7 +3,6 @@ package com.example.arek.visium;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.arek.visium.model.UserRegistration;
+import com.example.arek.visium.realm.UserImageCollection;
+import com.example.arek.visium.realm.UserRegistrationData;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
 
@@ -32,8 +33,6 @@ import retrofit2.Response;
 
 
 public class SignUpActivity extends AppCompatActivity {
-
-    private static int TAG_2 = 0;
 
     private static String TAG = "Response ";
 
@@ -57,7 +56,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Intent loginActivityIntent;
     private final int REQUEST_LOGIN = 0;
     private ApiInterface mApiInterface;
-//    private UserRegistration userRegistration;
+    UserRegistrationData userRegistrationRealm ;
+    private UserRegistration userRegistration;
     Context context;
     Realm realm;
     @Override
@@ -66,8 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
 //        Realm.init(context);
-//        realm = Realm.getDefaultInstance();
-
+        realm = Realm.getDefaultInstance();
         mApiInterface = ApiAdapter.getAPIService();
 
         ButterKnife.bind(this);
@@ -90,39 +89,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void sign() {
 
-        SharedPreferences userSettings = getSharedPreferences("MyData", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = userSettings.edit();
+//        if(validate()){
 
-//        if(validate() == true){
-
-//            email = emailText.getText().toString().trim();
-//            password = passwordText.getText().toString().trim();
-//            confirmPassword = confirmPasswordText.getText().toString().trim();
-
-            email= "elo2@elo2.pl";
-            password= "Mistrz123;";
-            confirmPassword= "Mistrz123;";
-//            try {
-//
-//                realm.beginTransaction();
-//                userRegistration = realm.createObject(UserRegistration.class);
-//                userRegistration.setmEmail(email);
-//                userRegistration.setmPassword(password);
-//                userRegistration.setmConfirmPassword(confirmPassword);
-//                realm.commitTransaction();
-//
-//            }catch (RealmPrimaryKeyConstraintException e){
-//
-//                e.printStackTrace();
-//                Toast.makeText(getBaseContext(), "User found on db ", Toast.LENGTH_SHORT).show();
-//            }
-//            progressDialog.setMessage("Registering User...");
-//            progressDialog.show();
-
-            editor.putString("email", email);
-            editor.putString("password", password);
-            editor.apply();
-            final UserRegistration userRegistration = new UserRegistration(email, password, confirmPassword);
+            email= "admin@visium.io";
+            password= "Qwe[]123";
+            confirmPassword= "Qwe[]123";
 
         try {
             mApiInterface.registerUser(userRegistration).enqueue(new Callback<String>() {
@@ -132,6 +103,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
 
                         Log.i(TAG, "post submitted to API." + response.body().toString());
+                        registerToRealm();
                     }
                     Toast.makeText(getBaseContext(), "token received", Toast.LENGTH_LONG).show();
                 }
@@ -154,23 +126,24 @@ public class SignUpActivity extends AppCompatActivity {
 //        }
 //    }
 
-//    public void registerUser(UserRegistration userRegistration){
-//
-//    this.userRegistration = userRegistration;
-//
-//        mApiInterface.registerUser(userRegistration).enqueue(new Callback<UserRegistration>() {
-//            @Override
-//            public void onResponse(Call<UserRegistration> call, Response<UserRegistration> response) {
-//                Log.i(TAG, " API." + response.body().toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserRegistration> call, Throwable t) {
-//                Log.e(TAG, "Unable to submit post to API.");
-//            }
-//        });
-//
-//    }
+    private void registerToRealm(){
+
+        try {
+
+            realm.beginTransaction();
+            userRegistrationRealm = realm.createObject(UserRegistrationData.class);
+            userRegistrationRealm.setmEmail(email);
+            userRegistrationRealm.setmPassword(password);
+            userRegistrationRealm.setmConfirmPassword(confirmPassword);
+            realm.commitTransaction();
+
+        }catch (RealmPrimaryKeyConstraintException e){
+
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "User found on db ", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     private boolean validate() {
 
@@ -196,21 +169,17 @@ public class SignUpActivity extends AppCompatActivity {
         if (confirmPassword.equals(password)){
 
             confirmPasswordText.setError(null);
-
         } else {
             confirmPasswordText.setError("Confirmation password is not the same as password");
             valid = false;
         }
-
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
             emailText.setError("Enter a valid email address");
             valid = false;
-
         } else {
             emailText.setError(null);
         }
-
         return valid;
     }
 

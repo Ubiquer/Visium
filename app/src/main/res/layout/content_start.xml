@@ -9,16 +9,22 @@
     tools:context="com.example.arek.visium.UserPreferencesActivity"
     tools:showIn="@layout/app_bar_start">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <android.support.v7.widget.RecyclerView
         android:paddingTop="32dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:id="@+id/preferences_recyclerview"
+        android:paddingBottom="70dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="false"
         android:scrollbars="vertical"
-        >
+        android:layout_below="@+id/toolbar"
+        android:layout_alignParentStart="true">
     </android.support.v7.widget.RecyclerView>
 
     <android.support.v7.widget.CardView
@@ -36,7 +42,7 @@
 
             <Button
                 android:textSize="20sp"
-                android:id="@+id/confirmation_button"
+                android:id="@+id/btn_confirm_preferences"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="16dp"
