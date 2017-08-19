@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.arek.visium.image_duel.ImageDuelActivity;
+import com.example.arek.visium.image_selection.ImageSelectionActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,6 +28,7 @@ public class BaseOptionsActivity extends AppCompatActivity {
     TextView rankingsTextView;
 
     private Intent imageSelectionActivity;
+    private Intent imageDuelActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +40,17 @@ public class BaseOptionsActivity extends AppCompatActivity {
 
         competitionTextView.setOnClickListener(v -> {
 
-            imageSelectionActivity = new Intent(getApplicationContext(), TestActivity.class);
+            imageSelectionActivity = new Intent(getApplicationContext(), ImageSelectionActivity.class);
             startActivityForResult(imageSelectionActivity, SELECTION_REQUEST_CODE);
 
         });
 
+    }
 
-
+    @OnClick(R.id.evaluatiion_textview)
+    public void navigateToImageDuelActivity(){
+        imageDuelActivity = new Intent(getBaseContext(), ImageDuelActivity.class);
+        startActivity(imageDuelActivity);
     }
 
 }

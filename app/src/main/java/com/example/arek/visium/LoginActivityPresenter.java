@@ -5,11 +5,15 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.arek.visium.model.ItunesResult;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.model.UserRegistration;
 import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.Realm;
 import retrofit2.Call;
@@ -24,10 +28,7 @@ class LoginActivityPresenter {
 
     private LoginActivityView view;
     private static final String TAG = "HOME";
-    Context context;
     Realm realm;
-    private UserRegistration userRegistration;
-    private ProgressDialog progressDialog;
     private ApiInterface mApiInterface;
     private String token;
     private String mUsername;
@@ -50,23 +51,37 @@ class LoginActivityPresenter {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()){
-//                    progressDialog.dismiss();
-//                    Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                     token = response.body().toString();
                     createOrUpdateToken();
                     view.onLoginSuccess();
-
                 }else {
-//                    progressDialog.dismiss();
-//                    Toast.makeText(LoginActivity.this, "Incorrect login ", Toast.LENGTH_SHORT).show();
+                    view.onLoginFailed();
                 }
             }
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 view.onLoginFailed();
-//                Toast.makeText(LoginActivity.this, "error: ", Toast.LENGTH_SHORT).show();
             }
         });
+        Map<String, String> queryMap = new HashMap<>();
+//    @GET("lookup?amgArtistId=468749,5723&entity=song&limit=5&sort=recent")
+        queryMap.put("amgArtistId", "468749,5723");
+        queryMap.put("entity", "song");
+        queryMap.put("limit", "5");
+        queryMap.put("sort", "recent");
+
+        mApiInterface.loadSongs(queryMap).enqueue(new Callback<ItunesResult>() {
+            @Override
+            public void onResponse(Call<ItunesResult> call, Response<ItunesResult> response) {
+                Log.d("result", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<ItunesResult> call, Throwable t) {
+
+            }
+        });
+
     }
 
     public void createOrUpdateToken(){

@@ -20,6 +20,7 @@ import com.example.arek.visium.model.UserRegistration;
 import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.rest.IntentKeys;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     private Intent userPrefActivity;
     private static final String TAG = "HOME";
     private LoginActivityPresenter presenter;
+    private Intent signUpIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +64,20 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
         ButterKnife.bind(this);
 
         if (BuildConfig.DEBUG){
-            emailText.setText("admin@visium.io");
-            passwordText.setText("Qwe[]123");
+            emailText.setText(IntentKeys.GET_EMAIL);
+            passwordText.setText(IntentKeys.GET_PASSWORD);
         }
-
         presenter = new LoginActivityPresenter(this);
+
     }
 
+    @OnClick(R.id.sing_up_text)
+    public void navigateToSignUpActivity(){
 
+        signUpIntent = new Intent(getBaseContext(), SignUpActivity.class);
+        startActivity(signUpIntent);
+
+    }
     //log in locally
 //    private boolean checkUser(String email, String password){
 //
@@ -90,14 +98,14 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     @OnClick(R.id.btn_login)
     public void login(){
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme);
+        progressDialog = ProgressDialog.show(this, "Authenticating...", null);
+//        final  = new ProgressDialog(LoginActivity.this, R.style.AppTheme);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
         presenter.attemptLogin(email, password);
-
     }
 
     @Override
@@ -112,13 +120,6 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
         userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
         startActivity(userPrefActivity);
     }
-
-//    public boolean validate(){
-//
-//        boolean valid = true;
-//
-//        return valid;
-//    }
 
 
 }

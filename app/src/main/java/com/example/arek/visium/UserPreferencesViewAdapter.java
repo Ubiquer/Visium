@@ -29,7 +29,6 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
     private Context mContext;
     private ArrayList<UserPreferencesWithImage> mPreferenceItems;
 
-
     public UserPreferencesViewAdapter(Context context){
 
     }
@@ -89,7 +88,6 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-
     }
 
     public List getSelectedItems() {

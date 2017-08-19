@@ -6,4 +6,7 @@
     <string name="choose_file">Choose file</string>
     <string name="action_settings">Settings</string>
     <string name="confirm_selection">Confirm</string>
+
+    <string name="carousel">Carousel</string>
+    <string name="carousel_subtitle">Swipe the section horizontally to scroll its items</string>
 </resources>

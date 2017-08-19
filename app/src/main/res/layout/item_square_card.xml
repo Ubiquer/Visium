@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+<FrameLayout
+    android:layout_width="?android:attr/listPreferredItemHeightLarge"
+    android:layout_height="?android:attr/listPreferredItemHeightLarge"
+    android:background="@color/light"
+    android:elevation="2dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/carousel_item_text"
+        android:gravity="center"
+        android:textColor="?android:attr/textColorPrimary"
+        android:text="This is text"/>
+
+</FrameLayout>
+</layout>

@@ -30,6 +30,7 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,27 +38,23 @@
         <activity
             android:name=".UserPreferencesActivity"
             android:label="@string/title_activity_start"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.OPENABLE" />
+
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseOptionsActivity"></activity>
-        <activity android:name=".ImageDuelActivity" />
+        <activity android:name=".BaseOptionsActivity" />
         <activity
             android:name=".PreferencesConfirmationDialog"
             android:theme="@style/AppTheme.CustomTheme" />
-        <activity android:name=".ImageSelectionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".image_selection.ImageSelectionActivity" />
+        <activity android:name=".image_duel.ImageDuelActivity"></activity>
     </application>
 
 </manifest>

@@ -1,7 +1,6 @@
-package com.example.arek.visium;
+package com.example.arek.visium.image_selection;
 
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,7 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,25 +24,23 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.arek.visium.realm.ListOfCategories;
+import com.example.arek.visium.R;
+import com.example.arek.visium.TestActivity;
 import com.example.arek.visium.realm.Token;
-import com.ipaulpro.afilechooser.utils.FileUtils;
-
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
-
-//import org.apache.commons.io.FileUtils;
+import com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mindorks.placeholderview.SmoothLinearLayoutManager;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.ArrayList;
+
+import javax.annotation.RegEx;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -50,7 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TestActivity extends AppCompatActivity {
+public class ImageSelectionActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST = 100;
     private static final int REQUEST_CODE = 6384;
@@ -58,7 +57,7 @@ public class TestActivity extends AppCompatActivity {
     private String TAG = "TestActivity";
     String path;
     Uri selectedImage;
-//    Realm realm;
+    //    Realm realm;
     private String spinnerCategory;
 
     @BindView(R.id.category_spinner)
@@ -75,19 +74,24 @@ public class TestActivity extends AppCompatActivity {
     Realm realm;
     private String mToken;
 
+    @BindView(R.id.carousel_recycler_view)
+    RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_image_selection);
         ButterKnife.bind(this);
         realm = Realm.getDefaultInstance();
         getAccessToken();
 
-        if(ContextCompat.checkSelfPermission(TestActivity.this,
+        if(ContextCompat.checkSelfPermission(ImageSelectionActivity.this,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
 
-            ActivityCompat.requestPermissions(TestActivity.this,
+            ActivityCompat.requestPermissions(ImageSelectionActivity.this,
                     new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST);
         }
@@ -96,16 +100,26 @@ public class TestActivity extends AppCompatActivity {
         progressDialog.setMessage("Uploading...");
         mApiInterface = ApiAdapter.getAPIService();
         testButton.setOnClickListener(v -> loadImage());
-//        testButton.setOnClickListener(v -> showChooser());
+
         progressDialog.dismiss();
         setUpSpinner();
         uploadButton.setOnClickListener(v -> uploadFile(selectedImage));
     }
 
+    private void initRecyclerView(){
+
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new SmoothLinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new ImageCarouselAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
+    }
+
     private void loadImage(){
         Intent i = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
     private void setUpSpinner(){
@@ -225,7 +239,7 @@ public class TestActivity extends AppCompatActivity {
 //        }
 //    }
 
-//    @OnClick(R.id.upload_button)
+    //    @OnClick(R.id.upload_button)
     public void uploadFile(Uri fileUri) {
         progressDialog.show();
         File originalFile = FileUtils.getFile(this, fileUri);
@@ -240,12 +254,12 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 response.message();
-                Toast.makeText(TestActivity.this, "Correct: " + call.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageSelectionActivity.this, "Correct: " + call.toString(), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(TestActivity.this, "Incorrect login", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageSelectionActivity.this, "Incorrect login", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });

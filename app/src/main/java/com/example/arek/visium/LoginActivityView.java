@@ -10,6 +10,5 @@ public interface LoginActivityView {
     void onLoginSuccess();
 //    void validate();
     void login();
-//    void getSecret();
 
 }

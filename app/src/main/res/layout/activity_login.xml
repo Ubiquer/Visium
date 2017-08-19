@@ -64,6 +64,7 @@
             android:background="#e8eaf6" />
 
         <TextView
+            android:onClick="true"
             android:id="@+id/sing_up_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
