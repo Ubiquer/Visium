@@ -63,27 +63,8 @@ class LoginActivityPresenter {
                 view.onLoginFailed();
             }
         });
-        Map<String, String> queryMap = new HashMap<>();
-//    @GET("lookup?amgArtistId=468749,5723&entity=song&limit=5&sort=recent")
-        queryMap.put("amgArtistId", "468749,5723");
-        queryMap.put("entity", "song");
-        queryMap.put("limit", "5");
-        queryMap.put("sort", "recent");
-
-        mApiInterface.loadSongs(queryMap).enqueue(new Callback<ItunesResult>() {
-            @Override
-            public void onResponse(Call<ItunesResult> call, Response<ItunesResult> response) {
-                Log.d("result", response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<ItunesResult> call, Throwable t) {
-
-            }
-        });
 
     }
-
     public void createOrUpdateToken(){
 
         Token mToken = realm.where(Token.class).findFirst();
