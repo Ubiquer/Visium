@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.*;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +40,7 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements LoginActivityView {
 
+    private static final String MANAGER = LoginActivity.class.getSimpleName();
     @BindView(R.id.btn_login)
     Button loginButton;
     @BindView(R.id.input_email)
@@ -53,22 +54,39 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     private String email, password, emailStored, passwordStored, token;
     private Intent userPrefActivity;
     private static final String TAG = "HOME";
-    private LoginActivityPresenter presenter;
     private Intent signUpIntent;
+
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        userManager = ((VisiumApplication)getApplication()).getUserManager();
+
+        Log.d(MANAGER, "UserManager: " + userManager);
 
         if (BuildConfig.DEBUG){
             emailText.setText(IntentKeys.GET_EMAIL);
             passwordText.setText(IntentKeys.GET_PASSWORD);
         }
-        presenter = new LoginActivityPresenter(this);
+//        presenter = new LoginActivityPresenter(this, getApplicationContext());
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        userManager.onAttach(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        userManager.onStop();
     }
 
     @OnClick(R.id.sing_up_text)
@@ -98,14 +116,15 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     @OnClick(R.id.btn_login)
     public void login(){
 
-        progressDialog = ProgressDialog.show(this, "Authenticating...", null);
-//        final  = new ProgressDialog(LoginActivity.this, R.style.AppTheme);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
-        presenter.attemptLogin(email, password);
+        userManager.attemptLogin(email, password);
+
+    }
+
+    @Override
+    public void showProgress(boolean progress) {
+        loginButton.setEnabled(!progress);
     }
 
     @Override
@@ -119,7 +138,16 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     public void onLoginSuccess() {
         userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
         startActivity(userPrefActivity);
+        progressDialog.dismiss();
+        finish();
     }
 
 
+    public void showProgressDialog() {
+
+        progressDialog = ProgressDialog.show(this, "Authenticating...", null);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+    }
 }
