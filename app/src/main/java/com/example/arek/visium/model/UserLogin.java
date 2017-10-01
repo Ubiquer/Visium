@@ -30,4 +30,12 @@ public class UserLogin {
     public void setmEmail(String mEmail) {
         this.mEmail = mEmail;
     }
+
+    public String getmPassword() {
+        return mPassword;
+    }
+
+    public void setmPassword(String mPassword) {
+        this.mPassword = mPassword;
+    }
 }

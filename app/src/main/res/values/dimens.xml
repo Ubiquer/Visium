@@ -11,6 +11,7 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_margin">5dp</dimen>
+    <dimen name="card_margin_1">1dp</dimen>
     <dimen name="card_album_radius">0dp</dimen>
     <dimen name="album_cover_height">160dp</dimen>
     <dimen name="album_title_padding">10dp</dimen>
@@ -18,5 +19,7 @@
     <!--TEXT SIZES-->
 
     <dimen name="txt_size_button_standard">14sp</dimen>
+    <dimen name="logo_margin_top">42dp</dimen>
+    <dimen name="logo_dimen">164dp</dimen>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.arek.visium;
+package com.example.arek.visium.screens.register;
 
 /**
  * Created by arek on 7/26/2017.

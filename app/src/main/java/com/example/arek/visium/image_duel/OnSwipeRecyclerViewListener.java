@@ -5,4 +5,5 @@ package com.example.arek.visium.image_duel;
  */
 
 public interface OnSwipeRecyclerViewListener {
+    public void swipeListener();
 }

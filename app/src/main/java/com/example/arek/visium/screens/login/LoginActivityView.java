@@ -1,4 +1,4 @@
-package com.example.arek.visium;
+package com.example.arek.visium.screens.login;
 
 /**
  * Created by arek on 7/25/2017.
@@ -6,10 +6,10 @@ package com.example.arek.visium;
 
 public interface LoginActivityView {
 
-    void onLoginFailed();
+    void onLoginFailed(String errorBody);
     void onLoginSuccess();
 //    void validate();
     void login();
-
+    boolean validate();
     void showProgress(boolean b);
 }

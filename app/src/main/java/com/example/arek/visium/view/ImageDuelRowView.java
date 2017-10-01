@@ -5,4 +5,7 @@ package com.example.arek.visium.view;
  */
 
 public interface ImageDuelRowView {
+
+    void setImageResource();
+
 }

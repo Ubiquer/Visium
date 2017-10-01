@@ -5,4 +5,8 @@ package com.example.arek.visium.rest;
  */
 
 public class ErrorResponse {
+
+    public int code;
+    public String error;
+
 }

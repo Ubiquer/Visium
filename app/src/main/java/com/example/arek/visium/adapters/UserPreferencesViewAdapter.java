@@ -1,4 +1,4 @@
-package com.example.arek.visium;
+package com.example.arek.visium.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.arek.visium.R;
+import com.example.arek.visium.model.UserPreferencesSelected;
+import com.example.arek.visium.repositories.UserPreferencesRepository;
 import com.example.arek.visium.rest.IntentKeys;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.squareup.picasso.Picasso;
@@ -28,13 +31,16 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
 
     private Context mContext;
     private ArrayList<UserPreferencesWithImage> mPreferenceItems;
+    private UserPreferencesRepository mRepository;
+    private ArrayList<Integer> mSelectedPreferencesIds;
 
     public UserPreferencesViewAdapter(Context context){
 
     }
 
-    public UserPreferencesViewAdapter(final ArrayList<UserPreferencesWithImage> preferenceItem){
+    public UserPreferencesViewAdapter(final ArrayList<UserPreferencesWithImage> preferenceItem, Context context){
         mPreferenceItems = preferenceItem;
+        this.mContext = context;
     }
 
     @Override
@@ -69,7 +75,6 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
                 getSelectedItems();
             }
         });
-
     }
 
     @Override
@@ -90,16 +95,23 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
         }
     }
 
+
     public List getSelectedItems() {
 
         List itemModelList = new ArrayList<>();
+        mSelectedPreferencesIds = new ArrayList<>();
         for (int i = 0; i < getItemCount(); i++) {
             String preferenceName;
+            int preferenceId;
             UserPreferencesWithImage item = mPreferenceItems.get(i);
             preferenceName = item.getCategoryName();
+            preferenceId = item.getCategoryId();
             if (item.isSelected()) {
                 itemModelList.add(preferenceName);
+                mSelectedPreferencesIds.add(preferenceId);
             }
+         mRepository = new UserPreferencesRepository(mSelectedPreferencesIds, mContext);
+
         }
         return itemModelList;
     }

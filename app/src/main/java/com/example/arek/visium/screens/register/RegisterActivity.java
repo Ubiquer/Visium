@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.arek.visium.BuildConfig;
 import com.example.arek.visium.R;
 import com.example.arek.visium.UserPreferencesActivity;
+import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.presenter.SignUpActivityPresenter;
 import com.example.arek.visium.rest.IntentKeys;
 
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class SignUpActivity extends AppCompatActivity implements SignUpActivityView {
+public class RegisterActivity extends AppCompatActivity implements SignUpActivityView {
     
     @BindView(R.id.btn_signUp)
     Button signInButton;
@@ -42,14 +43,16 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
     private String email, password, confirmPassword;
     private Intent loginActivityIntent;
     private final int REQUEST_LOGIN = 0;
-    private SignUpActivityPresenter signUpActivityPresenter;
     private Intent userPrefActivity;
+    private RegisterManager registerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
+
+        registerManager = ((VisiumApplication)getApplication()).getRegisterManager();
 
         if (BuildConfig.DEBUG){
             emailText.setText(IntentKeys.GET_EMAIL);
@@ -66,13 +69,25 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerManager.onAttach(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        registerManager.onStop();
+    }
+
     @OnClick(R.id.btn_signUp)
     public void signUp() {
 //        if(validate()){
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
         confirmPassword = passwordText.getText().toString();
-        signUpActivityPresenter.attemptSignUp(email, password, confirmPassword);
+        registerManager.register(email, password);
     }
 
     @Override
@@ -107,6 +122,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpActivityV
 
     @Override
     public void onSignUpSuccess() {
+        signInButton.setEnabled(false);
         Toast.makeText(getBaseContext(), "token received", Toast.LENGTH_LONG).show();
         userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
         startActivity(userPrefActivity);

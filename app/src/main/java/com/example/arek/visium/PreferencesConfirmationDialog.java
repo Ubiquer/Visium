@@ -25,7 +25,5 @@ public class PreferencesConfirmationDialog extends Activity {
         height = dm.heightPixels;
 
         getWindow().setLayout(width, height);
-
-
     }
 }

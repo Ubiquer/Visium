@@ -27,14 +27,8 @@
             </intent-filter>
         </provider>
         >
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".screens.login.LoginActivity" android:theme="@style/LoginThemeBase"/>
+        <activity android:name=".screens.register.RegisterActivity" android:theme="@style/RegisterTheme"/>
         <activity
             android:name=".UserPreferencesActivity"
             android:label="@string/title_activity_start"
@@ -49,12 +43,22 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseOptionsActivity" />
+        <activity android:name=".BaseOptionsActivity">
+        </activity>
         <activity
             android:name=".PreferencesConfirmationDialog"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity android:name=".image_selection.ImageSelectionActivity" />
-        <activity android:name=".image_duel.ImageDuelActivity"></activity>
+        <activity android:name=".image_duel.ImageDuelActivity" />
+        <activity
+            android:name=".MenuActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

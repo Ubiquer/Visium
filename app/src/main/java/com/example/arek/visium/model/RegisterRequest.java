@@ -10,7 +10,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by Arek on 2017-06-25.
  */
 
-public class UserRegistration {
+public class RegisterRequest {
 
 
     @SerializedName("Email")
@@ -23,9 +23,9 @@ public class UserRegistration {
     @Expose
     private String mConfirmPassword;
 
-    public UserRegistration(){}
+    public RegisterRequest(){}
 
-    public UserRegistration(String email, String password, String confirmPassword) {
+    public RegisterRequest(String email, String password, String confirmPassword) {
 
         mEmail = email;
         mPassword = password;

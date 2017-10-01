@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.UserPreferencesViewAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +25,6 @@ class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdapter.Car
 
     @Override
     public void onBindViewHolder(CarouselViewHolder holder, int position) {
-
 
     }
 

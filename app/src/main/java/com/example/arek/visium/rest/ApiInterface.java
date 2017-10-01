@@ -1,15 +1,13 @@
 package com.example.arek.visium.rest;
 
-import com.example.arek.visium.model.ItunesResult;
+import com.example.arek.visium.model.ImageDuelModel;
+import com.example.arek.visium.model.RegisterRequest;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.model.UserPreferencesWithImage;
-import com.example.arek.visium.model.UserRegistration;
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,7 +18,6 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 /**
  * Created by Arek on 2017-06-25.
@@ -30,7 +27,7 @@ public interface ApiInterface {
 
     @Headers("Content-Type:application/json")
     @POST("/api/Account/register")
-    Call<String> registerUser(@Body UserRegistration userRegistration);
+    Call<String> registerUser(@Body RegisterRequest registerRequest);
 
     @Headers("Content-Type:application/json")
     @POST("api/Account/Authenticate")
@@ -41,14 +38,19 @@ public interface ApiInterface {
     Call<String> validateToken(@Header("Authorization") String authToken);
 
     @Multipart
-    @POST(IntentKeys.UPLOAD_IMAGE)
+    @POST("api/User/UploadImage")
     Call<ResponseBody> uploadImage(@Header("Authorization") String token, @Query("category") String category,
                                    @Part MultipartBody.Part photo);
 
     @GET(IntentKeys.GET_ALL_CATEGORIES)
     Call<List<UserPreferencesWithImage>> getUserPreferences();
 
-    @GET("/lookup")
-    Call<ItunesResult> loadSongs(@QueryMap Map<String, String> options);
+    @Headers("Content-Type:application/json")
+    @POST("/api/User/AddCategories")
+    Call<String> sendPreferences(@Body List<Integer> userPreferencesSelectedList);
+
+//    @Headers("Content-Type:application/json")
+    @GET("/api/Basic/GetTwoImagesFromCategory")
+    Call<List<ImageDuelModel>> getDuelImages(@Query("category") String category);
 
 }

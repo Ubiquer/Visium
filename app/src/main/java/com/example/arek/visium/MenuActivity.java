@@ -1,5 +1,6 @@
 package com.example.arek.visium;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,14 +13,44 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.arek.visium.screens.login.LoginActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int SELECTION_REQUEST_CODE = 6465;
+
+    @BindView(R.id.app_logo)
+    ImageView logoImage;
+    @BindView(R.id.competition_textview)
+    TextView competitionTextView;
+    @BindView(R.id.evaluatiion_textview)
+    TextView evaluationTextView;
+    @BindView(R.id.rankings_textview)
+    TextView rankingsTextView;
+    private UserStorage userStorage;
+
+    private Intent imageSelectionActivity;
+    private Intent imageDuelActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        ButterKnife.bind(this);
+
+         userStorage = ((VisiumApplication)getApplication()).getUserStorage();
+        if (userStorage.hasToLogin()){
+            goToLogin();
+            return;
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,6 +71,11 @@ public class MenuActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void goToLogin() {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     @Override
@@ -67,7 +103,9 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            userStorage.logout();
+            goToLogin();
             return true;
         }
 

@@ -13,9 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arek.visium.adapters.UserPreferencesViewAdapter;
 import com.example.arek.visium.model.UserPreferencesWithImage;
-import com.example.arek.visium.realm.ListOfCategories;
-import com.example.arek.visium.realm.UserImageCollection;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
 
@@ -25,8 +24,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,10 +81,7 @@ public class UserPreferencesActivity extends Activity {
                if(response.isSuccessful()) {
 
                   userPreferencesWithImages = (ArrayList<UserPreferencesWithImage>) response.body();
-                  ArrayList<UserPreferencesWithImage> userPref = new ArrayList<>();
-                  userPref.addAll(userPreferencesWithImages);
-                  Log.d("myPref: ", userPref.toString());
-                  recyclerViewAdapter = new UserPreferencesViewAdapter(userPref);
+                  recyclerViewAdapter = new UserPreferencesViewAdapter(userPreferencesWithImages, getApplicationContext());
                   recyclerView.setAdapter(recyclerViewAdapter);
 //                  commitToRealm();
                }
@@ -117,7 +111,7 @@ public class UserPreferencesActivity extends Activity {
     @OnClick(R.id.btn_confirm_preferences)
     public void confirmPreferences(){
 
-        baseOptionsActivityIntent = new Intent(getBaseContext(), BaseOptionsActivity.class);
+        baseOptionsActivityIntent = new Intent(getBaseContext(), MenuActivity.class);
         recyclerViewAdapter.getSelectedItems();
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(UserPreferencesActivity.this);
         mBuilder.setTitle("Chosen preferences");
@@ -133,12 +127,6 @@ public class UserPreferencesActivity extends Activity {
                 }).setNegativeButton("NO", ((dialog, which) -> mBuilder.setCancelable(true)));
         AlertDialog dialog = mBuilder.create();
         dialog.show();
-
-//        View mView = getLayoutInflater().inflate(R.layout.pop_up_dialog, null);
-//        popUpWindow = new Intent(UserPreferencesActivity.this, PreferencesConfirmationDialog.class);
-////        popUpWindow.putExtra(recyclerViewAdapter.getSelectedItems(), );
-//        startActivity(popUpWindow);
-
     }
 
 }

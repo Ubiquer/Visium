@@ -1,6 +1,7 @@
 package com.example.arek.visium.rest.Services;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -11,7 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator{
 
     private static Retrofit retrofit = null;
-    private static OkHttpClient httpClient = new OkHttpClient();
 
     public static Retrofit getClient(String baseUrl) {
         if (retrofit==null) {
@@ -23,5 +23,5 @@ public class ServiceGenerator{
         }
         return retrofit;
     }
-    
+
 }

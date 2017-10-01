@@ -5,4 +5,11 @@ package com.example.arek.visium.model;
  */
 
 public class UserPreferencesSelected {
+
+    private String preferenceId;
+
+    public String getPreferenceId() {
+        return preferenceId;
+    }
+
 }

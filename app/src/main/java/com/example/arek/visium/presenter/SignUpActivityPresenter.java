@@ -1,11 +1,10 @@
-package com.example.arek.visium;
+package com.example.arek.visium.presenter;
 
-import android.content.Context;
 import android.util.Log;
 import android.util.Patterns;
-import android.widget.Toast;
 
-import com.example.arek.visium.model.UserRegistration;
+import com.example.arek.visium.model.RegisterRequest;
+import com.example.arek.visium.screens.register.SignUpActivityView;
 import com.example.arek.visium.realm.UserRegistrationData;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
@@ -27,7 +26,7 @@ public class SignUpActivityPresenter {
 
     private SignUpActivityView view;
     private UserRegistrationData userRegistrationRealm ;
-    private UserRegistration userRegistration;
+    private RegisterRequest registerRequest;
     Realm realm;
     private ApiInterface mApiInterface;
     private static String TAG = "Response: ";
@@ -41,10 +40,10 @@ public class SignUpActivityPresenter {
 
         validate(email, password, confirmPassword);
 
-        userRegistration = new UserRegistration(email, password, confirmPassword);
+        registerRequest = new RegisterRequest(email, password, confirmPassword);
 
         try {
-            mApiInterface.registerUser(userRegistration).enqueue(new Callback<String>() {
+            mApiInterface.registerUser(registerRequest).enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
 

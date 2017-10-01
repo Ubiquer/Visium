@@ -2,23 +2,31 @@ package com.example.arek.visium.screens.login;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.rest.ErrorResponse;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 
 import io.realm.Realm;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by arek on 9/27/2017.
  */
 
-public class UserManager {
+public class LoginManager {
 
     private static final String TAG = "HOME";
     Realm realm;
@@ -30,10 +38,15 @@ public class UserManager {
     LoginActivity mLoginActivity;
     private final UserStorage userStorage;
     private UserLogin userLogin;
-    Call<String> loginCall;
+    private Call<String> loginCall;
+    private Retrofit mRetrofit;
+    private static final String LOGIN_FAILED = "Login failed";
 
-    public UserManager(UserStorage userStorage) {
+
+    public LoginManager(UserStorage userStorage, ApiInterface apiInterface, Retrofit retrofit) {
         this.userStorage = userStorage;
+        this.mApiInterface = apiInterface;
+        this.mRetrofit = retrofit;
     }
 
     public void onAttach(LoginActivity loginActivity){
@@ -48,15 +61,13 @@ public class UserManager {
 
 
         mLoginActivity.showProgressDialog();
-
-        mApiInterface = ApiAdapter.getAPIService();
         realm = Realm.getDefaultInstance();
         this.mUsername = userName;
         this.mPassword = password;
         userLogin = new UserLogin(mUsername, mPassword);
         Log.d(TAG, "Log in");
 
-        if (loginCall ==null){
+        if (loginCall == null){
             loginCall = mApiInterface.loginUser(userLogin);
             updateProgress();
             loginCall.enqueue(new Callback<String>() {
@@ -65,28 +76,30 @@ public class UserManager {
                     loginCall = null;
                     updateProgress();
                     if (response.isSuccessful()){
-                        token = response.body().toString();
-                        userStorage.login(userLogin, token);
-                        createOrUpdateToken();
-                        if (mLoginActivity != null){
+                            token = response.body().toString();
+                            userStorage.login(userLogin, token);
+                            createOrUpdateToken();
+                        if (mLoginActivity!=null){
                             mLoginActivity.onLoginSuccess();
+                        }else {
+                            ResponseBody responseBody = response.errorBody();
+                            Converter<ResponseBody, ErrorResponse> converter = mRetrofit.responseBodyConverter(ErrorResponse.class, new Annotation[]{});
+                            try {
+                                ErrorResponse errorResponse = converter.convert(responseBody);
+                                mLoginActivity.onLoginFailed(errorResponse.error);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-//                    ResponseBody responseBody = response.errorBody();
-//                    try {
-//
-//                        Toast.makeText(mContext, "error: " + responseBody.string(), Toast.LENGTH_SHORT).show();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                     }else {
-                        mLoginActivity.onLoginFailed();
+                        mLoginActivity.onLoginFailed(response.errorBody().toString());
                     }
                 }
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
                     loginCall = null;
                     updateProgress();
-                    mLoginActivity.onLoginFailed();
+                    mLoginActivity.onLoginFailed(LOGIN_FAILED);
                 }
             });
         }
