@@ -1,40 +1,27 @@
-package com.example.arek.visium;
+package com.example.arek.visium.screens.register;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.arek.visium.model.UserRegistration;
-import com.example.arek.visium.realm.UserImageCollection;
-import com.example.arek.visium.realm.UserRegistrationData;
-import com.example.arek.visium.rest.ApiAdapter;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.BuildConfig;
+import com.example.arek.visium.R;
+import com.example.arek.visium.UserPreferencesActivity;
+import com.example.arek.visium.presenter.SignUpActivityPresenter;
 import com.example.arek.visium.rest.IntentKeys;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.exceptions.RealmPrimaryKeyConstraintException;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
-
-public class SignUpActivity extends AppCompatActivity implements SignUpActivityView{
+public class SignUpActivity extends AppCompatActivity implements SignUpActivityView {
     
     @BindView(R.id.btn_signUp)
     Button signInButton;

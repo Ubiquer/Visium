@@ -1,8 +1,9 @@
-package com.example.arek.visium;
+package com.example.arek.visium.screens.login;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.rest.ApiAdapter;
@@ -80,8 +81,6 @@ public class UserManager {
                     }else {
                         mLoginActivity.onLoginFailed();
                     }
-
-
                 }
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
