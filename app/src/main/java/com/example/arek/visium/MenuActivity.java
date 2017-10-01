@@ -16,10 +16,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.arek.visium.image_duel.ImageDuelActivity;
 import com.example.arek.visium.screens.login.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -110,6 +112,12 @@ public class MenuActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.evaluatiion_textview)
+    public void navigateToImageDuelActivity(){
+        imageDuelActivity = new Intent(getBaseContext(), ImageDuelActivity.class);
+        startActivity(imageDuelActivity);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

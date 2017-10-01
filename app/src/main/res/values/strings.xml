@@ -13,4 +13,8 @@
     <string name="title_activity_menu">MenuActivity</string>
     <string name="click_here_to_login">Click here to login!</string>
     <string name="sign_in">Sign in</string>
+    <string name="passwords_differ">Confirmation password is not the same as password</string>
+    <string name="enter_valid_email">Enter a valid email address</string>
+    <string name="incorrect_password">Enter a valid password. The password should consist of 6-14 characters, with at least one big letter, one special character and one number</string>
+    <string name="token_received">token received</string>
 </resources>

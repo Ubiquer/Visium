@@ -92,7 +92,6 @@ public class RegisterActivity extends AppCompatActivity implements SignUpActivit
 
     @Override
     public void onSingUpFailed() {
-
     }
 
     @Override
@@ -102,12 +101,12 @@ public class RegisterActivity extends AppCompatActivity implements SignUpActivit
 
     @Override
     public void passwordsDiffer() {
-        confirmPasswordText.setError("Confirmation password is not the same as password");
+        confirmPasswordText.setError(getString(R.string.passwords_differ));
     }
 
     @Override
     public void invalidEmail() {
-        emailText.setError("Enter a valid email address");
+        emailText.setError(getString(R.string.enter_valid_email));
     }
 
     @Override
@@ -117,13 +116,13 @@ public class RegisterActivity extends AppCompatActivity implements SignUpActivit
 
     @Override
     public void incorrectPassword() {
-        passwordText.setError("Enter a valid password. The password should consist of 6-14 characters, with at least one big letter, one special character and one number");
+        passwordText.setError(getString(R.string.incorrect_password));
     }
 
     @Override
     public void onSignUpSuccess() {
         signInButton.setEnabled(false);
-        Toast.makeText(getBaseContext(), "token received", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), R.string.token_received, Toast.LENGTH_LONG).show();
         userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
         startActivity(userPrefActivity);
     }

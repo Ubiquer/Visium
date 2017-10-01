@@ -12,9 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arek.visium.BuildConfig;
 import com.example.arek.visium.R;
 import com.example.arek.visium.UserPreferencesActivity;
 import com.example.arek.visium.VisiumApplication;
+import com.example.arek.visium.rest.IntentKeys;
 import com.example.arek.visium.screens.register.RegisterActivity;
 
 import java.util.regex.Matcher;
@@ -58,10 +60,10 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
 
         Log.d(MANAGER, "LoginManager: " + loginManager);
 
-//        if (BuildConfig.DEBUG){
-//            emailText.setText(IntentKeys.GET_EMAIL);
-//            passwordText.setText(IntentKeys.GET_PASSWORD);
-//        }
+        if (BuildConfig.DEBUG){
+            emailText.setText(IntentKeys.GET_EMAIL);
+            passwordText.setText(IntentKeys.GET_PASSWORD);
+        }
 
     }
 
