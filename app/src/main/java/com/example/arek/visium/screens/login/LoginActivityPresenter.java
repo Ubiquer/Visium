@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.realm.ListOfCategories;
 import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.ApiInterface;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 
 import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +44,7 @@ public class LoginManager {
     private Call<String> loginCall;
     private Retrofit mRetrofit;
     private static final String LOGIN_FAILED = "Login failed";
+    private Realm realm;
 
 
     public LoginManager(UserStorage userStorage, ApiInterface apiInterface, Retrofit retrofit) {
@@ -58,7 +62,6 @@ public class LoginManager {
     }
 
     public void attemptLogin(String userName, String password){
-
 
         mLoginActivity.showProgressDialog();
         realm = Realm.getDefaultInstance();
@@ -104,18 +107,14 @@ public class LoginManager {
             });
         }
     }
-
     private void updateProgress() {
         if (mLoginActivity != null){
             mLoginActivity.showProgress(loginCall != null);
         }
     }
-
     public void createOrUpdateToken(){
-
         Token mToken = realm.where(Token.class).findFirst();
         realm.beginTransaction();
-
         if (mToken == null){
             mToken = realm.createObject(Token.class);
             mToken.setM_token(token);
@@ -124,6 +123,16 @@ public class LoginManager {
             Log.d("my token: ", mToken.getM_token());
         }
         realm.commitTransaction();
+    }
+
+    public void checkSavedPreferences(){
+        realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<ListOfCategories> listListOfCategories = realm.where(ListOfCategories.class).findAll();
+        if (listListOfCategories != null){
+            LoginActivity.userPreferencesStatus();
+        }
+
     }
 
 }
