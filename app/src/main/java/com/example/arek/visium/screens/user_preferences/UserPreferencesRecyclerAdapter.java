@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.rest.IntentKeys;
+import com.example.arek.visium.rest.ApiKeys;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.squareup.picasso.Picasso;
 
@@ -24,12 +24,12 @@ import java.util.List;
  * Created by arek on 7/8/2017.
  */
 
-public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPreferencesViewAdapter.MyViewHolder>{
+public class UserPreferencesRecyclerAdapter extends RecyclerView.Adapter<UserPreferencesRecyclerAdapter.MyViewHolder>{
 
     private ArrayList<UserPreferencesWithImage> categories;
     private ArrayList<Integer> selectedPreferencesIds;
 
-    public UserPreferencesViewAdapter(){
+    public UserPreferencesRecyclerAdapter(){
     }
 
     @Override
@@ -44,8 +44,8 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
         final UserPreferencesWithImage preferenceItem = categories.get(position);
         holder.preferenceName.setText(preferenceItem.getCategoryName());
         Picasso.with(holder.image.getContext())
-                .load(IntentKeys.BASE_URL + preferenceItem.getImagePath())
-                .resize(160, 160)
+                .load(ApiKeys.BASE_URL + preferenceItem.getImagePath())
+                .resize(300, 300)
                 .centerInside()
                 .into(holder.image);
 
