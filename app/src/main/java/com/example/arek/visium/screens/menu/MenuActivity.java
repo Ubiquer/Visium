@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,33 +14,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.arek.visium.image_duel.ImageDuelActivity;
+import com.example.arek.visium.screens.image_selection.ImageSelectionActivity;
+import com.example.arek.visium.screens.image_duel.ImageDuelActivity;
 import com.example.arek.visium.screens.login.LoginActivity;
+import com.example.arek.visium.screens.rankings.RankingsActivity;
+import com.example.arek.visium.screens.subscribe.SubscribedFragment;
+import com.example.arek.visium.screens.user_pictures.UserPicturesFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback{
 
     private static final int SELECTION_REQUEST_CODE = 6465;
 
     @BindView(R.id.app_logo)
     ImageView logoImage;
-    @BindView(R.id.competition_textview)
-    TextView competitionTextView;
-    @BindView(R.id.evaluatiion_textview)
-    TextView evaluationTextView;
-    @BindView(R.id.rankings_textview)
-    TextView rankingsTextView;
+    @BindView(R.id.competition_button)
+    Button competitionButton;
+    @BindView(R.id.evaluation_button)
+    Button evaluationButton;
+    @BindView(R.id.rankings_button)
+    Button rankingsButton;
     private UserStorage userStorage;
 
-    private Intent imageSelectionActivity;
+    private Intent competitionActivity;
     private Intent imageDuelActivity;
+    private Intent rankingsActivity;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +79,15 @@ public class MenuActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView drawerNameTextView = (TextView) headerView.findViewById(R.id.drawerNameTextView);
+        TextView drawerEmailTextView = (TextView) headerView.findViewById(R.id.drawerEmailTextView);
+
+        drawerNameTextView.setText(R.string.test_username);
+        drawerEmailTextView.setText(userStorage.getEmail());
     }
 
     private void goToLogin() {
@@ -103,23 +118,30 @@ public class MenuActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             userStorage.logout();
             goToLogin();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.evaluatiion_textview)
+    @OnClick(R.id.rankings_button)
+    public void navigateToRankingsActivity(){
+        rankingsActivity = new Intent(getBaseContext(), RankingsActivity.class);
+        startActivity(rankingsActivity);
+    }
+    @OnClick(R.id.evaluation_button)
     public void navigateToImageDuelActivity(){
         imageDuelActivity = new Intent(getBaseContext(), ImageDuelActivity.class);
         startActivity(imageDuelActivity);
     }
-
+    @OnClick(R.id.competition_button)
+    public void navigateToCompetitionActivity(){
+        competitionActivity = new Intent(getBaseContext(), ImageSelectionActivity.class);
+        startActivity(competitionActivity);
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -130,18 +152,31 @@ public class MenuActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.nav_logout){
+            userStorage.logout();
+            goToLogin();
+        } else if (id == R.id.nav_subscribe){
+            showFragment(new SubscribedFragment());
+        } else if (id == R.id.nav_user_pictures){
+            showFragment(new UserPicturesFragment());
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void showFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+    }
+    @Override
+    public void goToUserPictures() {
+       MenuItem item = navigationView.getMenu().findItem(R.id.nav_user_pictures);
+       item.setChecked(true);
+       onNavigationItemSelected(item);
     }
 }

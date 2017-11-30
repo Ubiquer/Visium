@@ -1,4 +1,4 @@
-package com.example.arek.visium.image_selection;
+package com.example.arek.visium.screens.image_selection;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

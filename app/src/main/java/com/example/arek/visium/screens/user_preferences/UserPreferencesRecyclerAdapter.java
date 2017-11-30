@@ -1,6 +1,5 @@
-package com.example.arek.visium.adapters;
+package com.example.arek.visium.screens.user_preferences;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.UserPreferencesSelected;
-import com.example.arek.visium.repositories.UserPreferencesRepository;
 import com.example.arek.visium.rest.IntentKeys;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.squareup.picasso.Picasso;
@@ -29,18 +26,10 @@ import java.util.List;
 
 public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPreferencesViewAdapter.MyViewHolder>{
 
-    private Context mContext;
-    private ArrayList<UserPreferencesWithImage> mPreferenceItems;
-    private UserPreferencesRepository mRepository;
-    private ArrayList<Integer> mSelectedPreferencesIds;
+    private ArrayList<UserPreferencesWithImage> categories;
+    private ArrayList<Integer> selectedPreferencesIds;
 
-    public UserPreferencesViewAdapter(Context context){
-
-    }
-
-    public UserPreferencesViewAdapter(final ArrayList<UserPreferencesWithImage> preferenceItem, Context context){
-        mPreferenceItems = preferenceItem;
-        this.mContext = context;
+    public UserPreferencesViewAdapter(){
     }
 
     @Override
@@ -52,11 +41,11 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        final UserPreferencesWithImage preferenceItem = mPreferenceItems.get(position);
+        final UserPreferencesWithImage preferenceItem = categories.get(position);
         holder.preferenceName.setText(preferenceItem.getCategoryName());
         Picasso.with(holder.image.getContext())
                 .load(IntentKeys.BASE_URL + preferenceItem.getImagePath())
-                .resize(330, 330)
+                .resize(160, 160)
                 .centerInside()
                 .into(holder.image);
 
@@ -79,7 +68,7 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
 
     @Override
     public int getItemCount() {
-        return mPreferenceItems.size();
+        return categories.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -94,26 +83,29 @@ public class UserPreferencesViewAdapter extends RecyclerView.Adapter<UserPrefere
             ButterKnife.bind(this, itemView);
         }
     }
-
-
     public List getSelectedItems() {
-
-        List itemModelList = new ArrayList<>();
-        mSelectedPreferencesIds = new ArrayList<>();
+        List itemModelList = new ArrayList<String>();
+        selectedPreferencesIds = new ArrayList<>();
         for (int i = 0; i < getItemCount(); i++) {
             String preferenceName;
             int preferenceId;
-            UserPreferencesWithImage item = mPreferenceItems.get(i);
+            UserPreferencesWithImage item = categories.get(i);
             preferenceName = item.getCategoryName();
             preferenceId = item.getCategoryId();
             if (item.isSelected()) {
                 itemModelList.add(preferenceName);
-                mSelectedPreferencesIds.add(preferenceId);
+                selectedPreferencesIds.add(preferenceId);
             }
-         mRepository = new UserPreferencesRepository(mSelectedPreferencesIds, mContext);
-
         }
         return itemModelList;
+    }
+
+    public ArrayList<Integer> getPreferences(){
+        return selectedPreferencesIds;
+    }
+
+    public void setData(ArrayList<UserPreferencesWithImage> mPreferenceItems){
+        this.categories = mPreferenceItems;
     }
 
 }

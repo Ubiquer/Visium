@@ -142,12 +142,11 @@ public class ImageSelectionActivity extends AppCompatActivity {
 //    private void getFromRealm(){
 //
 //        ArrayList<String> spinnerList;
-//        RealmResults<ListOfCategories> = realm.where(ListOfCategories.class).findAll();
-//        for (ListOfCategories listOfCategories : spinnerList)
+//        RealmResults<UserPreferencesCategories> = realm.where(UserPreferencesCategories.class).findAll();
+//        for (UserPreferencesCategories listOfCategories : spinnerList)
 //    }
 
     private void getAccessToken(){
-
         realm.beginTransaction();
         Token token = realm.where(Token.class).findFirst();
         mToken = token.getM_token();
@@ -266,13 +265,11 @@ public class ImageSelectionActivity extends AppCompatActivity {
     }
 
     private Bitmap getBitmapFromUri(Uri uri) throws IOException {
-
         ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
-
     }
 
 }
