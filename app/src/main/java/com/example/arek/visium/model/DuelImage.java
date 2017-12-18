@@ -20,7 +20,7 @@ public class ImageDuelModel {
     private int dislikes;
     @SerializedName("ImagePath")
     private String imagePath;
-    @SerializedName("Category")
+    @SerializedName("UserPreferencesCategories")
     private String imageCategory;
 
     public int getPictureId() {

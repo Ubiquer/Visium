@@ -1,6 +1,8 @@
 package com.example.arek.visium.rest;
 
 import com.example.arek.visium.model.ImageDuelModel;
+import com.example.arek.visium.model.PhotographersModel;
+import com.example.arek.visium.model.RankingImageByCategory;
 import com.example.arek.visium.model.RegisterRequest;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.model.UserPreferencesWithImage;
@@ -41,8 +43,7 @@ public interface ApiInterface {
     @POST("api/User/UploadImage")
     Call<ResponseBody> uploadImage(@Header("Authorization") String token, @Query("category") String category,
                                    @Part MultipartBody.Part photo);
-
-    @GET(IntentKeys.GET_ALL_CATEGORIES)
+    @GET(ApiKeys.GET_ALL_CATEGORIES)
     Call<List<UserPreferencesWithImage>> getUserPreferences();
 
     @Headers("Content-Type:application/json")
@@ -52,5 +53,19 @@ public interface ApiInterface {
 //    @Headers("Content-Type:application/json")
     @GET("/api/Basic/GetTwoImagesFromCategory")
     Call<List<ImageDuelModel>> getDuelImages(@Query("category") String category);
+
+//    @Multipart
+    @Headers("Content-Type:application/json")
+    @POST("api/Basic/AddResultOfImagesBattle")
+    Call<ResponseBody> postDuelResult(@Query("looserPictureId") int looserPictureId, @Query("winnerPictureId") int winnerPictureId);
+
+    @Headers("Content-Type:application/json")
+    @GET("api/Basic/GetImagesRanking")
+    Call<List<RankingImageByCategory>> getAllImagesFromCategoryByRanking();
+
+    @Headers("Content-Type:application/json")
+    @GET("api/Basic/GetUsersRanking")
+    Call<List<PhotographersModel>> getAllPhotographers();
+
 
 }
