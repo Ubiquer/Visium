@@ -4,15 +4,14 @@ package com.example.arek.visium.screens.register;
  * Created by arek on 7/26/2017.
  */
 
-public interface SignUpActivityView {
+public interface RegisterActivityView {
 
     void signUp();
-    void onSingUpFailed();
-    void passwordsMatch();
-    void passwordsDiffer();
-    void invalidEmail();
-    void validEmail();
-    void incorrectPassword();
+    void onSingUpFailed(String message);
+    void onPasswordsMatch();
+    void onPasswordsDiffer();
+    void onEmailsMatch();
+    void onEmailsDiffer();
     void onSignUpSuccess();
 
 }

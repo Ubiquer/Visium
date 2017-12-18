@@ -14,31 +14,20 @@ import android.view.Display;
 
 import com.example.arek.visium.R;
 import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.ImageDuelModel;
-import com.example.arek.visium.rest.ApiAdapter;
-import com.example.arek.visium.rest.ApiInterface;
-import com.example.arek.visium.rest.Services.BackgroundService;
+import com.example.arek.visium.model.DuelImage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class ImageDuelActivity extends AppCompatActivity implements ImageDuelView {
+public class ImageDuelActivity extends AppCompatActivity implements ImageDuelView, ItemSwipeHelper.ImageChooseListener {
 
     private static final String TAG = "DISPLAY_METRICS" ;
     @BindView(R.id.duel_rv)
     RecyclerView mRecyclerView;
-
-    boolean isImageChosen;
     private Context mContext;
-    private ApiInterface mApiInterface;
     private final String CATEGORY = "Samochody";
-    private ArrayList<ImageDuelModel> duelImage;
     private ImageDuelViewAdapter mRecyclerAdapter;
     private int displayHeight;
     private int displayWidth;
@@ -46,11 +35,11 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
     private ItemSwipeHelper itemSwipeHelper;
     private final String rightColorCode = "#388E3C";
     private final String leftColorCode = "#D32F2F";
-    BackgroundService service;
-    private int mDirection;
     private ProgressDialog progressDialog;
-    private ImageDuelManager imageDuelManager;
-
+    private ImageDuelPresenter imageDuelPresenter;
+    private ImageDuelViewAdapter imageDuelViewAdapter;
+    private int winnerPosition;
+    private int loserPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +48,11 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
         setContentView(R.layout.activity_duel);
         ButterKnife.bind(this);
         screenMetrics();
-
-        imageDuelManager = new ImageDuelManager(((VisiumApplication) getApplication()).getApiInterface(),
-                ((VisiumApplication) getApplication()).getRetrofit(), this, displayHeight, displayWidth);
-//        screenMetrics();
-//        mApiInterface = ApiAdapter.getAPIService();
-//        mContext = getApplicationContext();
-//        initRecyclerView();
+        imageDuelPresenter = new ImageDuelPresenter(((VisiumApplication) getApplication()).getVisiumService(),
+                ((VisiumApplication) getApplication()).getRetrofit());
     }
 
     private void initRecyclerView(){
-
         mLinearLayoutManager = new LinearLayoutManager(mContext){
             @Override
             public boolean canScrollVertically() {
@@ -79,56 +62,20 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        imageDuelViewAdapter = new ImageDuelViewAdapter();
+        mRecyclerView.setAdapter(imageDuelViewAdapter);
+        initSwipeHelper();
     }
     @Override
     protected void onStart() {
-
         super.onStart();
-        initRecyclerView();
-        imageDuelManager.onAttach(this);
+        imageDuelPresenter.onAttach(this);
     }
 
     @Override
     protected void onStop() {
+        imageDuelPresenter.onDetach();
         super.onStop();
-        imageDuelManager.onStop();
-    }
-
-    private void loadDuelImage(){
-
-        mApiInterface.getDuelImages(CATEGORY).enqueue(new Callback<List<ImageDuelModel>>() {
-            @Override
-            public void onResponse(Call<List<ImageDuelModel>> call, Response<List<ImageDuelModel>> response) {
-
-                if (response.isSuccessful()){
-                    duelImage = (ArrayList<ImageDuelModel>) response.body();
-                    mRecyclerAdapter = new ImageDuelViewAdapter(duelImage, displayHeight, displayWidth);
-                    mRecyclerView.setAdapter(mRecyclerAdapter);
-                    mRecyclerAdapter.notifyDataSetChanged();
-//                    initSwipeHelper();
-                    //zrobic callback z id przesunietego obrazka
-
-//                    sendWinner();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ImageDuelModel>> call, Throwable t) {
-
-                Log.d("Failed: ", t.toString());
-            }
-        });
-    }
-
-//    private void loadDuelImage(){
-//
-//        Intent intent = new Intent(ImageDuelActivity.this, BackgroundService.class);
-//        startService(intent);
-//
-//    }
-
-    void sendWinner(){
-
     }
 
     private void screenMetrics(){
@@ -142,7 +89,7 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
     }
 
     public void initSwipeHelper(){
-        ItemSwipeHelper itemSwipeHelper = new ItemSwipeHelper(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT, mRecyclerAdapter, mContext,rightColorCode, leftColorCode);
+        itemSwipeHelper = new ItemSwipeHelper(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT, mRecyclerAdapter, mContext,rightColorCode, leftColorCode, this);
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(itemSwipeHelper);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
@@ -155,12 +102,36 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
     }
 
     @Override
-    public void setRecycylerAdapter(ImageDuelViewAdapter adapter) {
-        mRecyclerView.setAdapter(adapter);
+    public void showData(ArrayList<DuelImage> duelImagesList) {
+        initRecyclerView();
+        onImagesAccessed();
+        imageDuelViewAdapter.setData(duelImagesList, displayHeight, displayWidth);
     }
 
     @Override
     public void onImagesAccessed() {
-        progressDialog.dismiss();
+//        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onImageChosen(int position, boolean winner) {
+
+        if (winner){
+            this.winnerPosition = position;
+            if (winnerPosition == 0){
+                loserPosition = 1;
+            }else{
+                loserPosition = 0;
+            }
+        }else{
+            this.loserPosition = position;
+            if (loserPosition == 0){
+                winnerPosition = 1;
+            }else {
+                winnerPosition = 0;
+            }
+        }
+        ArrayList<DuelImage> images = imageDuelViewAdapter.getImages();
+        imageDuelPresenter.onImageChosen(images.get(winnerPosition).getPictureId(), images.get(loserPosition).getPictureId());
     }
 }

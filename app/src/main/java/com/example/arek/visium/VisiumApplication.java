@@ -1,12 +1,21 @@
 package com.example.arek.visium;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.preference.PreferenceManager;
+import android.support.annotation.UiThread;
 
-import com.example.arek.visium.rest.ApiInterface;
-import com.example.arek.visium.rest.IntentKeys;
-import com.example.arek.visium.screens.login.LoginManager;
-import com.example.arek.visium.screens.register.RegisterManager;
+import com.example.arek.visium.dependency_injection.application.DaggerVisiumApplicationComponent;
+import com.example.arek.visium.dependency_injection.application.VisiumApplicationComponent;
+import com.example.arek.visium.dependency_injection.application.ContextModule;
+import com.example.arek.visium.rest.VisiumService;
+import com.example.arek.visium.rest.ApiKeys;
+import com.example.arek.visium.screens.image_duel.ImageDuelPresenter;
+import com.example.arek.visium.screens.register.RegisterActivityPresenter;
+import com.example.arek.visium.screens.user_preferences.UserPreferencesRepository;
+import com.example.arek.visium.screens.user_preferences.UserPreferencesRepositoryImpl;
+import com.squareup.picasso.Picasso;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -21,15 +30,40 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VisiumApplication extends Application {
 
-   private LoginManager loginManager;
    private UserStorage userStorage;
-   private RegisterManager registerManager;
-   private ApiInterface apiInterface;
+   private RegisterActivityPresenter registerActivityPresenter;
+   private VisiumService visiumService;
+
    private Retrofit retrofit;
+   private static Context context = null;
+   private UserPreferencesRepository userPreferencesRepository;
+
+   private VisiumApplicationComponent visiumApplicationComponent;
+   private Picasso picasso;
+
+    @UiThread
+    public VisiumApplicationComponent getVisiumApplicationComponent(){
+        return visiumApplicationComponent;
+    }
+
+   public static VisiumApplication get(Activity activity){
+       return (VisiumApplication)activity.getApplication();
+   }
+
+   private RxBus rxBus;
+   private ImageDuelPresenter imageDuelPresenter;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
+
+        visiumApplicationComponent = DaggerVisiumApplicationComponent.builder()
+                .contextModule(new ContextModule(this))
+                .build();
+
+        visiumService = visiumApplicationComponent.getVisiumService();
+        picasso = visiumApplicationComponent.getPicasso();
 
         final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -37,34 +71,57 @@ public class VisiumApplication extends Application {
         OkHttpClient client = new OkHttpClient.Builder().addNetworkInterceptor(loggingInterceptor).build();
 
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl(IntentKeys.BASE_URL);
+        builder.baseUrl(ApiKeys.BASE_URL);
         builder.addConverterFactory(GsonConverterFactory.create());
         builder.client(client);
         retrofit = builder.build();
-        apiInterface = retrofit.create(ApiInterface.class);
+        visiumService = retrofit.create(VisiumService.class);
 
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
         Realm.setDefaultConfiguration(realmConfiguration);
 
         userStorage = new UserStorage(PreferenceManager.getDefaultSharedPreferences(this));
-        loginManager = new LoginManager(userStorage, apiInterface, retrofit);
-        registerManager = new RegisterManager(userStorage, apiInterface, retrofit);
+//        registerActivityPresenter = new RegisterActivityPresenter(userStorage);
+        userPreferencesRepository = new UserPreferencesRepositoryImpl();
     }
 
-    public LoginManager getLoginManager() {
-        return loginManager;
+    public VisiumApplicationComponent component(){
+        return visiumApplicationComponent;
     }
 
-    public RegisterManager getRegisterManager(){
-        return registerManager;
+    public Retrofit getRetrofit() {
+        return retrofit;
     }
 
+    public RxBus bus(){
+        return bus();
+    }
+
+    public RegisterActivityPresenter getRegisterActivityPresenter(){
+        return registerActivityPresenter;
+    }
     public UserStorage getUserStorage() {
         return userStorage;
     }
 
-    public ApiInterface getApiInterface(){
-        return apiInterface;
+    public VisiumService getVisiumService(){
+        return visiumService;
+    }
+
+    public ImageDuelPresenter getImageDuelPresenter() {
+        return imageDuelPresenter;
+    }
+
+    public RxBus getRxBus() {
+        return rxBus;
+    }
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public UserPreferencesRepository getUserPreferencesRepository() {
+        return userPreferencesRepository;
     }
 }

@@ -2,50 +2,49 @@ package com.example.arek.visium.screens.login;
 
 import android.util.Patterns;
 
-import com.example.arek.visium.UserStorage;
-import com.example.arek.visium.rest.VisiumService;
+import com.example.arek.visium.model.UserLogin;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-
 /**
  * Created by arek on 9/27/2017.
  */
 
-public class LoginActivityPresenter implements LoginRepository.OnLoginListener,
-        LoginRepositoryImpl.OnCheckSavedPreferences{
+public class LoginActivityPresenterImpl implements LoginActivityPresenter, LoginRepository.OnLoginListener,
+        LoginRepository.OnCheckSavedPreferences{
 
-    private LoginActivityView loginActivityView;
+    private final LoginActivityView loginActivityView;
     private final LoginRepository loginRepository;
 
     @Inject
-    public LoginActivityPresenter(LoginRepository loginRepository) {
+    public LoginActivityPresenterImpl(LoginActivityView loginActivityView, LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
-    }
-
-    public void onAttach(LoginActivityView loginActivityView){
         this.loginActivityView = loginActivityView;
-        loginRepository.checkSavedPreferences(this);
-    }
-
-    public void onDetach(){
-        this.loginActivityView = null;
-//        this.loginRepository = null;
-    }
-
-    public void attemptLogin(String userName, String password) {
-        loginActivityView.showProgressDialog();
-        loginRepository.loginToApi(userName, password, this);
     }
 
     @Override
-    public void onLoginProgress(boolean status) {
+    public void onCreate(){
+        loginRepository.checkSavedPreferences(this);
+    }
 
-        if (status){
+    @Override
+    public void onDestroy(){
+
+    }
+
+    @Override
+    public void attemptLogin(UserLogin userLogin) {
+        loginActivityView.showProgressDialog();
+        loginRepository.logIn(userLogin, this);
+    }
+
+    @Override
+    public void onLoginProgress(boolean notLoggedIn) {
+
+        if (notLoggedIn){
             loginActivityView.showProgress(true);
         }else {
             loginActivityView.showProgress(false);
@@ -53,8 +52,8 @@ public class LoginActivityPresenter implements LoginRepository.OnLoginListener,
     }
 
     @Override
-    public void onFinished(boolean loginStatus, String loginMessage) {
-        if (loginStatus){
+    public void onLoginFinished(boolean loginSuccess, String loginMessage) {
+        if (loginSuccess){
             loginActivityView.onLoginSuccess();
         }else
             loginActivityView.onLoginFailed(loginMessage);
@@ -70,31 +69,35 @@ public class LoginActivityPresenter implements LoginRepository.OnLoginListener,
 
     }
 
+    @Override
     public void validateLoginData(String email, String password) {
 
         Pattern pattern;
         Matcher matcher;
-        boolean hasErrors = false;
+        boolean passwordError = true;
+        boolean emailError = true;
+        UserLogin userLogin = new UserLogin();
 
         final String passwordValidationPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_+=-|<>?}~;])(?=\\S+$).{6,14}";
         pattern = Pattern.compile(passwordValidationPattern);
         matcher = pattern.matcher(password);
 
-        if (matcher.matches() != true) {
+        if (!matcher.matches()) {
             loginActivityView.setPasswordError(true);
-            hasErrors = true;
         }else {
+            passwordError = false;
             loginActivityView.setPasswordError(false);
         }
-
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             loginActivityView.setEmailError(true);
-            hasErrors = true;
         } else {
+            emailError = false;
             loginActivityView.setEmailError(false);
         }
-        if (!hasErrors) {
-            attemptLogin(email, password);
+        if (!passwordError && !emailError) {
+            userLogin.setEmail(email);
+            userLogin.setPassword(password);
+            attemptLogin(userLogin);
         }
     }
 }

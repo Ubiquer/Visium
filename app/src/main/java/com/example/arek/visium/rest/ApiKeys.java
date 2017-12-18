@@ -4,7 +4,7 @@ package com.example.arek.visium.rest;
  * Created by arek on 7/19/2017.
  */
 
-public class IntentKeys {
+public class ApiKeys {
 
 //    BASE_URL
     public static final String BASE_URL = "http://visiumapp.azurewebsites.net/";

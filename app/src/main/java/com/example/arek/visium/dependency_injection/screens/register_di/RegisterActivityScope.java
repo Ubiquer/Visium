@@ -1,4 +1,4 @@
-package com.example.arek.visium.dependency_injection.screens.register;
+package com.example.arek.visium.dependency_injection.screens.register_di;
 
 import javax.inject.Scope;
 

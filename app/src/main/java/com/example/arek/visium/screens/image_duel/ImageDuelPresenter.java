@@ -1,46 +1,41 @@
 package com.example.arek.visium.screens.image_duel;
 
 
-import android.media.Image;
+import android.util.Log;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.RxBus;
-import com.example.arek.visium.model.ImageDuelModel;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import rx.functions.Action1;
 
 /**
  * Created by arek on 10/5/2017.
  */
 
-public class ImageDuelManager {
+public class ImageDuelPresenter {
 
-    private ApiInterface mApiInterface;
+    private VisiumService mVisiumService;
     private Retrofit mRetrofit;
-    Call<List<ImageDuelModel>> imagesCall;
+    private Call<List<DuelImage>> imagesCall;
+    private Call<ResponseBody> imageDuelResultCall;
     private static final String CATEGORY = "Samochody";
+    private static final String CATEGORY_MOUNTAINS = "Góry";
     private ImageDuelViewAdapter imageDuelViewAdapter;
-    private ArrayList<ImageDuelModel> duelImage;
+    private ArrayList<DuelImage> duelImage;
     private final String rightColorCode = String.valueOf(R.string.rightColorCode);
     private final String leftColorCode = String.valueOf(R.string.leftColorCode);
-    private SwipedItemParams swipedItemParams;
-    private int viewHolderAdapterPosition;
-    private int swipeDirection;
-    private final int LEFT = 0;
-    private final int RIGHT = 1;
     private ImageDuelView mImageDuelView;
 
-    public ImageDuelManager(ApiInterface mApiInterface, Retrofit retrofit) {
-        this.mApiInterface = mApiInterface;
+    public ImageDuelPresenter(VisiumService mVisiumService, Retrofit retrofit) {
+        this.mVisiumService = mVisiumService;
         this.mRetrofit = retrofit;
     }
 
@@ -54,17 +49,15 @@ public class ImageDuelManager {
     }
 
     private void getDuelImages(){
-//I have to send winnerPictureId and loserPictureId
-
-        mImageDuelView.showProgressDialog();
+//        mImageDuelView.showProgressDialog();
         if (imagesCall == null){
-            imagesCall = mApiInterface.getDuelImages(CATEGORY);
-            imagesCall.enqueue(new Callback<List<ImageDuelModel>>() {
+            imagesCall = mVisiumService.getDuelImages(CATEGORY_MOUNTAINS);
+            imagesCall.enqueue(new Callback<List<DuelImage>>() {
                 @Override
-                public void onResponse(Call<List<ImageDuelModel>> call, Response<List<ImageDuelModel>> response) {
+                public void onResponse(Call<List<DuelImage>> call, Response<List<DuelImage>> response) {
                     if (response.isSuccessful()){
-                        duelImage = (ArrayList<ImageDuelModel>) response.body();
-                        mImageDuelView.onImagesAccessed();
+                        duelImage = (ArrayList<DuelImage>) response.body();
+//                        mImageDuelView.onImagesAccessed();
                         mImageDuelView.showData(duelImage);
 //                        RxBus.swipeActionObservable().subscribe(new Consumer<SwipedItemParams>() {
 //                            @Override
@@ -77,18 +70,47 @@ public class ImageDuelManager {
 //                               duelImage.get(viewHolderAdapterPosition);
 //                            }
 //                        });
+                    }else {
+                        Log.d("failure: ", "");
                     }
                 }
                 @Override
-                public void onFailure(Call<List<ImageDuelModel>> call, Throwable t) {
+                public void onFailure(Call<List<DuelImage>> call, Throwable t) {
 
+                    Log.d("failed: ", " ");
                 }
             });
         }
 
     }
 
-    public void onImageChosen(int winnerId, int looserId) {
+    public void onImageChosen(int winnerId, int loserId) {
+
+        Log.d("winner: ", String.valueOf(winnerId));
+        Log.d("loser: ", String.valueOf(loserId));
+
+        if (imageDuelResultCall==null){
+            imageDuelResultCall = mVisiumService.postDuelResult(loserId, winnerId);
+            imageDuelResultCall.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()){
+                        Log.d("Posted result response: ", response.message());
+                        imagesCall = null;
+                        imageDuelResultCall = null;
+                        getDuelImages();
+                    }else{
+                        Log.d("Went wrong: ", response.message());
+                        imageDuelResultCall = null;
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    t.printStackTrace();
+                    imageDuelResultCall = null;
+                }
+            });
+        }
 
     }
 }

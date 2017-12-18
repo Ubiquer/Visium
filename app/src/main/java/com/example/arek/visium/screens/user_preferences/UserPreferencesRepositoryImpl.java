@@ -7,7 +7,7 @@ import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.example.arek.visium.realm.CategoriesRealm;
 import com.example.arek.visium.realm.UserPreferencesCategories;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import retrofit2.Response;
 
 public class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
 
-    private ApiInterface mApiInterface;
+    private VisiumService mVisiumService;
     private Context context;
     private Realm realm;
     private Call<String> sendPreferencesCall;
@@ -34,7 +34,7 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     public UserPreferencesRepositoryImpl() {
 
         context = VisiumApplication.getContext();
-        mApiInterface = ((VisiumApplication) context).getApiInterface();
+        mVisiumService = ((VisiumApplication) context).getVisiumService();
 
     }
 
@@ -42,7 +42,7 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     public void commitPreferencesToDB(ArrayList<Integer> chosenPreferences) {
 
         if (sendPreferencesCall == null){
-            sendPreferencesCall = mApiInterface.sendPreferences(chosenPreferences);
+            sendPreferencesCall = mVisiumService.sendPreferences(chosenPreferences);
             sendPreferencesCall.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -108,22 +108,22 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     @Override
     public void loadPreferenceModels(OnDownLoadFinishedListener listener) {
 
-        mApiInterface.getUserPreferences().enqueue(new Callback<List<UserPreferencesWithImage>>() {
+        mVisiumService.getUserPreferences().enqueue(new Callback<List<UserPreferencesWithImage>>() {
             @Override
             public void onResponse(Call<List<UserPreferencesWithImage>> call, Response<List<UserPreferencesWithImage>> response) {
 
                 if(response.isSuccessful()) {
                     userPreferencesWithImages = (ArrayList<UserPreferencesWithImage>) response.body();
                     commitAllCategoriesToRealm(userPreferencesWithImages);
-                    listener.onFinishedPreferencesDownload(userPreferencesWithImages);
+                    listener.onLoadPreferences(userPreferencesWithImages);
                 }else {
-                    listener.onDownloadFailed(response.errorBody().toString());
+                    listener.onLoadFailed(response.errorBody().toString());
                 }
             }
             @Override
             public void onFailure(Call<List<UserPreferencesWithImage>> call, Throwable t) {
 
-                listener.onResponseFailure(t.getMessage());
+                listener.onLoadResponseFailure(t.getMessage());
 
             }
         });

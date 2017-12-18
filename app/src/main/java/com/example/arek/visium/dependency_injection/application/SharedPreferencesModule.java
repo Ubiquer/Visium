@@ -1,4 +1,4 @@
-package com.example.arek.visium.dependency_injection.storage;
+package com.example.arek.visium.dependency_injection.application;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,8 +13,8 @@ import dagger.Provides;
 public class SharedPreferencesModule {
 
     @Provides
-    @StorageScope
-    SharedPreferences sharedPreferences(Context context){
+    @VisiumApplicationScope
+    SharedPreferences sharedPreferences(@ApplicationContext Context context){
         return context.getSharedPreferences("My_preferences", Context.MODE_PRIVATE);
     }
 

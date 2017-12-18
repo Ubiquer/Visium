@@ -16,12 +16,12 @@ import java.util.ArrayList;
  * Created by arek on 7/27/2017.
  */
 
-public class ImageCarouselPresenter {
+public class ImageCarouselPresenterImpl {
 
     private ImageCarouselView imageCarouselView;
     private ImageCarouselRepository imageCarouselRepository;
 
-    public ImageCarouselPresenter() {
+    public ImageCarouselPresenterImpl() {
     }
 
     public void onAttach(ImageCarouselView imageCarouselView){

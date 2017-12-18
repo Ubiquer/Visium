@@ -11,31 +11,34 @@ public class UserLogin {
 
     @SerializedName("Email")
     @Expose
-    private String mEmail;
+    private String email;
 
     @SerializedName("Password")
     @Expose
-    private String mPassword;
+    private String password;
 
-    public UserLogin(String mEmail, String mPassword) {
-
-        this.mEmail = mEmail;
-        this.mPassword = mPassword;
+    public UserLogin() {
     }
 
-    public String getmEmail() {
-        return mEmail;
+    public UserLogin(String email, String password) {
+
+        this.email = email;
+        this.password = password;
     }
 
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public String getmPassword() {
-        return mPassword;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setmPassword(String mPassword) {
-        this.mPassword = mPassword;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -8,8 +8,11 @@ public interface LoginActivityView {
 
     void onLoginFailed(String errorBody);
     void onLoginSuccess();
-//    void validate();
     void login();
-    boolean validate();
     void showProgress(boolean b);
+    void showProgressDialog();
+    void setEmailError(boolean errorS);
+    void setPasswordError(boolean errorStatus);
+    void userPreferencesStatus(boolean status);
+
 }

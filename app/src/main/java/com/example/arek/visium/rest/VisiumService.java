@@ -1,7 +1,7 @@
 package com.example.arek.visium.rest;
 
-import com.example.arek.visium.model.ImageDuelModel;
-import com.example.arek.visium.model.PhotographersModel;
+import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.model.Photographer;
 import com.example.arek.visium.model.RankingImageByCategory;
 import com.example.arek.visium.model.RegisterRequest;
 import com.example.arek.visium.model.UserLogin;
@@ -25,7 +25,7 @@ import retrofit2.http.Query;
  * Created by Arek on 2017-06-25.
  */
 
-public interface ApiInterface {
+public interface VisiumService {
 
     @Headers("Content-Type:application/json")
     @POST("/api/Account/register")
@@ -52,7 +52,7 @@ public interface ApiInterface {
 
 //    @Headers("Content-Type:application/json")
     @GET("/api/Basic/GetTwoImagesFromCategory")
-    Call<List<ImageDuelModel>> getDuelImages(@Query("category") String category);
+    Call<List<DuelImage>> getDuelImages(@Query("category") String category);
 
 //    @Multipart
     @Headers("Content-Type:application/json")
@@ -65,7 +65,7 @@ public interface ApiInterface {
 
     @Headers("Content-Type:application/json")
     @GET("api/Basic/GetUsersRanking")
-    Call<List<PhotographersModel>> getAllPhotographers();
+    Call<List<Photographer>> getAllPhotographers();
 
 
 }

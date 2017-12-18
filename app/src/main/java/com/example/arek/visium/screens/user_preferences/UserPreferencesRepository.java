@@ -19,9 +19,9 @@ public interface UserPreferencesRepository {
 
     interface OnDownLoadFinishedListener {
 
-        void onFinishedPreferencesDownload(ArrayList<UserPreferencesWithImage> allPreferences);
-        void onDownloadFailed(String message);
-        void onResponseFailure(String message);
+        void onLoadPreferences(ArrayList<UserPreferencesWithImage> allPreferences);
+        void onLoadFailed(String message);
+        void onLoadResponseFailure(String message);
 
     }
 

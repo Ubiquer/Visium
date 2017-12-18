@@ -1,4 +1,4 @@
-package com.example.arek.visium.dependency_injection.screens.login;
+package com.example.arek.visium.dependency_injection.application;
 
 import android.content.SharedPreferences;
 
@@ -7,6 +7,7 @@ import com.example.arek.visium.dependency_injection.application.VisiumApplicatio
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 
 /**
  * Created by arek on 12/5/2017.
@@ -19,6 +20,12 @@ public class UserStorageModule {
     UserStorage userStorage(SharedPreferences sharedPreferences){
         UserStorage userStorage = new UserStorage(sharedPreferences);
         return userStorage;
+    }
+
+    @Provides
+    @VisiumApplicationScope
+    Realm provideRealm(){
+        return Realm.getDefaultInstance();
     }
 
 }

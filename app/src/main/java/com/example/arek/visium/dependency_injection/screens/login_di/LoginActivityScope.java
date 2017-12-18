@@ -1,6 +1,4 @@
-package com.example.arek.visium.dependency_injection.screens.login;
-
-import java.lang.annotation.Retention;
+package com.example.arek.visium.dependency_injection.screens.login_di;
 
 import javax.inject.Scope;
 

@@ -9,5 +9,7 @@
     <color name="white">#fff</color>
     <color name="lazur">#4efccd</color>
     <color name="main_bg">#333333</color>
+    <color name="green1">#68EFAD</color>
+    <color name="green2">#A7FFEB</color>
 
 </resources>

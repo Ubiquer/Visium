@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
  * Created by arek on 7/24/2017.
  */
 
-public class Category extends RealmObject{
+public class UserPreferencesCategories extends RealmObject{
 
     @PrimaryKey
     private String id;

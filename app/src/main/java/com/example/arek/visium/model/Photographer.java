@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by arek on 10/31/2017.
  */
 
-public class PhotographersModel {
+public class Photographer {
 
     @SerializedName("Name")
     private String name;

@@ -12,7 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.RxBus;
 
 /**
  * Created by arek on 9/18/2017.
@@ -23,23 +23,28 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
 
     private ImageDuelViewAdapter mAdapter;
 //    private ItemSwipeHelperAdapter swipeHelperAdapter;
-    private OnSwipeRecyclerViewListener mListener;
     private Context mContext;
     private Paint paint = new Paint();
     private String rightColorCode;
     private String leftColorCode;
-    private ApiInterface mApiInterface;
+    private ImageChooseListener listener;
+    private RxBus rxBus;
+    private int viewholderAdapterPosition;
+    private SwipedItemParams swipedItemParams;
 
+    public interface ImageChooseListener {
+        void onImageChosen(int position, boolean winner);
+    }
 
-    public ItemSwipeHelper(int dragDirs, int swipeDirs, ImageDuelViewAdapter adapter,Context context, String rightColorCode, String leftColorCode) {
+    public ItemSwipeHelper(int dragDirs, int swipeDirs, ImageDuelViewAdapter adapter,Context context, String rightColorCode, String leftColorCode, ImageChooseListener listener) {
 
         super(dragDirs, swipeDirs);
         this.mAdapter = adapter;
         this.mContext = context;
         this.rightColorCode = rightColorCode;
         this.leftColorCode = leftColorCode;
+        this.listener = listener;
     }
-
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -51,8 +56,11 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
 
        try {
            if (direction == ItemTouchHelper.LEFT) {
-                int position = viewHolder.getAdapterPosition();
-
+//               swipedItemParams = new SwipedItemParams(viewHolder.getAdapterPosition(), direction);
+//               RxBus.publishSwipedItemParams(swipedItemParams);
+               listener.onImageChosen(viewHolder.getAdapterPosition(), false);
+           }else{
+               listener.onImageChosen(viewHolder.getAdapterPosition(), true);
            }
        }catch (Exception e){
            e.printStackTrace();

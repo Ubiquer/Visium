@@ -5,4 +5,8 @@ package com.example.arek.visium.screens.image_selection.image_carousel;
  */
 
 public class ImageCarouselPresenter {
+
+//    void onAttach(ImageCarouselView imageCarouselView);
+
+
 }

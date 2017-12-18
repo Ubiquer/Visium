@@ -21,5 +21,10 @@
     <dimen name="txt_size_button_standard">14sp</dimen>
     <dimen name="logo_margin_top">42dp</dimen>
     <dimen name="logo_dimen">164dp</dimen>
+    <dimen name="date_and_points_test_size">11sp</dimen>
+    <dimen name="circularPhotographersAvatarWidth">140dp</dimen>
+    <dimen name="circularPhotographersAvatarHeight">140dp</dimen>
+    <dimen name="menu_image_view_margin_right">24dp</dimen>
+    <dimen name="linear_layout_menu_activity_width">210dp</dimen>
 
 </resources>

@@ -14,6 +14,10 @@ public class ImageSelectionPresenterImpl implements ImageSelectionPresenter, Ima
     private ImageSelectionRepositoryImpl imageSelectionRepositoryImpl;
     private String mToken;
 
+    public ImageSelectionPresenterImpl(ImageSelectionView imageSelectionView) {
+        this.imageSelectionView = imageSelectionView;
+    }
+
     @Override
     public void onAttach(ImageSelectionView imageSelectionView) {
         this.imageSelectionView = imageSelectionView;
@@ -24,10 +28,6 @@ public class ImageSelectionPresenterImpl implements ImageSelectionPresenter, Ima
     public void onDetach() {
         imageSelectionView = null;
         imageSelectionRepositoryImpl = null;
-    }
-
-    public ImageSelectionPresenterImpl(ImageSelectionView imageSelectionView) {
-        this.imageSelectionView = imageSelectionView;
     }
 
     @Override

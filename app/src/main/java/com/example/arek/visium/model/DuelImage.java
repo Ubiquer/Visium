@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by arek on 7/26/2017.
  */
 
-public class ImageDuelModel {
+public class DuelImage {
 
     @SerializedName("PictureId")
     private int pictureId;

@@ -1,4 +1,4 @@
-package com.example.arek.visium.image_selection;
+package com.example.arek.visium.screens.image_selection;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -7,58 +7,43 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.TestActivity;
-import com.example.arek.visium.realm.Token;
-import com.example.arek.visium.rest.ApiAdapter;
-import com.example.arek.visium.rest.ApiInterface;
-import com.ipaulpro.afilechooser.utils.FileUtils;
-import com.mindorks.placeholderview.SmoothLinearLayoutManager;
+import com.example.arek.visium.model.Category;
+import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselAdapter;
+import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenterImpl;
+import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselView;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.IOException;
-
-import javax.annotation.RegEx;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class ImageSelectionActivity extends AppCompatActivity {
+public class ImageSelectionActivity extends AppCompatActivity implements ImageCarouselView, ImageSelectionView {
 
     private static final int MY_PERMISSIONS_REQUEST = 100;
     private static final int REQUEST_CODE = 6384;
     private static int RESULT_LOAD_IMAGE = 1;
     private String TAG = "TestActivity";
-    String path;
-    Uri selectedImage;
-    //    Realm realm;
-    private String spinnerCategory;
+    private Uri selectedImage;
+    private String spinnerCategory, imageUri;
 
     @BindView(R.id.category_spinner)
     Spinner categorySpinner;
@@ -69,68 +54,93 @@ public class ImageSelectionActivity extends AppCompatActivity {
     @BindView(R.id.upload_button) Button uploadButton;
 
     ProgressDialog progressDialog;
-    private ApiInterface mApiInterface;
-    ArrayAdapter<CharSequence> spinnerAdapter;
-    Realm realm;
-    private String mToken;
+    private Realm realm;
+    private SpinnerAdapter spinnerAdapter;
 
     @BindView(R.id.carousel_recycler_view)
     RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
+    private ImageCarouselAdapter adapter;
+    private Boolean isSDPresent;
+    private LinearLayoutManager linearLayoutManager;
+    private ImageCarouselPresenterImpl imageCarouselPresenterImpl;
+    private ImageSelectionPresenterImpl imageSelectionPresenterImpl;
+    private ArrayList<String> imagePathsList;
+    private Bitmap bitmap;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        requestPermissions();
+    }
+
+    @Override
+    protected void onStop() {
+        imageCarouselPresenterImpl.onDetach();
+        imageSelectionPresenterImpl.onDetach();
+        super.onStop();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_selection);
         ButterKnife.bind(this);
-        realm = Realm.getDefaultInstance();
-        getAccessToken();
 
-        if(ContextCompat.checkSelfPermission(ImageSelectionActivity.this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-            ActivityCompat.requestPermissions(ImageSelectionActivity.this,
-                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST);
-        }
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Uploading...");
-        mApiInterface = ApiAdapter.getAPIService();
+        imageSelectionPresenterImpl = new ImageSelectionPresenterImpl(this);
+        imageCarouselPresenterImpl = new ImageCarouselPresenterImpl();
         testButton.setOnClickListener(v -> loadImage());
-
-        progressDialog.dismiss();
-        setUpSpinner();
-        uploadButton.setOnClickListener(v -> uploadFile(selectedImage));
+//        progressDialog.dismiss();
+        uploadButton.setOnClickListener(v -> imageSelectionPresenterImpl.uploadImage(imageUri, spinnerCategory));
     }
 
     private void initRecyclerView(){
 
+        SnapHelper snapHelper = new LinearSnapHelper();
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new SmoothLinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ImageCarouselAdapter();
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        snapHelper.attachToRecyclerView(mRecyclerView);
+        adapter = new ImageCarouselAdapter();
+        mRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                View view = snapHelper.findSnapView(linearLayoutManager);
+                int pos = mRecyclerView.getChildAdapterPosition(view);
+                showEnlargedSnappedImage(pos);
+            }
+        });
+    }
+
+    private void showEnlargedSnappedImage(int pos) {
+
+        imageUri = imagePathsList.get(pos);
+        bitmap = BitmapFactory.decodeFile(imageUri);
+        ImageView imageView = (ImageView) findViewById(R.id.test_image);
+        imageView.setImageBitmap(bitmap);
 
     }
 
     private void loadImage(){
+
         Intent i = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
     private void setUpSpinner(){
-
-        spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.categories_array, android.R.layout.simple_spinner_dropdown_item);
+        spinnerAdapter = new SpinnerAdapter(this, R.layout.item_spinner_dropdown, imageSelectionPresenterImpl.getCategoriesFromRealm());
         spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                spinnerCategory = categorySpinner.getSelectedItem().toString();
+                Category category = spinnerAdapter.getItem(position);
+                spinnerCategory = category.getCategoryName();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -139,25 +149,23 @@ public class ImageSelectionActivity extends AppCompatActivity {
         });
     }
 
-//    private void getFromRealm(){
-//
-//        ArrayList<String> spinnerList;
-//        RealmResults<UserPreferencesCategories> = realm.where(UserPreferencesCategories.class).findAll();
-//        for (UserPreferencesCategories listOfCategories : spinnerList)
-//    }
-
-    private void getAccessToken(){
-        realm.beginTransaction();
-        Token token = realm.where(Token.class).findFirst();
-        mToken = token.getM_token();
-        realm.commitTransaction();
-    }
-
     private void setButtonActive(){
         if (selectedImage == null){
             uploadButton.setEnabled(false);
-        }else if (selectedImage!=null){
+        }else {
             uploadButton.setEnabled(true);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            attachPresenters();
+            setUpSpinner();
+        }else{
+            finish();
         }
     }
 
@@ -176,100 +184,60 @@ public class ImageSelectionActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-
-            ImageView imageView = (ImageView) findViewById(R.id.test_image);
-            Bitmap bmp = null;
-            try{
-                bmp = getBitmapFromUri(selectedImage);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-            imageView.setImageBitmap(bmp);
+//            ImageView imageView = (ImageView) findViewById(R.id.test_image);
+//            Bitmap bmp = null;
+//            try{
+//                bmp = getBitmapFromUri(selectedImage);
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
+//            imageView.setImageBitmap(bmp);
         }
-
     }
 
-    //    private void requestPermission(){
-//
-//        if(ContextCompat.checkSelfPermission(TestActivity.this,
-//                android.Manifest.permission.READ_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED){
-//
-//            ActivityCompat.requestPermissions(TestActivity.this,
-//                    new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-//                    MY_PERMISSIONS_REQUEST);
-//
-//    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        switch(requestCode) {
-//            case REQUEST_CODE:
-//                if (resultCode == RESULT_OK){
-//                    if(data!=null){
-//
-//                        uri = data.getData();
-//                        Log.i(TAG, "Uri = " + uri.toString());
-//                        try {
-//                            path = FileUtils.getPath(this, uri);
-//                            Toast.makeText(TestActivity.this, "File selected: " + path, Toast.LENGTH_LONG).show();
-////                            uploadFile(uri);
-//                        }catch (Exception e){
-//                            Log.e("Error ", "File error", e);
-//                        }
-//                    }
-//                }
-//                break;
-//        }
-//
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-//
-//    private void showChooser(){
-//
-//        Intent target = FileUtils.createGetContentIntent();
-//        Intent intent = Intent.createChooser(target, getString(R.string.choose_file));
-//
-//        try{
-//            startActivityForResult(intent, REQUEST_CODE);
-//        } catch (ActivityNotFoundException e){
-//
-//        }
-//    }
-
-    //    @OnClick(R.id.upload_button)
-    public void uploadFile(Uri fileUri) {
-        progressDialog.show();
-        File originalFile = FileUtils.getFile(this, fileUri);
-        RequestBody descriptionPart = RequestBody.create(MultipartBody.FORM, spinnerCategory);
-        RequestBody filePart = RequestBody.create(
-                MediaType.parse(getContentResolver().getType(fileUri)),
-                originalFile);
-
-        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
-
-        mApiInterface.uploadImage(mToken, spinnerCategory, fileToUpload).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                response.message();
-                Toast.makeText(ImageSelectionActivity.this, "Correct: " + call.toString(), Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(ImageSelectionActivity.this, "Incorrect login", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
+    @Override
+    public void showImages(ArrayList<String> imagePathsList) {
+        this.imagePathsList = imagePathsList;
+        initRecyclerView();
+        adapter.setData(imagePathsList);
     }
 
-    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
-        ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
-        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-        parcelFileDescriptor.close();
-        return image;
+
+    @Override
+    public void onSuccessfulUpload(String message) {
+        Toast.makeText(this, R.string.imageUploadedInfo, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUploadError(String message) {
+        Toast.makeText(this, getString(R.string.imageErrorInfo1) + message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void insufficientData(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void requestPermissions(){
+
+        if(ContextCompat.checkSelfPermission(ImageSelectionActivity.this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+
+                ActivityCompat.requestPermissions(ImageSelectionActivity.this,
+                        new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST);
+        }else {
+            attachPresenters();
+            setUpSpinner();
+        }
+    }
+
+    private void attachPresenters(){
+
+        imageCarouselPresenterImpl.onAttach(this);
+        imageSelectionPresenterImpl.onAttach(this);
+
     }
 
 }

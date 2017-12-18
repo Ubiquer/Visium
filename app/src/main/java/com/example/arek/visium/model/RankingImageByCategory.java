@@ -8,14 +8,14 @@ import java.util.Date;
  * Created by arek on 10/31/2017.
  */
 
-public class RankingImagesByCategory {
+public class RankingImageByCategory {
 
     @SerializedName("PictureId")
     private int pictureId;
     @SerializedName("RankingPoints")
     private int rankingPoints;
     @SerializedName("DateOfUpload")
-    private Date dateOfUpload;
+    private String dateOfUpload;
     @SerializedName("Likes")
     private int likes;
     @SerializedName("Dislikes")
@@ -24,6 +24,16 @@ public class RankingImagesByCategory {
     private String imagePath;
     @SerializedName("Category")
     private String category;
+    @SerializedName("RankingPosition")
+    private int rankingPosition;
+
+    public int getRankingPosition() {
+        return rankingPosition;
+    }
+
+    public void setRankingPosition(int rankingPosition) {
+        this.rankingPosition = rankingPosition;
+    }
 
     public int getPictureId() {
         return pictureId;
@@ -41,11 +51,11 @@ public class RankingImagesByCategory {
         this.rankingPoints = rankingPoints;
     }
 
-    public Date getDateOfUpload() {
+    public String getDateOfUpload() {
         return dateOfUpload;
     }
 
-    public void setDateOfUpload(Date dateOfUpload) {
+    public void setDateOfUpload(String dateOfUpload) {
         this.dateOfUpload = dateOfUpload;
     }
 
@@ -80,4 +90,5 @@ public class RankingImagesByCategory {
     public void setCategory(String category) {
         this.category = category;
     }
+
 }

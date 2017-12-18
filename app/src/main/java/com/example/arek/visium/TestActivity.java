@@ -1,7 +1,6 @@
 package com.example.arek.visium;
 
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,25 +21,21 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.arek.visium.realm.ListOfCategories;
 import com.example.arek.visium.realm.Token;
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import com.example.arek.visium.rest.ApiAdapter;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.rest.VisiumService;
 
 //import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,7 +64,7 @@ public class TestActivity extends AppCompatActivity {
     @BindView(R.id.upload_button) Button uploadButton;
 
     ProgressDialog progressDialog;
-    private ApiInterface mApiInterface;
+    private VisiumService mVisiumService;
     ArrayAdapter<CharSequence> spinnerAdapter;
     Realm realm;
     private String mToken;
@@ -94,7 +88,7 @@ public class TestActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
-        mApiInterface = ApiAdapter.getAPIService();
+        mVisiumService = ApiAdapter.getAPIService();
         testButton.setOnClickListener(v -> loadImage());
 //        testButton.setOnClickListener(v -> showChooser());
         progressDialog.dismiss();
@@ -128,8 +122,8 @@ public class TestActivity extends AppCompatActivity {
 //    private void getFromRealm(){
 //
 //        ArrayList<String> spinnerList;
-//        RealmResults<ListOfCategories> = realm.where(ListOfCategories.class).findAll();
-//        for (ListOfCategories listOfCategories : spinnerList)
+//        RealmResults<UserPreferencesCategories> = realm.where(UserPreferencesCategories.class).findAll();
+//        for (UserPreferencesCategories listOfCategories : spinnerList)
 //    }
 
     private void getAccessToken(){
@@ -236,7 +230,7 @@ public class TestActivity extends AppCompatActivity {
 
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
 
-        mApiInterface.uploadImage(mToken, spinnerCategory, fileToUpload).enqueue(new Callback<ResponseBody>() {
+        mVisiumService.uploadImage(mToken, spinnerCategory, fileToUpload).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 response.message();

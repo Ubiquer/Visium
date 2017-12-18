@@ -20,10 +20,8 @@ public class PreferencesConfirmationDialog extends Activity {
         setContentView(R.layout.pop_up_dialog);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-
         width = dm.widthPixels;
         height = dm.heightPixels;
-
         getWindow().setLayout(width, height);
     }
 }

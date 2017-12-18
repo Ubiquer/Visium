@@ -1,7 +1,7 @@
 package com.example.arek.visium.rest.Services;
 
-import com.example.arek.visium.rest.IntentKeys;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.rest.ApiKeys;
+import com.example.arek.visium.rest.VisiumService;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -14,16 +14,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PreferencesService {
 
     private static volatile PreferencesService mPreferencesService;
-    private final ApiInterface mApiInterface;
+    private final VisiumService mVisiumService;
 
     private PreferencesService(){
 
-        mApiInterface = new Retrofit.Builder()
-                .baseUrl(IntentKeys.BASE_URL)
+        mVisiumService = new Retrofit.Builder()
+                .baseUrl(ApiKeys.BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(ApiInterface.class);
+                .create(VisiumService.class);
 
     }
 

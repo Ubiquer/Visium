@@ -1,5 +1,7 @@
-package com.example.arek.visium.screens.image_selection;
+package com.example.arek.visium.screens.image_selection.image_carousel;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.arek.visium.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,7 +20,9 @@ import butterknife.ButterKnife;
  * Created by arek on 7/27/2017.
  */
 
-class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdapter.CarouselViewHolder> {
+public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdapter.CarouselViewHolder> {
+
+    private ArrayList<String> picsFromExternalStorage;
 
     @Override
     public CarouselViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -26,11 +33,18 @@ class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdapter.Car
     @Override
     public void onBindViewHolder(CarouselViewHolder holder, int position) {
 
+        final String picture = picsFromExternalStorage.get(position);
+        Bitmap bitmap = BitmapFactory.decodeFile(picture);
+        holder.carouselImage.setImageBitmap(bitmap);
+//        Picasso.with(holder.carouselImage.getContext())
+//                .load(picture)
+//                .into(holder.carouselImage);
+//        holder.carouselImage.setOnScrollChangeListener();
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return picsFromExternalStorage.size();
     }
 
     public class CarouselViewHolder extends RecyclerView.ViewHolder{
@@ -42,6 +56,10 @@ class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdapter.Car
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
+    }
+
+    public void setData(ArrayList<String> picsFromExternalStorage){
+        this.picsFromExternalStorage = picsFromExternalStorage;
     }
 
 }

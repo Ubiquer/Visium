@@ -7,37 +7,37 @@ import android.os.Parcelable;
  * Created by arek on 7/8/2017.
  */
 
-public class UserPreferencesImageModel implements Parcelable {
+public class UserPreferencesImage implements Parcelable {
 
 
     private String imageName;
     private int imageId;
     private boolean isSelected;
 
-//    public UserPreferencesImageModel(String imageName, int imageId, boolean isSelected) {
+//    public UserPreferencesImage(String imageName, int imageId, boolean isSelected) {
 //        this.imageName = imageName;
 //        this.imageId = imageId;
 //        this.isSelected = isSelected;
 //    }
 
-    public UserPreferencesImageModel(Parcel in) {
+    public UserPreferencesImage(Parcel in) {
         imageName = in.readString();
         imageId = in.readInt();
     }
 
-    public static final Creator<UserPreferencesImageModel> CREATOR = new Creator<UserPreferencesImageModel>() {
+    public static final Creator<UserPreferencesImage> CREATOR = new Creator<UserPreferencesImage>() {
         @Override
-        public UserPreferencesImageModel createFromParcel(Parcel in) {
-            return new UserPreferencesImageModel(in);
+        public UserPreferencesImage createFromParcel(Parcel in) {
+            return new UserPreferencesImage(in);
         }
 
         @Override
-        public UserPreferencesImageModel[] newArray(int size) {
-            return new UserPreferencesImageModel[size];
+        public UserPreferencesImage[] newArray(int size) {
+            return new UserPreferencesImage[size];
         }
     };
 
-    public UserPreferencesImageModel() {
+    public UserPreferencesImage() {
 
     }
 

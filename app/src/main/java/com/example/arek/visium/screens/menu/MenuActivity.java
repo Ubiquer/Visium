@@ -1,10 +1,15 @@
-package com.example.arek.visium;
+package com.example.arek.visium.screens.menu;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,13 +21,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.arek.visium.R;
+import com.example.arek.visium.UserStorage;
+import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.screens.image_selection.ImageSelectionActivity;
 import com.example.arek.visium.screens.image_duel.ImageDuelActivity;
 import com.example.arek.visium.screens.login.LoginActivity;
 import com.example.arek.visium.screens.rankings.RankingsActivity;
-import com.example.arek.visium.screens.subscribe.SubscribedFragment;
+import com.example.arek.visium.screens.menu.subscribe.SubscribedFragment;
 import com.example.arek.visium.screens.user_pictures.UserPicturesFragment;
 
 import butterknife.BindView;
@@ -32,7 +42,9 @@ import butterknife.OnClick;
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback{
 
-    private static final int SELECTION_REQUEST_CODE = 6465;
+    private static final int SELECTION_REQUEST_CODE = 2;
+    private static final int CAMERA_PERMISSION_REQUEST = 1;
+    private boolean permissionGranted;
 
     @BindView(R.id.app_logo)
     ImageView logoImage;
@@ -42,12 +54,15 @@ public class MenuActivity extends AppCompatActivity
     Button evaluationButton;
     @BindView(R.id.rankings_button)
     Button rankingsButton;
+    @BindView(R.id.drawer_relative)
+    RelativeLayout relativeLayout;
     private UserStorage userStorage;
 
     private Intent competitionActivity;
     private Intent imageDuelActivity;
     private Intent rankingsActivity;
     private NavigationView navigationView;
+    private static final int CAMERA_PIC_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +71,7 @@ public class MenuActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
          userStorage = ((VisiumApplication)getApplication()).getUserStorage();
-        if (userStorage.hasToLogin()){
+        if (userStorage.noSessionToken()){
             goToLogin();
             return;
         }
@@ -68,8 +83,7 @@ public class MenuActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                requestPermission();
             }
         });
 
@@ -88,6 +102,11 @@ public class MenuActivity extends AppCompatActivity
 
         drawerNameTextView.setText(R.string.test_username);
         drawerEmailTextView.setText(userStorage.getEmail());
+    }
+
+    private void showSnackbar() {
+        Snackbar snackbar = Snackbar.make(relativeLayout, "Camera permission denied", Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private void goToLogin() {
@@ -178,5 +197,35 @@ public class MenuActivity extends AppCompatActivity
        MenuItem item = navigationView.getMenu().findItem(R.id.nav_user_pictures);
        item.setChecked(true);
        onNavigationItemSelected(item);
+    }
+
+    private void requestPermission(){
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED){
+
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+        }else {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+
+        }else{
+
+            Toast.makeText(getApplicationContext(),"Camera permission denied", Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 }

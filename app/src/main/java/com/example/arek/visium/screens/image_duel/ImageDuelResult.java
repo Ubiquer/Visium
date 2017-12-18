@@ -5,4 +5,13 @@ package com.example.arek.visium.screens.image_duel;
  */
 
 public class ImageDuelResult {
+
+    int loserPictureId;
+    int winnerPictureId;
+
+    public ImageDuelResult(int loserPictureId, int winnerPictureId) {
+        this.loserPictureId = loserPictureId;
+        this.winnerPictureId = winnerPictureId;
+    }
+
 }

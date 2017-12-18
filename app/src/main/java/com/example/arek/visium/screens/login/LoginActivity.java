@@ -5,22 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.util.Patterns;
+import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.arek.visium.BuildConfig;
+import com.example.arek.visium.dependency_injection.screens.login_di.DaggerLoginActivityComponent;
+import com.example.arek.visium.dependency_injection.screens.login_di.LoginActivityComponent;
+import com.example.arek.visium.dependency_injection.screens.login_di.LoginActivityModule;
+import com.example.arek.visium.screens.menu.MenuActivity;
 import com.example.arek.visium.R;
-import com.example.arek.visium.UserPreferencesActivity;
+import com.example.arek.visium.rest.ApiKeys;
+import com.example.arek.visium.screens.user_preferences.UserPreferencesActivity;
 import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.rest.IntentKeys;
 import com.example.arek.visium.screens.register.RegisterActivity;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,12 +44,19 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     TextInputLayout passwordTextInputLayout;
 
     private ProgressDialog progressDialog;
-    private String email, password, emailStored, passwordStored, token;
+    private String email, password;
     private Intent userPrefActivity;
     private static final String TAG = "HOME";
     private Intent signUpIntent;
+    private Intent menuActivity;
+    private boolean preferencesDefined;
+    private LoginActivityComponent loginActivityComponent;
 
-    private LoginManager loginManager;
+    @Inject
+    LoginActivityPresenter presenter;
+
+    @Inject
+    LoginActivityView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,89 +64,39 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        loginManager = ((VisiumApplication) getApplication()).getLoginManager();
+        passwordText.setTransformationMethod(new PasswordTransformationMethod());
 
-        Log.d(MANAGER, "LoginManager: " + loginManager);
+        loginActivityComponent = DaggerLoginActivityComponent.builder()
+                .loginActivityModule(new LoginActivityModule(this))
+                .visiumApplicationComponent(VisiumApplication.get(this).component())
+                .build();
+        loginActivityComponent.injectLoginActivity(this);
 
         if (BuildConfig.DEBUG){
-            emailText.setText(IntentKeys.GET_EMAIL);
-            passwordText.setText(IntentKeys.GET_PASSWORD);
+            emailText.setText(ApiKeys.GET_EMAIL);
+            passwordText.setText(ApiKeys.GET_PASSWORD);
         }
-
+        presenter.onCreate();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        loginManager.onAttach(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        loginManager.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @OnClick(R.id.register_button)
     public void navigateToSignUpActivity() {
-
         signUpIntent = new Intent(getBaseContext(), RegisterActivity.class);
         startActivity(signUpIntent);
         finish();
-
     }
-    //log in locally
-//    private boolean checkUser(String email, String password){
-//
-//        RealmResults<RegisterRequest> realmRegistrationObjects = realm.where(RegisterRequest.class).findAll();
-//
-//        for(RegisterRequest userRegistration : realmRegistrationObjects){
-//
-//            if (email.equals(userRegistration.getmEmail()) && password.equals(userRegistration.getmPassword())){
-//                Log.e(TAG, userRegistration.getmEmail());
-//            }
-//        }
-//
-//        Log.e(TAG, String.valueOf(realm.where(RegisterRequest.class).contains("Email", email)));
-//        return false;
-//
-//    }
 
     @OnClick(R.id.btn_login)
     public void login() {
-        validate();
-    }
-
-    @Override
-    public boolean validate() {
-
-        Pattern pattern;
-        Matcher matcher;
-
-        boolean hasErrors = false;
-
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
-        final String passwordValidationPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_+=-|<>?}~;])(?=\\S+$).{6,14}";
-        pattern = Pattern.compile(passwordValidationPattern);
-        matcher = pattern.matcher(password);
-
-        if (matcher.matches() != true) {
-            passwordTextInputLayout.setError("Enter a valid password. The password should consist of 6-14 characters, with at least one big letter, one special character and one number");
-            hasErrors = true;
-        }
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailTextInputLayout.setError("Enter a valid email address");
-            hasErrors = true;
-        } else {
-            emailTextInputLayout.setError(null);
-        }
-
-        if (!hasErrors) {
-            loginManager.attemptLogin(email, password);
-        }
-
-        return hasErrors;
+        presenter.validateLoginData(email, password);
     }
 
     @Override
@@ -152,21 +110,47 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
         Toast.makeText(getBaseContext(), errorBody, Toast.LENGTH_LONG).show();
         loginButton.setEnabled(true);
     }
-
     @Override
     public void onLoginSuccess() {
-        userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
-        startActivity(userPrefActivity);
+
+        if (preferencesDefined){
+            menuActivity = new Intent(getApplicationContext(), MenuActivity.class);
+            startActivity(menuActivity);
+        }else{
+            userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
+            startActivity(userPrefActivity);
+        }
         progressDialog.dismiss();
         finish();
     }
 
-
+    @Override
     public void showProgressDialog() {
-
-        progressDialog = ProgressDialog.show(this, "Authenticating...", null);
+        progressDialog = ProgressDialog.show(this, getString(R.string.authentication_progress), null);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
         progressDialog.show();
+    }
+
+    @Override
+    public void setEmailError(boolean hasError) {
+        if(hasError){
+            emailTextInputLayout.setError(getString(R.string.email_error));
+        }else {
+            emailTextInputLayout.setError(null);
+        }
+    }
+
+    @Override
+    public void setPasswordError(boolean hasError) {
+        if (hasError){
+            passwordTextInputLayout.setError(getString(R.string.password_error));
+        }else {
+            passwordTextInputLayout.setError(null);
+        }
+    }
+
+    @Override
+    public void userPreferencesStatus(boolean status) {
+        this.preferencesDefined = status;
     }
 }

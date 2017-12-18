@@ -1,5 +1,8 @@
 package com.example.arek.visium.screens.user_preferences;
 
+import android.content.Context;
+
+import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 
 import java.util.ArrayList;
@@ -12,13 +15,16 @@ import java.util.List;
 public class UserPreferencesPresenter implements UserPreferencesRepository.OnDownLoadFinishedListener{
 
     private UserPreferencesView userPreferencesView;
-    private UserPreferencesRepositoryImpl userPreferencesRepository;
+    private UserPreferencesRepository userPreferencesRepository;
+    private Context context;
 
     public UserPreferencesPresenter() {
+        context = VisiumApplication.getContext();
     }
 
     public void onAttach(UserPreferencesView userPreferencesView){
         this.userPreferencesView = userPreferencesView;
+//        userPreferencesRepository = ((VisiumApplication) context).getUserPreferencesRepository();
         userPreferencesRepository = new UserPreferencesRepositoryImpl();
         userPreferencesRepository.loadPreferenceModels(this);
     }
@@ -37,19 +43,19 @@ public class UserPreferencesPresenter implements UserPreferencesRepository.OnDow
     }
 
    @Override
-    public void onFinishedPreferencesDownload(ArrayList<UserPreferencesWithImage> allPreferences) {
+    public void onLoadPreferences(ArrayList<UserPreferencesWithImage> allPreferences) {
         if (userPreferencesView != null){
             userPreferencesView.showData(allPreferences);
         }
     }
 
     @Override
-    public void onDownloadFailed(String message) {
+    public void onLoadFailed(String message) {
         userPreferencesView.onPreferencesDownloadFailed(message);
     }
 
     @Override
-    public void onResponseFailure(String message) {
+    public void onLoadResponseFailure(String message) {
         userPreferencesView.onResponseFailure(message);
     }
 }

@@ -48,4 +48,18 @@
         <item name="android:textColor">@color/login_text_color_selector</item>
     </style>
 
+    <style name="MyStyle" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">#FFFF</item>
+        <item name="tabIndicatorHeight">5dp</item>
+        <item name="tabPaddingStart">8dp</item>
+        <item name="tabPaddingEnd">8dp</item>
+    </style>
+
+    <style name="CardView.Custom" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/light</item>
+        <item name="colorPrimaryDark">@color/light</item>
+        <item name="colorAccent">@color/lazur</item>
+    </style>
+
 </resources>

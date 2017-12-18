@@ -1,19 +1,20 @@
 package com.example.arek.visium.screens.image_selection;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 import com.example.arek.visium.VisiumApplication;
+import com.example.arek.visium.model.Category;
+import com.example.arek.visium.realm.CategoriesRealm;
 import com.example.arek.visium.realm.Token;
-import com.example.arek.visium.rest.ApiAdapter;
-import com.example.arek.visium.rest.ApiInterface;
-
-import org.apache.commons.io.FileUtils;
+import com.example.arek.visium.rest.VisiumService;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -26,18 +27,20 @@ import retrofit2.Response;
  * Created by arek on 11/13/2017.
  */
 
-public class ImageSelectionRepository {
+public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
 
     private Realm realm;
     private String mToken;
     private Context context;
     private Call<ResponseBody> uploadImageCall;
-    private ApiInterface apiInterface;
+    private VisiumService visiumService;
     private String token;
     private String fileUri;
+    private static final int MY_PERMISSIONS_REQUEST = 100;
 
-    public ImageSelectionRepository() {
+    public ImageSelectionRepositoryImpl() {
         context = VisiumApplication.getContext();
+        visiumService = ((VisiumApplication) context).getVisiumService();
     }
 
 
@@ -45,48 +48,75 @@ public class ImageSelectionRepository {
 //    RequestBody filePart = RequestBody.create(
 //            MediaType.parse(context.getContentResolver().getType(fileUri)),
 //            originalFile);
-
-    public void uploadFile(String fileUri, String spinnerCategory) {
+    @Override
+    public void uploadFile(String fileUri, String spinnerCategory, OnUploadFinishedListener onUploadFinishedListener) {
 
         this.fileUri = fileUri;
 
         uploadImageCall = null;
         if (uploadImageCall == null){
 
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), fileUri);
-
-//            Uri image = Uri.parse(String.valueOf(file));
-            Uri imageUri = Uri.fromFile(file);
-//            File originalFile = FileUtils.getFile(context.getFilesDir(), fileUri);
+            File file = new File(fileUri);
             File originalFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileUri);
             token = getAccessToken();
-//        RequestBody descriptionPart = RequestBody.create(MultipartBody.FORM, spinnerCategory);
+            String originalFileName = originalFile.getName();
+            Log.d("fName: ", originalFileName);
             RequestBody filePart = RequestBody.create(
-                    MediaType.parse(context.getContentResolver().getType(imageUri)),
+                    MediaType.parse("image/*"),
                     file);
 
             MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
-            uploadImageCall = apiInterface.uploadImage(token, spinnerCategory, fileToUpload);
+            uploadImageCall = visiumService.uploadImage(token, spinnerCategory, fileToUpload);
 
-            uploadImageCall.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    response.message();
-                }
+                uploadImageCall.enqueue(new Callback<ResponseBody>() {
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    boolean uploadSuccessful = false;
 
-                }
-            });
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        if (response.isSuccessful()){
+                            uploadSuccessful = true;
+                            onUploadFinishedListener.onUploadFinished(uploadSuccessful, response.message());
+                        }
+                        else {
+                            onUploadFinishedListener.onUploadFinished(uploadSuccessful, response.message());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        onUploadFinishedListener.onUploadFinished(uploadSuccessful, t.getMessage());
+                    }
+                });
+
         }
+    }
+
+    @Override
+    public ArrayList<Category> getCategoriesFromRealm() {
+
+        ArrayList<Category> categoriesList = new ArrayList<>();
+        realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
+        RealmList<String> categories = categoriesRealm.getAllCategories();
+
+        for (int i=0; i<categories.size(); i++){
+
+            Category category = new Category();
+            category.setCategoryName(categories.get(i));
+            categoriesList.add(category);
+        }
+
+        realm.commitTransaction();
+        realm.close();
+        return categoriesList;
     }
 
     public String getAccessToken(){
 
         realm = Realm.getDefaultInstance();
-
         realm.beginTransaction();
         Token token = realm.where(Token.class).findFirst();
         mToken = token.getM_token();
@@ -95,5 +125,4 @@ public class ImageSelectionRepository {
 
         return mToken;
     }
-
 }

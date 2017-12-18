@@ -1,6 +1,5 @@
 package com.example.arek.visium.screens.image_duel;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.ImageDuelModel;
-import com.example.arek.visium.rest.IntentKeys;
+import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.rest.ApiKeys;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,15 +22,11 @@ import butterknife.ButterKnife;
 
 public class ImageDuelViewAdapter extends RecyclerView.Adapter<ImageDuelViewAdapter.ImageDuelViewHolder> {
 
-    private ArrayList<ImageDuelModel> duelImageList;
+    private ArrayList<DuelImage> duelImageList;
     private int mDisplayHeight;
     private int mDisplayWidth;
 
-    public ImageDuelViewAdapter(ArrayList<ImageDuelModel> duelImageList, int displayHeight, int displayWidth) {
-        this.duelImageList = duelImageList;
-        this.mDisplayHeight = displayHeight;
-        this.mDisplayWidth = displayWidth;
-    }
+    public ImageDuelViewAdapter() {}
 
     @Override
     public ImageDuelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,9 +37,9 @@ public class ImageDuelViewAdapter extends RecyclerView.Adapter<ImageDuelViewAdap
     @Override
     public void onBindViewHolder(ImageDuelViewHolder holder, int position) {
 
-        final ImageDuelModel model = duelImageList.get(position);
+        final DuelImage model = duelImageList.get(position);
         Picasso.with(holder.duelImage.getContext())
-                    .load(IntentKeys.BASE_URL + model.getImagePath())
+                    .load(ApiKeys.BASE_URL + model.getImagePath())
                     .resize(mDisplayWidth, mDisplayHeight/2)
                     .into(holder.duelImage);
     }
@@ -65,4 +60,14 @@ public class ImageDuelViewAdapter extends RecyclerView.Adapter<ImageDuelViewAdap
         }
     }
 
+    public void setData(ArrayList<DuelImage> duelImageList, int displayHeight, int displayWidth) {
+        this.duelImageList = duelImageList;
+        this.mDisplayHeight = displayHeight;
+        this.mDisplayWidth = displayWidth;
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<DuelImage> getImages() {
+        return duelImageList;
+    }
 }

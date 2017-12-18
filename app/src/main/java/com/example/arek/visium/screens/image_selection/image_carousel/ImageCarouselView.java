@@ -1,5 +1,7 @@
-package com.example.arek.visium.screens.image_selection;
+package com.example.arek.visium.screens.image_selection.image_carousel;
 
+
+import java.util.ArrayList;
 
 /**
  * Created by arek on 7/27/2017.
@@ -7,6 +9,6 @@ package com.example.arek.visium.screens.image_selection;
 
 public interface ImageCarouselView  {
 
-    void updateCarousel();
+    void showImages(ArrayList<String> imagePathsList);
 
 }

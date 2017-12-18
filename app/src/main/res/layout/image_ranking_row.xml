@@ -1,6 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:elevation="@dimen/card_margin"
+    android:layout_marginBottom="6dp"
+    app:cardElevation="5dp"
+    card_view:cardPreventCornerOverlap="true">
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/ranking_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:src="@drawable/bird" />
+
+        <LinearLayout
+            android:id="@+id/name_and_type_linear"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ranking_image"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/picture_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="32dp"
+                android:text="Whatever"
+                android:textColor="@color/light"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="normal" />
+
+            <TextView
+                android:id="@+id/ranking_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/picture_name"
+                android:paddingLeft="32dp"
+                android:textColor="@color/light"
+                android:typeface="normal" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="24dp"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/date_text"
+                    android:paddingRight="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    android:textColor="@color/light"
+                    android:textSize="@dimen/date_and_points_test_size" />
+
+                <TextView
+                    android:id="@+id/date_of_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/date_text"
+                    android:textColor="@color/light"
+                    android:textSize="@dimen/date_and_points_test_size" />
+
+                <TextView
+                    android:id="@+id/points_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="2dp"
+                    android:layout_toRightOf="@id/date_of_upload"
+                    android:paddingLeft="8dp"
+                    android:text="@string/points"
+                    android:textColor="@color/light"
+                    android:textSize="@dimen/date_and_points_test_size" />
+
+                <TextView
+                    android:id="@+id/ranking_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/points_text"
+                    android:textColor="@color/light"
+                    android:textSize="@dimen/date_and_points_test_size" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="24dp"
+            android:layout_toRightOf="@id/name_and_type_linear">
+
+            <TextView
+                android:id="@+id/ranking_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/green_gradient"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--android:layout_toRightOf="@id/name_and_type_linear"-->
+
+</android.support.v7.widget.CardView>

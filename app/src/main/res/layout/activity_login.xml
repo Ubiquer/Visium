@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
                     android:textColorHint="@color/white"
-                    android:textColor="@color/lazur"
+                    android:textColor="@color/white"
                     android:hint="Email" />
             </android.support.design.widget.TextInputLayout>
 
@@ -59,7 +59,7 @@
                     android:drawableLeft="@drawable/ic_lock_selector"
                     android:inputType="textEmailAddress"
                     android:textColorHint="@color/white"
-                    android:textColor="@color/lazur"
+                    android:textColor="@color/white"
                     android:hint="Password" />
             </android.support.design.widget.TextInputLayout>
 

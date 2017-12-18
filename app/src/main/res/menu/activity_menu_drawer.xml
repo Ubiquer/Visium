@@ -11,13 +11,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Gallery" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_user_pictures"
+            android:title="Account"
+            android:icon="@drawable/ic_email_black"/>
     </group>
 
     <item android:title="Communicate">
@@ -30,7 +26,19 @@
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Send" />
+            <item
+                android:id="@+id/nav_subscribe"
+                android:icon="@drawable/ic_subscription"
+                android:title="@string/subscribe"/>
         </menu>
     </item>
+
+    <group android:id="@+id/logout_group">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout"
+            />
+    </group>
 
 </menu>

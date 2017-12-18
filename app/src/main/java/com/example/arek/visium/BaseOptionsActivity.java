@@ -8,9 +8,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.arek.visium.image_duel.ImageDuelActivity;
-import com.example.arek.visium.image_selection.ImageSelectionActivity;
+import com.example.arek.visium.screens.image_duel.ImageDuelActivity;
+import com.example.arek.visium.screens.image_selection.ImageSelectionActivity;
 import com.example.arek.visium.screens.login.LoginActivity;
+import com.example.arek.visium.screens.rankings.RankingsActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +32,7 @@ public class BaseOptionsActivity extends AppCompatActivity implements Navigation
 
     private Intent imageSelectionActivity;
     private Intent imageDuelActivity;
+    private Intent rankingsActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class BaseOptionsActivity extends AppCompatActivity implements Navigation
         ButterKnife.bind(this);
 
         UserStorage userStorage = ((VisiumApplication)getApplication()).getUserStorage();
-        if (userStorage.hasToLogin()){
+        if (userStorage.noSessionToken()){
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
@@ -58,7 +60,7 @@ public class BaseOptionsActivity extends AppCompatActivity implements Navigation
 
     @OnClick(R.id.rankings_textview)
     public void navigateToRankingsActivity(){
-        Intent rankingsActivity = new Intent(getBaseContext(), MenuActivity.class);
+        rankingsActivity = new Intent(getBaseContext(), RankingsActivity.class);
         startActivity(rankingsActivity);
     }
 

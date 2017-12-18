@@ -10,9 +10,9 @@ public class ApiAdapter {
 
     private ApiAdapter() {}
 
-    public static ApiInterface getAPIService() {
+    public static VisiumService getAPIService() {
 
-        return ServiceGenerator.getClient(IntentKeys.BASE_URL).create(ApiInterface.class);
+        return ServiceGenerator.getClient(ApiKeys.BASE_URL).create(VisiumService.class);
     }
 
 }

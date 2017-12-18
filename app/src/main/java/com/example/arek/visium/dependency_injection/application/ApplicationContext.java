@@ -1,8 +1,10 @@
 package com.example.arek.visium.dependency_injection.application;
 
+import javax.inject.Qualifier;
+
 /**
  * Created by arek on 12/5/2017.
  */
-
-public interface ApplicationContext {
+@Qualifier
+public @interface ApplicationContext {
 }

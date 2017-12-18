@@ -5,4 +5,13 @@ package com.example.arek.visium.screens.register;
  */
 
 public interface RegisterRepository {
+
+    void register(String email, String password, OnSignUpListener onSignUpListener);
+
+    interface OnSignUpListener {
+        void onSignUpFinishedSuccess(String response);
+        void onSignUpFinishedFailure(String response);
+        void onResponseUnsuccessful(String response);
+    }
+
 }

@@ -17,7 +17,7 @@ import com.example.arek.visium.screens.menu.MenuActivity;
 import com.example.arek.visium.MyGridLayoutManager;
 import com.example.arek.visium.R;
 import com.example.arek.visium.model.UserPreferencesWithImage;
-import com.example.arek.visium.rest.ApiInterface;
+import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
     @BindView(R.id.num_of_categories)
     public TextView numOfCategories;
 
-    private ApiInterface mApiInterface;
+    private VisiumService mVisiumService;
     UserPreferencesRecyclerAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recyclerViewLayoutManager;
     private Context context;

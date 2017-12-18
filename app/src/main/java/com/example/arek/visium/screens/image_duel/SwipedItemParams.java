@@ -5,4 +5,20 @@ package com.example.arek.visium.screens.image_duel;
  */
 
 public class SwipedItemParams {
+
+    private int viewholderAdapterPosition;
+    private int direction;
+
+    public SwipedItemParams(int viewholderAdapterPosition, int direction) {
+        this.viewholderAdapterPosition = viewholderAdapterPosition;
+        this.direction = direction;
+    }
+
+    public int getViewholderAdapterPosition() {
+        return viewholderAdapterPosition;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
 }

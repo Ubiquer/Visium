@@ -1,11 +1,10 @@
-package com.example.arek.visium.dependency_injection.screens.login;
-
-import android.content.Context;
+package com.example.arek.visium.dependency_injection.screens.login_di;
 
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.screens.login.LoginActivity;
 import com.example.arek.visium.screens.login.LoginActivityPresenter;
+import com.example.arek.visium.screens.login.LoginActivityPresenterImpl;
 import com.example.arek.visium.screens.login.LoginActivityView;
 import com.example.arek.visium.screens.login.LoginRepository;
 import com.example.arek.visium.screens.login.LoginRepositoryImpl;
@@ -35,13 +34,19 @@ public class LoginActivityModule {
 
     @Provides
     @LoginActivityScope
-    LoginActivityPresenter presenter(LoginRepositoryImpl repository){
-        return new LoginActivityPresenter(repository);
+    LoginActivityView view(){
+        return loginActivity;
     }
 
     @Provides
     @LoginActivityScope
-    LoginRepositoryImpl repository(UserStorage userStorage, VisiumService visiumService, Realm realm){
+    LoginActivityPresenter presenter(LoginActivityView view, LoginRepository repository){
+        return new LoginActivityPresenterImpl(view, repository);
+    }
+
+    @Provides
+    @LoginActivityScope
+    LoginRepository repository(UserStorage userStorage, VisiumService visiumService, Realm realm){
         return new LoginRepositoryImpl(userStorage, visiumService, realm);
     }
 
