@@ -41,7 +41,7 @@ public class LoginRepositoryImpl implements LoginRepository{
     @Override
     public void logIn(UserLogin userLogin, OnLoginListener onLoginListener) {
 
-//        userLogin = new UserLogin(email, password);
+//        userLogin = new UserLogin(email, observePasswordText);
         if (loginCall == null){
             loginCall = visiumService.loginUser(userLogin);
             onLoginListener.onLoginProgress(false);

@@ -12,7 +12,7 @@ import com.example.arek.visium.dependency_injection.application.ContextModule;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.rest.ApiKeys;
 import com.example.arek.visium.screens.image_duel.ImageDuelPresenter;
-import com.example.arek.visium.screens.register.RegisterActivityPresenter;
+import com.example.arek.visium.screens.register.RegisterActivityPresenterImpl;
 import com.example.arek.visium.screens.user_preferences.UserPreferencesRepository;
 import com.example.arek.visium.screens.user_preferences.UserPreferencesRepositoryImpl;
 import com.squareup.picasso.Picasso;
@@ -31,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class VisiumApplication extends Application {
 
    private UserStorage userStorage;
-   private RegisterActivityPresenter registerActivityPresenter;
+   private RegisterActivityPresenterImpl registerActivityPresenterImpl;
    private VisiumService visiumService;
 
    private Retrofit retrofit;
@@ -50,7 +50,6 @@ public class VisiumApplication extends Application {
        return (VisiumApplication)activity.getApplication();
    }
 
-   private RxBus rxBus;
    private ImageDuelPresenter imageDuelPresenter;
 
     @Override
@@ -82,7 +81,7 @@ public class VisiumApplication extends Application {
         Realm.setDefaultConfiguration(realmConfiguration);
 
         userStorage = new UserStorage(PreferenceManager.getDefaultSharedPreferences(this));
-//        registerActivityPresenter = new RegisterActivityPresenter(userStorage);
+//        registerActivityPresenterImpl = new RegisterActivityPresenterImpl(userStorage);
         userPreferencesRepository = new UserPreferencesRepositoryImpl();
     }
 
@@ -94,12 +93,8 @@ public class VisiumApplication extends Application {
         return retrofit;
     }
 
-    public RxBus bus(){
-        return bus();
-    }
-
-    public RegisterActivityPresenter getRegisterActivityPresenter(){
-        return registerActivityPresenter;
+    public RegisterActivityPresenterImpl getRegisterActivityPresenterImpl(){
+        return registerActivityPresenterImpl;
     }
     public UserStorage getUserStorage() {
         return userStorage;
@@ -111,10 +106,6 @@ public class VisiumApplication extends Application {
 
     public ImageDuelPresenter getImageDuelPresenter() {
         return imageDuelPresenter;
-    }
-
-    public RxBus getRxBus() {
-        return rxBus;
     }
 
     public static Context getContext() {

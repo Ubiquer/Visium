@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import rx.Subscription;
+
 /**
  * Created by arek on 9/27/2017.
  */
@@ -100,4 +102,5 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter, Login
             attemptLogin(userLogin);
         }
     }
+
 }

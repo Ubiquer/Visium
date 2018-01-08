@@ -15,9 +15,7 @@ public class AuthenticationInterceptor implements Interceptor {
     private String authToken;
 
     public AuthenticationInterceptor(String token){
-
         this.authToken = token;
-
     }
 
     @Override

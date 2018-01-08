@@ -20,12 +20,14 @@ import com.example.arek.visium.rest.ApiKeys;
 import com.example.arek.visium.screens.login.LoginActivity;
 import com.example.arek.visium.screens.user_preferences.UserPreferencesActivity;
 import com.example.arek.visium.VisiumApplication;
+import com.jakewharton.rxbinding2.InitialValueObservable;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 
 
 public class RegisterActivity extends AppCompatActivity implements RegisterActivityView {
@@ -52,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
     private Intent userPrefActivity;
 
     @Inject
-    RegisterActivityPresenter registerActivityPresenter;
+    RegisterActivityPresenter presenter;
 
     private RegisterActivityComponent registerActivityComponent;
 
@@ -67,41 +69,39 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
                 .visiumApplicationComponent(VisiumApplication.get(this).component())
                 .build();
         registerActivityComponent.injectRegisterActivity(this);
+        presenter.onCreate();
+        signInButton.setEnabled(false);
 
-        confirmPasswordText.setTransformationMethod(new PasswordTransformationMethod());;
+        confirmPasswordText.setTransformationMethod(new PasswordTransformationMethod());
 
         if (BuildConfig.DEBUG){
             emailText.setText(ApiKeys.GET_EMAIL);
             passwordText.setText(ApiKeys.GET_PASSWORD);
             confirmPasswordText.setText(ApiKeys.GET_PASSWORD);
         }
-        haveAccountTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginActivity = new Intent(getBaseContext(), LoginActivity.class);
-                startActivity(loginActivity);
-            }
+        haveAccountTextView.setOnClickListener(v -> {
+            loginActivity = new Intent(getBaseContext(), LoginActivity.class);
+            startActivity(loginActivity);
         });
     }
+
     @Override
-    protected void onStart() {
-        super.onStart();
-        registerActivityPresenter.onAttach(this);
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        registerActivityPresenter.onStop();
     }
 
     @OnClick(R.id.btn_signUp)
     public void signUp() {
-//        if(validate()){
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
         confirmPassword = passwordText.getText().toString();
-        registerActivityPresenter.register(email, password);
+        presenter.onRegister(email, password);
     }
 
     @Override
@@ -112,23 +112,39 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
     }
 
     @Override
+    public Observable<CharSequence> passwordObservable() {
+        return RxTextView.textChanges(passwordText);
+    }
+
+    @Override
+    public Observable<CharSequence> confirmPasswordObservable() {
+        return RxTextView.textChanges(confirmPasswordText);
+    }
+
+    @Override
+    public Observable<CharSequence> emailObservable() {
+        return RxTextView.textChanges(emailText);
+    }
+
+    @Override
     public void onPasswordsDiffer() {
+        passwordText.setError(getString(R.string.on_passwords_differ));
+    }
+
+    @Override
+    public void onPasswordNotValid() {
         passwordText.setError(getString(R.string.incorrect_password));
     }
 
     @Override
-    public void onEmailsDiffer() {
-        confirmPasswordText.setError(getString(R.string.passwords_differ));
+    public void onConfirmationPasswordNotValid() {
+        passwordText.setError(getString(R.string.incorrect_password));
     }
 
     @Override
     public void onPasswordsMatch() {
+        passwordText.setError(null);
         confirmPasswordText.setError(null);
-    }
-
-    @Override
-    public void onEmailsMatch() {
-        emailText.setError(null);
     }
 
     @Override
@@ -139,5 +155,14 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
         startActivity(userPrefActivity);
     }
 
+    @Override
+    public void onEmailNotValid() {
+        emailText.setError(getString(R.string.incorrect_email));
+    }
+
+    @Override
+    public void enableSignUpButton(boolean enable) {
+        signInButton.setEnabled(enable);
+    }
 
 }

@@ -49,12 +49,6 @@ public class LoginActivityPresenterTest {
     UserLogin userLogin;
     @Mock
     LoginRepository.OnLoginListener listener;
-//    private LoginActivityPresenter loginActivityPresenter;
-//    private LoginActivityView loginActivityView;
-//    private LoginRepository loginRepository;
-//    private UserStorage userStorage;
-//    private Realm realm;
-//    private VisiumService visiumService;
 
     @Before
     public void setUp() throws Exception{
@@ -64,20 +58,6 @@ public class LoginActivityPresenterTest {
         //UserLogin setup
         userLogin = new UserLogin(ApiKeys.GET_EMAIL, ApiKeys.GET_PASSWORD);
 
-
-////        loginActivityView = Mockito.mock(LoginActivityView.class);
-////        loginRepository = Mockito.mock(LoginRepository.class);
-////        userStorage = Mockito.mock(UserStorage.class);
-////        realm = Mockito.mock(Realm.class);
-////        visiumService = Mockito.mock(VisiumService.class);
-////
-////        loginActivityPresenter = new LoginActivityPresenterImpl(loginActivityView, loginRepository);
-////        ArgumentCaptor valueCapture = ArgumentCaptor.forClass(Boolean.class);
-////        doNothing().when(loginActivityView).userPreferencesStatus((Boolean) valueCapture.capture());
-////        loginActivityView.userPreferencesStatus(false);
-////
-////        assertEquals(true, valueCapture.getValue());
-////        Mockito.when(loginActivityView.onLoginSuccess()).thenReturn()
     }
 
     @Captor
@@ -91,15 +71,6 @@ public class LoginActivityPresenterTest {
     @Test
     public void onSavedPreferencesStatus(){
 
-//        Mockito.when()
-        //given
-//        LoginActivityView view = new MockLoginView();
-//        LoginRepository repository = new MockLoginRepository();
-//        repository.checkSavedPreferences(onCheckSavedPreferences.savedPreferencesStatus());
-//        verify(onCheckSavedPreferences).savedPreferencesStatus(eq(true));
-        //when
-//        LoginActivityPresenter presenter = new LoginActivityPresenterImpl(view, repository);
-//        presenter = new LoginActivityPresenterImpl(view, repository);
         repository.checkSavedPreferences(onCheckSavedPreferences);
         verify(repository).checkSavedPreferences(onCheckSavedPreferences);
         onCheckSavedPreferences.savedPreferencesStatus(true);
@@ -155,72 +126,6 @@ public class LoginActivityPresenterTest {
             view.onLoginFailed(loginInformation);
         }
         verify(view).onLoginFailed(loginInformation);
-
     }
-
-//    private class MockLoginView implements LoginActivityView{
-//
-//        boolean status;
-//
-//        @Override
-//        public void onLoginFailed(String errorBody) {
-//
-//        }
-//
-//        @Override
-//        public void onLoginSuccess() {
-//
-//        }
-//
-//        @Override
-//        public void login() {
-//
-//        }
-//
-//        @Override
-//        public void showProgress(boolean b) {
-//
-//        }
-//
-//        @Override
-//        public void showProgressDialog() {
-//
-//        }
-//
-//        @Override
-//        public void setEmailError(boolean errorStatus) {
-//
-//        }
-//
-//        @Override
-//        public void setPasswordError(boolean errorStatus) {
-//
-//        }
-//
-//        @Override
-//        public void userPreferencesStatus(boolean status) {
-//            this.status = status;
-//        }
-//    }
-//
-//    private class MockLoginRepository implements LoginRepository{
-//
-//        @Override
-//        public void logIn(UserLogin userLogin, OnLoginListener onLoginListener) {
-//
-//        }
-//
-//        @Override
-//        public void createOrUpdateToken(String token) {
-//
-//        }
-//
-//        @Override
-//        public void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences) {
-//
-//            onCheckSavedPreferences.savedPreferencesStatus(true);
-//
-//        }
-//    }
 
 }

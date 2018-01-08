@@ -37,4 +37,6 @@
     <string name="sign_up_failed_message">Failed due to:</string>
     <string name="api_connection_failure">Api connection failed:</string>
     <string name="loading_preferences_failure">Failed loading preferences:</string>
+    <string name="on_passwords_differ">Confirmation password differs from password</string>
+    <string name="incorrect_email">Incorrect email</string>
 </resources>

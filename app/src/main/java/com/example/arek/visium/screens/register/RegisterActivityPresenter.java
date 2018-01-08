@@ -1,57 +1,23 @@
 package com.example.arek.visium.screens.register;
 
-import com.example.arek.visium.UserStorage;
-
-import javax.inject.Inject;
-
-import retrofit2.Call;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
- * Created by arek on 9/30/2017.
+ * Created by arek on 12/19/2017.
  */
 
-public class RegisterActivityPresenter implements RegisterRepository.OnSignUpListener {
+public interface RegisterActivityPresenter {
 
+    void onCreate();
+    void onDestroy();
+    void onRegister(String email, String password);
+    Function<CharSequence, Boolean> isPasswordValid();
+    Function<CharSequence, Boolean> isConfirmPasswordValid();
+    Function<CharSequence, Boolean> isEmailValid();
+    Function<CharSequence, Boolean> isUserNameValid();
+    Consumer<Boolean> updatePasswordViewState();
+    Consumer<Boolean> updateConfirmPasswordViewState();
+    Consumer<Boolean> updateEmailViewState();
 
-    private final RegisterRepository repository;
-    private RegisterActivityView registerActivityView;
-
-    @Inject
-    public RegisterActivityPresenter(RegisterRepository repository) {
-        this.repository = repository;
-    }
-
-    public void onAttach(RegisterActivityView registerActivityView){
-        this.registerActivityView = registerActivityView;
-    }
-
-    public void onStop(){
-        this.registerActivityView = null;
-    }
-
-    public void register(String email, String password){
-
-        repository.register(email, password, this);
-   }
-
-    @Override
-    public void onSignUpFinishedSuccess(String response) {
-
-        registerActivityView.onSignUpSuccess();
-
-    }
-
-    @Override
-    public void onSignUpFinishedFailure(String response) {
-
-        registerActivityView.onSingUpFailed(response);
-
-    }
-
-    @Override
-    public void onResponseUnsuccessful(String response) {
-
-
-
-    }
 }

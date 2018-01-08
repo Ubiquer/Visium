@@ -42,6 +42,8 @@ import butterknife.OnClick;
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback{
 
+    //TODO: Implement MVP for this screen.
+
     private static final int SELECTION_REQUEST_CODE = 2;
     private static final int CAMERA_PERMISSION_REQUEST = 1;
     private boolean permissionGranted;
@@ -71,10 +73,10 @@ public class MenuActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
          userStorage = ((VisiumApplication)getApplication()).getUserStorage();
-        if (userStorage.noSessionToken()){
-            goToLogin();
-            return;
-        }
+//        if (userStorage.noSessionToken()){
+//            goToLogin();
+//            return;
+//        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

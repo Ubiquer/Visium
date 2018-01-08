@@ -1,24 +1,13 @@
 package com.example.arek.visium.screens.register;
-
-import android.content.Context;
-
 import com.example.arek.visium.UserStorage;
-import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.model.RegisterRequest;
 import com.example.arek.visium.rest.VisiumService;
-import com.example.arek.visium.rest.ErrorResponse;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-
 import javax.inject.Inject;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Converter;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+
 
 /**
  * Created by arek on 11/28/2017.
@@ -29,24 +18,22 @@ public class RegisterRepositoryImpl implements RegisterRepository {
     private final UserStorage userStorage;
     private final VisiumService visiumService;
     private Call<String> userResponseCall;
+    private final RegisterRequest registerRequest;
 //    private Retrofit retrofit;
 //    private Context context;
 
     @Inject
-    public RegisterRepositoryImpl(UserStorage userStorage, VisiumService visiumService) {
+    public RegisterRepositoryImpl(UserStorage userStorage, VisiumService visiumService, RegisterRequest registerRequest) {
         this.userStorage = userStorage;
         this.visiumService = visiumService;
+        this.registerRequest = registerRequest;
     }
 
     @Override
     public void register(String email, String password, OnSignUpListener onSignUpListener) {
 
-        RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setmEmail(email);
         registerRequest.setmPassword(password);
-
-//        context = VisiumApplication.getContext();
-//        visiumService = ((VisiumApplication) context).getVisiumService();
 
         if (userResponseCall == null) {
             userResponseCall = visiumService.registerUser(registerRequest);

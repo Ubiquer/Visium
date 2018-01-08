@@ -12,7 +12,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.RxBus;
 
 /**
  * Created by arek on 9/18/2017.
@@ -28,7 +27,6 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
     private String rightColorCode;
     private String leftColorCode;
     private ImageChooseListener listener;
-    private RxBus rxBus;
     private int viewholderAdapterPosition;
     private SwipedItemParams swipedItemParams;
 
@@ -56,8 +54,6 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
 
        try {
            if (direction == ItemTouchHelper.LEFT) {
-//               swipedItemParams = new SwipedItemParams(viewHolder.getAdapterPosition(), direction);
-//               RxBus.publishSwipedItemParams(swipedItemParams);
                listener.onImageChosen(viewHolder.getAdapterPosition(), false);
            }else{
                listener.onImageChosen(viewHolder.getAdapterPosition(), true);
