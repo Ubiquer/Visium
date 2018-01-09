@@ -56,11 +56,10 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
 
         compositeDisposable.add(Observable.combineLatest(view.emailObservable(), view.passwordObservable(), view.confirmPasswordObservable(),
                 (emailCharSequence, passwordCharSequence, confirmPasswordCharSequence) -> {
-                    String email = emailCharSequence.toString();
                     String password = passwordCharSequence.toString();
                     String confirmPassword = confirmPasswordCharSequence.toString();
 
-                    return !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty() && password.equals(confirmPassword);
+                    return validator.isEmailValid(emailCharSequence) && !password.isEmpty() && !confirmPassword.isEmpty() && password.equals(confirmPassword);
 
                 }).subscribe(fieldsFilledCorrectly -> {
             if (fieldsFilledCorrectly) {
@@ -85,17 +84,17 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
 
     @Override
     public Function<CharSequence, Boolean> isPasswordValid() {
-        return  passwordTextAfterChangeEvent -> validator.validatePassword(passwordTextAfterChangeEvent);
+        return  passwordTextAfterChangeEvent -> validator.isPasswordValid(passwordTextAfterChangeEvent);
     }
 
     @Override
     public Function<CharSequence, Boolean> isConfirmPasswordValid() {
-        return confirmPasswordTextAfterChangeEvent -> validator.validatePassword(confirmPasswordTextAfterChangeEvent);
+        return confirmPasswordTextAfterChangeEvent -> validator.isPasswordValid(confirmPasswordTextAfterChangeEvent);
     }
 
     @Override
     public Function<CharSequence, Boolean> isEmailValid() {
-        return emailTextAfterTextChangeEvent -> validator.validateEmail(emailTextAfterTextChangeEvent);
+        return emailTextAfterTextChangeEvent -> validator.isEmailValid(emailTextAfterTextChangeEvent);
     }
 
     @Override

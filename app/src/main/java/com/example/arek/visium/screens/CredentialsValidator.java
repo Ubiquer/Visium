@@ -30,7 +30,7 @@ public class CredentialsValidator {
         this.confirmEmail = confirmEmail;
     }
 
-    public boolean validatePassword(CharSequence password) {
+    public boolean isPasswordValid(CharSequence password) {
 
         final String passwordValidationPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_+=-|<>?}~;])(?=\\S+$).{6,14}";
         pattern = Pattern.compile(passwordValidationPattern);
@@ -44,7 +44,7 @@ public class CredentialsValidator {
         return passwordValid;
     }
 
-    public boolean validateEmail(CharSequence charSequenceEmail){
+    public boolean isEmailValid(CharSequence charSequenceEmail){
 
         email = charSequenceEmail.toString();
 
