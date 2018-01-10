@@ -21,7 +21,6 @@ public interface RegisterActivityView {
     void onPasswordsMatch();
     void onPasswordsDiffer();
     void onPasswordNotValid();
-    void onConfirmationPasswordNotValid();
     void onSignUpSuccess();
     void onEmailNotValid();
     void enableSignUpButton(boolean enable);

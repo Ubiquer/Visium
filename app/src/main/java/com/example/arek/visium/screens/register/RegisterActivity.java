@@ -128,16 +128,11 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
 
     @Override
     public void onPasswordsDiffer() {
-        passwordText.setError(getString(R.string.on_passwords_differ));
+        confirmPasswordText.setError(getString(R.string.on_passwords_differ));
     }
 
     @Override
     public void onPasswordNotValid() {
-        passwordText.setError(getString(R.string.incorrect_password));
-    }
-
-    @Override
-    public void onConfirmationPasswordNotValid() {
         passwordText.setError(getString(R.string.incorrect_password));
     }
 

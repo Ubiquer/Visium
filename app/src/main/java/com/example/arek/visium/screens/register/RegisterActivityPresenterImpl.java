@@ -116,7 +116,7 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
     public Consumer<Boolean> updateConfirmPasswordViewState() {
         return isValid ->{
             if (!isValid){
-                view.onConfirmationPasswordNotValid();
+                view.onPasswordsDiffer();
             }
         };
     }
