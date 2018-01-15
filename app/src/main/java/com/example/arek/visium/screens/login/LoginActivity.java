@@ -20,12 +20,17 @@ import com.example.arek.visium.rest.ApiKeys;
 import com.example.arek.visium.screens.user_preferences.UserPreferencesActivity;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.screens.register.RegisterActivity;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class LoginActivity extends AppCompatActivity implements LoginActivityView {
 
@@ -71,11 +76,11 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
                 .visiumApplicationComponent(VisiumApplication.get(this).component())
                 .build();
         loginActivityComponent.injectLoginActivity(this);
-
-        if (BuildConfig.DEBUG){
-            emailText.setText(ApiKeys.GET_EMAIL);
-            passwordText.setText(ApiKeys.GET_PASSWORD);
-        }
+        loginButton.setEnabled(false);
+//        if (BuildConfig.DEBUG){
+//            emailText.setText(ApiKeys.GET_EMAIL);
+//            passwordText.setText(ApiKeys.GET_PASSWORD);
+//        }
         presenter.onCreate();
     }
 
@@ -96,7 +101,8 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     public void login() {
         email = emailText.getText().toString();
         password = passwordText.getText().toString();
-        presenter.validateLoginData(email, password);
+        showProgressDialog();
+        presenter.attemptLogin(email, password);
     }
 
     @Override
@@ -132,21 +138,41 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     }
 
     @Override
-    public void setEmailError(boolean hasError) {
-        if(hasError){
-            emailTextInputLayout.setError(getString(R.string.email_error));
-        }else {
-            emailTextInputLayout.setError(null);
-        }
+    public Observable<CharSequence> emailObservable() {
+        return RxTextView.textChanges(emailText).skip(1).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
     }
 
     @Override
-    public void setPasswordError(boolean hasError) {
-        if (hasError){
-            passwordTextInputLayout.setError(getString(R.string.password_error));
-        }else {
-            passwordTextInputLayout.setError(null);
-        }
+    public Observable<CharSequence> passwordObservable() {
+        return RxTextView.textChanges(passwordText).skip(1).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
+    }
+
+
+    @Override
+    public void onEmailNotValid() {
+        emailTextInputLayout.setError(getString(R.string.incorrect_email));
+    }
+
+    @Override
+    public void onEmailValid() {
+        emailTextInputLayout.setError(null);
+    }
+
+    @Override
+    public void onPasswordNotValid() {
+        passwordTextInputLayout.setError(getString(R.string.incorrect_password));
+    }
+
+    @Override
+    public void onPasswordValid() {
+        passwordTextInputLayout.setError(null);
+    }
+
+    @Override
+    public void enableLoginButton(boolean enable) {
+
+        loginButton.setEnabled(enable);
+
     }
 
     @Override

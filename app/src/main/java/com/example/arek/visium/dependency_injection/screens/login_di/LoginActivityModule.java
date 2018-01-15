@@ -2,6 +2,7 @@ package com.example.arek.visium.dependency_injection.screens.login_di;
 
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.rest.VisiumService;
+import com.example.arek.visium.screens.CredentialsValidator;
 import com.example.arek.visium.screens.login.LoginActivity;
 import com.example.arek.visium.screens.login.LoginActivityPresenter;
 import com.example.arek.visium.screens.login.LoginActivityPresenterImpl;
@@ -11,6 +12,7 @@ import com.example.arek.visium.screens.login.LoginRepositoryImpl;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
 import io.realm.Realm;
 
 /**
@@ -40,8 +42,8 @@ public class LoginActivityModule {
 
     @Provides
     @LoginActivityScope
-    LoginActivityPresenter presenter(LoginActivityView view, LoginRepository repository){
-        return new LoginActivityPresenterImpl(view, repository);
+    LoginActivityPresenter presenter(LoginActivityView view, LoginRepository repository, CredentialsValidator validator){
+        return new LoginActivityPresenterImpl(view, repository, validator);
     }
 
     @Provides

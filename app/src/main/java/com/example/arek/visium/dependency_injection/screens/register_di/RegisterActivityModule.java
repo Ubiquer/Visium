@@ -47,8 +47,8 @@ public class RegisterActivityModule {
 
     @Provides
     @RegisterActivityScope
-    RegisterActivityPresenter registerActivityPresenter(RegisterActivityView view, RegisterRepository repository, CredentialsValidator validator, CompositeDisposable compositeDisposable){
-        return new RegisterActivityPresenterImpl(view, repository, validator, compositeDisposable);
+    RegisterActivityPresenter registerActivityPresenter(RegisterActivityView view, RegisterRepository repository, CredentialsValidator validator){
+        return new RegisterActivityPresenterImpl(view, repository, validator);
     }
 
     @Provides

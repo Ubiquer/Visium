@@ -5,35 +5,34 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.arek.visium.BuildConfig;
 import com.example.arek.visium.R;
 import com.example.arek.visium.dependency_injection.screens.register_di.DaggerRegisterActivityComponent;
 import com.example.arek.visium.dependency_injection.screens.register_di.RegisterActivityComponent;
 import com.example.arek.visium.dependency_injection.screens.register_di.RegisterActivityModule;
-import com.example.arek.visium.rest.ApiKeys;
 import com.example.arek.visium.screens.login.LoginActivity;
 import com.example.arek.visium.screens.user_preferences.UserPreferencesActivity;
 import com.example.arek.visium.VisiumApplication;
-import com.jakewharton.rxbinding2.InitialValueObservable;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 
 public class RegisterActivity extends AppCompatActivity implements RegisterActivityView {
     
     @BindView(R.id.btn_signUp)
-    Button signInButton;
+    Button signUpButton;
     @BindView(R.id.input_email)
     EditText emailText;
     @BindView(R.id.input_name)
@@ -70,18 +69,19 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
                 .build();
         registerActivityComponent.injectRegisterActivity(this);
         presenter.onCreate();
-        signInButton.setEnabled(false);
+        signUpButton.setEnabled(false);
 
         confirmPasswordText.setTransformationMethod(new PasswordTransformationMethod());
 
-        if (BuildConfig.DEBUG){
-            emailText.setText(ApiKeys.GET_EMAIL);
-            passwordText.setText(ApiKeys.GET_PASSWORD);
-            confirmPasswordText.setText(ApiKeys.GET_PASSWORD);
-        }
+//        if (BuildConfig.DEBUG){
+//            emailText.setText(ApiKeys.GET_EMAIL);
+//            passwordText.setText(ApiKeys.GET_PASSWORD);
+//            confirmPasswordText.setText(ApiKeys.GET_PASSWORD);
+//        }
         haveAccountTextView.setOnClickListener(v -> {
             loginActivity = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(loginActivity);
+            finish();
         });
     }
 
@@ -113,17 +113,17 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
 
     @Override
     public Observable<CharSequence> passwordObservable() {
-        return RxTextView.textChanges(passwordText);
+        return RxTextView.textChanges(passwordText).skip(1).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable<CharSequence> confirmPasswordObservable() {
-        return RxTextView.textChanges(confirmPasswordText);
-    }
+        return RxTextView.textChanges(confirmPasswordText).skip(2).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
+}
 
     @Override
     public Observable<CharSequence> emailObservable() {
-        return RxTextView.textChanges(emailText);
+        return RxTextView.textChanges(emailText).skip(1).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
 
     @Override
     public void onSignUpSuccess() {
-        signInButton.setEnabled(false);
+        signUpButton.setEnabled(false);
         Toast.makeText(getBaseContext(), R.string.token_received, Toast.LENGTH_LONG).show();
         userPrefActivity = new Intent(getApplicationContext(), UserPreferencesActivity.class);
         startActivity(userPrefActivity);
@@ -157,7 +157,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterActiv
 
     @Override
     public void enableSignUpButton(boolean enable) {
-        signInButton.setEnabled(enable);
+        signUpButton.setEnabled(enable);
     }
 
 }

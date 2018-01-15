@@ -1,5 +1,7 @@
 package com.example.arek.visium.screens.login;
 
+import io.reactivex.Observable;
+
 /**
  * Created by arek on 7/25/2017.
  */
@@ -11,8 +13,12 @@ public interface LoginActivityView {
     void login();
     void showProgress(boolean b);
     void showProgressDialog();
-    void setEmailError(boolean errorS);
-    void setPasswordError(boolean errorStatus);
+    Observable<CharSequence> emailObservable();
+    Observable<CharSequence> passwordObservable();
+    void onEmailNotValid();
+    void onEmailValid();
+    void onPasswordNotValid();
     void userPreferencesStatus(boolean status);
-
+    void onPasswordValid();
+    void enableLoginButton(boolean b);
 }

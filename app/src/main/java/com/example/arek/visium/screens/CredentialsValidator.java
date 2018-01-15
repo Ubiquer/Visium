@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 public class CredentialsValidator {
 
     private String password;
-    private String passwordConfirmation;
     private String email;
     private String confirmEmail;
     private Pattern pattern;
@@ -23,14 +22,13 @@ public class CredentialsValidator {
     public CredentialsValidator() {
     }
 
-    public CredentialsValidator(String password, String passwordConfirmation, String email, String confirmEmail) {
+    public CredentialsValidator(String password, String email, String confirmEmail) {
         this.password = password;
-        this.passwordConfirmation = passwordConfirmation;
         this.email = email;
         this.confirmEmail = confirmEmail;
     }
 
-    public boolean isPasswordValid(CharSequence password) {
+    public boolean validPassword(CharSequence password) {
 
         final String passwordValidationPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()_+=-|<>?}~;])(?=\\S+$).{6,14}";
         pattern = Pattern.compile(passwordValidationPattern);
@@ -44,7 +42,7 @@ public class CredentialsValidator {
         return passwordValid;
     }
 
-    public boolean isEmailValid(CharSequence charSequenceEmail){
+    public boolean validEmail(CharSequence charSequenceEmail){
 
         email = charSequenceEmail.toString();
 

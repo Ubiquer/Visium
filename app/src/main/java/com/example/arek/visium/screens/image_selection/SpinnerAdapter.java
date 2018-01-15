@@ -27,24 +27,18 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
 
     private ArrayList<Category> categories;
     private Context context;
-//    private final LayoutInflater inflater;
     private int resource;
     private LinearLayout llWrapper;
     private TextView categoryText, tvDropDownItem;
     private ImageView underLine;
     private int border;
-//    @BindView(R.id.tv_spinner_item)
-//    TextView categoryText;
-//    @BindView(R.id.tv_underline)
-//    ImageView underline;
+
 
     public SpinnerAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Category> categories) {
         super(context, resource, categories);
         this.categories = categories;
         this.context = context;
-//        this.inflater = LayoutInflater.from(context);
         this.resource = resource;
-//        border = (int) context.getResources().getDimension(R.dimen.);
     }
 
     @Override
@@ -86,8 +80,6 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-//        return createItemView(position, convertView, parent);
-
         View row;
 
         row = View.inflate(context, R.layout.item_spinner_dropdown, null);
@@ -109,32 +101,6 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
 //            params.setMargins();
         }
 
-//
-//        if (position == categories.size() - 1){
-//            underLine.setVisibility(View.GONE);
-////            int padding = (int)context.getResources().getDimension(R.dimen.activity_vertical_margin_small);
-////            int paddingTop = (int)context.getResources().getDimension(R.dimen.rounding_radius_dp);
-////            tvItem.setPadding(padding, paddingTop, 0, padding);
-//            params.setMargins(border, 0, border, border); //end part
-//            llWrapper.setLayoutParams(params);
-//        } else if(position == 0){
-//            params.setMargins(border, border, border, 0); //start part
-//            llWrapper.setLayoutParams(params);
-//        } else {
-//            params.setMargins(border, 0, border, 0); //middle part
-//            llWrapper.setLayoutParams(params);
-//        }
-//        TextView label = new TextView(context);
-//        label.setTextColor(Color.CYAN);
-//        label.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary, null));
-//        label.setTextSize(16);
-//        label.setGravity(Gravity.CENTER);
-//        label.setPadding(16,16,16,16);
-//        Category category = categories.get(position);
-//        category.getCategoryName();
-//        label.setText(category.getCategoryName());
-//
-//        return label;
 //    }
 
         return row;

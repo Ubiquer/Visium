@@ -15,7 +15,6 @@ public interface RegisterActivityPresenter {
     Function<CharSequence, Boolean> isPasswordValid();
     Function<CharSequence, Boolean> isConfirmPasswordValid();
     Function<CharSequence, Boolean> isEmailValid();
-    Function<CharSequence, Boolean> isUserNameValid();
     Consumer<Boolean> updatePasswordViewState();
     Consumer<Boolean> updateConfirmPasswordViewState();
     Consumer<Boolean> updateEmailViewState();

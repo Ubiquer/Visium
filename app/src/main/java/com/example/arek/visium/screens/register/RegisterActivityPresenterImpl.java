@@ -8,6 +8,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+
 /**
  * Created by arek on 9/30/2017.
  */
@@ -17,27 +18,26 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
 
     private final RegisterRepository repository;
     private final RegisterActivityView view;
-    private final CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final CredentialsValidator validator;
 
     @Inject
-    public RegisterActivityPresenterImpl(RegisterActivityView view, RegisterRepository repository, CredentialsValidator validator, CompositeDisposable compositeDisposable) {
+    public RegisterActivityPresenterImpl(RegisterActivityView view, RegisterRepository repository, CredentialsValidator validator) {
         this.repository = repository;
         this.view = view;
         this.validator = validator;
-        this.compositeDisposable = compositeDisposable;
     }
 
     @Override
     public void onCreate() {
 
+        Observable<Boolean> emailObservable = view.emailObservable().map(isEmailValid());
         Observable<Boolean> passwordObservable = view.passwordObservable().map(isPasswordValid());
         Observable<Boolean> confirmPasswordObservable = view.confirmPasswordObservable().map(isConfirmPasswordValid());
-        Observable<Boolean> emailPasswordObservable = view.emailObservable().map(isEmailValid());
 
+        compositeDisposable.add(emailObservable.subscribe(updateEmailViewState()));
         compositeDisposable.add(passwordObservable.subscribe(updatePasswordViewState()));
         compositeDisposable.add(confirmPasswordObservable.subscribe(updateConfirmPasswordViewState()));
-        compositeDisposable.add(emailPasswordObservable.subscribe(updateEmailViewState()));
 
         compositeDisposable.add(Observable.combineLatest(view.passwordObservable(), view.confirmPasswordObservable(),
                 (passwordCharSequence, confirmPasswordCharSequence) -> {
@@ -59,7 +59,7 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
                     String password = passwordCharSequence.toString();
                     String confirmPassword = confirmPasswordCharSequence.toString();
 
-                    return validator.isEmailValid(emailCharSequence) && !password.isEmpty() && !confirmPassword.isEmpty() && password.equals(confirmPassword);
+                    return validator.validEmail(emailCharSequence) && !password.isEmpty() && !confirmPassword.isEmpty() && password.equals(confirmPassword);
 
                 }).subscribe(fieldsFilledCorrectly -> {
             if (fieldsFilledCorrectly) {
@@ -74,7 +74,7 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
 
     @Override
     public void onDestroy() {
-        compositeDisposable.dispose();
+        compositeDisposable.clear();
     }
 
     @Override
@@ -84,24 +84,18 @@ public class RegisterActivityPresenterImpl implements RegisterActivityPresenter,
 
     @Override
     public Function<CharSequence, Boolean> isPasswordValid() {
-        return  passwordTextAfterChangeEvent -> validator.isPasswordValid(passwordTextAfterChangeEvent);
+        return  passwordTextAfterChangeEvent -> validator.validPassword(passwordTextAfterChangeEvent);
     }
 
     @Override
     public Function<CharSequence, Boolean> isConfirmPasswordValid() {
-        return confirmPasswordTextAfterChangeEvent -> validator.isPasswordValid(confirmPasswordTextAfterChangeEvent);
+        return confirmPasswordTextAfterChangeEvent -> validator.validPassword(confirmPasswordTextAfterChangeEvent);
     }
 
     @Override
     public Function<CharSequence, Boolean> isEmailValid() {
-        return emailTextAfterTextChangeEvent -> validator.isEmailValid(emailTextAfterTextChangeEvent);
+        return emailTextAfterTextChangeEvent -> validator.validEmail(emailTextAfterTextChangeEvent);
     }
-
-    @Override
-    public Function<CharSequence, Boolean> isUserNameValid() {
-        return null;
-    }
-
 
     @Override
     public Consumer<Boolean> updatePasswordViewState() {

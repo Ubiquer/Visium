@@ -25,7 +25,7 @@ import retrofit2.Response;
 
 public class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
 
-    private VisiumService mVisiumService;
+    private VisiumService visiumService;
     private Context context;
     private Realm realm;
     private Call<String> sendPreferencesCall;
@@ -34,7 +34,7 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     public UserPreferencesRepositoryImpl() {
 
         context = VisiumApplication.getContext();
-        mVisiumService = ((VisiumApplication) context).getVisiumService();
+        visiumService = ((VisiumApplication) context).getVisiumService();
 
     }
 
@@ -42,7 +42,7 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     public void commitPreferencesToDB(ArrayList<Integer> chosenPreferences) {
 
         if (sendPreferencesCall == null){
-            sendPreferencesCall = mVisiumService.sendPreferences(chosenPreferences);
+            sendPreferencesCall = visiumService.sendPreferences(chosenPreferences);
             sendPreferencesCall.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -108,7 +108,7 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     @Override
     public void loadPreferenceModels(OnDownLoadFinishedListener listener) {
 
-        mVisiumService.getUserPreferences().enqueue(new Callback<List<UserPreferencesWithImage>>() {
+        visiumService.getUserPreferences().enqueue(new Callback<List<UserPreferencesWithImage>>() {
             @Override
             public void onResponse(Call<List<UserPreferencesWithImage>> call, Response<List<UserPreferencesWithImage>> response) {
 

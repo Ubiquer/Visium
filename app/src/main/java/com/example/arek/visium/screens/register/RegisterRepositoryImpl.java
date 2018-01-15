@@ -19,8 +19,6 @@ public class RegisterRepositoryImpl implements RegisterRepository {
     private final VisiumService visiumService;
     private Call<String> userResponseCall;
     private final RegisterRequest registerRequest;
-//    private Retrofit retrofit;
-//    private Context context;
 
     @Inject
     public RegisterRepositoryImpl(UserStorage userStorage, VisiumService visiumService, RegisterRequest registerRequest) {
