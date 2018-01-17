@@ -61,7 +61,6 @@ public class UserPreferencesPresenterImplTest {
         public void commitPreferencesToDB(ArrayList<Integer> chosenPreferences) {
 
 
-
         }
 
         @Override
@@ -71,6 +70,11 @@ public class UserPreferencesPresenterImplTest {
 
         @Override
         public void commitAllCategoriesToRealm(List allCategories) {
+
+        }
+
+        @Override
+        public void onDestroy() {
 
         }
 

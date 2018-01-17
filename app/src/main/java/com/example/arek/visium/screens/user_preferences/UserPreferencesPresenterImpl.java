@@ -33,12 +33,6 @@ public class UserPreferencesPresenterImpl implements UserPreferencesPresenter, U
         repository.onDestroy();
     }
 
-    public void onAttach(UserPreferencesView userPreferencesView){
-//        this.view = userPreferencesView;
-//        repository = new UserPreferencesRepositoryImpl();
-
-    }
-
     @Override
     public void sendPreferencesToDB(ArrayList<Integer> chosenPreferences){
         repository.commitPreferencesToDB(chosenPreferences);

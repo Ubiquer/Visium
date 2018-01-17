@@ -2,10 +2,12 @@ package com.example.arek.visium;
 
 import android.util.Log;
 
+import com.example.arek.visium.model.Category;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.example.arek.visium.realm.CategoriesRealm;
 import com.example.arek.visium.realm.UserPreferencesCategories;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,7 +53,6 @@ public class RealmService {
                 {
                     categoriesRealm.setAllCategories(categories);
                 }
-
             }
         });
 
@@ -74,7 +75,25 @@ public class RealmService {
             }
         });
 
+    }
 
+    public ArrayList<Category> getCategories(){
+
+        ArrayList<Category> categoriesList = new ArrayList<>();
+
+        realm.executeTransaction(realm1 -> {
+            CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
+            RealmList<String> categories = categoriesRealm.getAllCategories();
+
+            for (int i=0; i<categories.size(); i++){
+
+                Category category = new Category();
+                category.setCategoryName(categories.get(i));
+                categoriesList.add(category);
+            }
+        });
+
+        return categoriesList;
 
     }
 

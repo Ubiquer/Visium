@@ -33,6 +33,7 @@ public class VisiumApplication extends Application {
    private UserStorage userStorage;
    private RegisterActivityPresenterImpl registerActivityPresenterImpl;
    private VisiumService visiumService;
+   private RealmService realmService;
 
    private Retrofit retrofit;
    private static Context context = null;
@@ -61,10 +62,11 @@ public class VisiumApplication extends Application {
                 .contextModule(new ContextModule(this))
                 .build();
 
+        initRealmConfiguration();
+
         visiumService = visiumApplicationComponent.getVisiumService();
         picasso = visiumApplicationComponent.getPicasso();
-
-        initRealmConfiguration();
+        realmService = visiumApplicationComponent.getRealmService();
 
         final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -77,10 +79,7 @@ public class VisiumApplication extends Application {
         builder.client(client);
         retrofit = builder.build();
         visiumService = retrofit.create(VisiumService.class);
-
         userStorage = new UserStorage(PreferenceManager.getDefaultSharedPreferences(this));
-//        registerActivityPresenterImpl = new RegisterActivityPresenterImpl(userStorage);
-//        userPreferencesRepository = new UserPreferencesRepositoryImpl();
     }
 
     private void initRealmConfiguration(){
@@ -122,5 +121,9 @@ public class VisiumApplication extends Application {
 
     public UserPreferencesRepository getUserPreferencesRepository() {
         return userPreferencesRepository;
+    }
+
+    public RealmService getRealmService() {
+        return realmService;
     }
 }

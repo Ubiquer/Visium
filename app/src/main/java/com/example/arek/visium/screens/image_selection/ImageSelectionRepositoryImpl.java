@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.model.Category;
 import com.example.arek.visium.realm.CategoriesRealm;
@@ -34,6 +35,7 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
     private Context context;
     private Call<ResponseBody> uploadImageCall;
     private VisiumService visiumService;
+    private RealmService realmService;
     private String token;
     private String fileUri;
     private static final int MY_PERMISSIONS_REQUEST = 100;
@@ -41,6 +43,7 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
     public ImageSelectionRepositoryImpl() {
         context = VisiumApplication.getContext();
         visiumService = ((VisiumApplication) context).getVisiumService();
+        realmService = ((VisiumApplication) context).getRealmService();
     }
 
 
@@ -96,22 +99,23 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
     @Override
     public ArrayList<Category> getCategoriesFromRealm() {
 
-        ArrayList<Category> categoriesList = new ArrayList<>();
-        realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
-        RealmList<String> categories = categoriesRealm.getAllCategories();
-
-        for (int i=0; i<categories.size(); i++){
-
-            Category category = new Category();
-            category.setCategoryName(categories.get(i));
-            categoriesList.add(category);
-        }
-
-        realm.commitTransaction();
-        realm.close();
-        return categoriesList;
+        return realmService.getCategories();
+//        ArrayList<Category> categoriesList = new ArrayList<>();
+//        realm = Realm.getDefaultInstance();
+//        realm.beginTransaction();
+//        CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
+//        RealmList<String> categories = categoriesRealm.getAllCategories();
+//
+//        for (int i=0; i<categories.size(); i++){
+//
+//            Category category = new Category();
+//            category.setCategoryName(categories.get(i));
+//            categoriesList.add(category);
+//        }
+//
+//        realm.commitTransaction();
+//        realm.close();
+//        return categoriesList;
     }
 
     public String getAccessToken(){

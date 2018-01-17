@@ -1,7 +1,6 @@
 package com.example.arek.visium.screens.user_preferences;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,13 +20,9 @@ import com.example.arek.visium.screens.menu.MenuActivity;
 import com.example.arek.visium.MyGridLayoutManager;
 import com.example.arek.visium.R;
 import com.example.arek.visium.model.UserPreferencesWithImage;
-import com.example.arek.visium.rest.VisiumService;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,13 +37,10 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
     @BindView(R.id.num_of_categories)
     public TextView numOfCategories;
 
-    private VisiumService mVisiumService;
     UserPreferencesRecyclerAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recyclerViewLayoutManager;
-    private Context context;
     private Intent menuActivityIntent;
     private static final int columnsNumber = 3;
-    private UserPreferencesPresenterImpl userPreferencesPresenterImpl;
     private ArrayList<Integer> chosenPreferences;
     int resId;
 
@@ -76,7 +68,7 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
 
     private void initRecyclerView(){
         resId = R.anim.grid_layout_animation_from_bottom;
-        recyclerViewLayoutManager = new MyGridLayoutManager(context, columnsNumber);
+        recyclerViewLayoutManager = new MyGridLayoutManager(this, columnsNumber);
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerViewAdapter = new UserPreferencesRecyclerAdapter();

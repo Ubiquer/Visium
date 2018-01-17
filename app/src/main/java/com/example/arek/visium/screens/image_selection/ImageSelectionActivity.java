@@ -184,14 +184,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-//            ImageView imageView = (ImageView) findViewById(R.id.test_image);
-//            Bitmap bmp = null;
-//            try{
-//                bmp = getBitmapFromUri(selectedImage);
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
-//            imageView.setImageBitmap(bmp);
         }
     }
 
