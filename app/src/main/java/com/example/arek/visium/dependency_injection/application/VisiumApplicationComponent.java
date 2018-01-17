@@ -2,6 +2,7 @@ package com.example.arek.visium.dependency_injection.application;
 
 import android.content.SharedPreferences;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.dependency_injection.network.VisiumServiceModule;
 import com.example.arek.visium.rest.VisiumService;
@@ -23,6 +24,7 @@ public interface VisiumApplicationComponent {
     SharedPreferences getSharedPreferences();
     Picasso getPicasso();
     VisiumService getVisiumService();
+    RealmService getRealmService();
     UserStorage getUserStorage();
     Realm getRealm();
     CredentialsValidator getCredentialsValidator();

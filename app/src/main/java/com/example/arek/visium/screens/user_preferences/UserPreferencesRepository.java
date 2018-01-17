@@ -25,6 +25,8 @@ public interface UserPreferencesRepository {
 
     }
 
+    void onDestroy();
+
     void loadPreferenceModels(OnDownLoadFinishedListener listener);
 
 }

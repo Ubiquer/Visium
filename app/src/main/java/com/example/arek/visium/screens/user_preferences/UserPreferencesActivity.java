@@ -83,14 +83,13 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-//        userPreferencesPresenterImpl.onAttach(this);
+    protected void onDestroy() {
+        presenter.onDestroy();
+        super.onDestroy();
     }
 
     @Override
     protected void onStop() {
-//        userPreferencesPresenterImpl.onDetach();
         super.onStop();
         finish();
     }
@@ -112,8 +111,8 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
                 (dialog, which) -> {
                    startActivity(menuActivityIntent);
                     chosenPreferences = recyclerViewAdapter.getPreferences();
-                    userPreferencesPresenterImpl.commitSelectedPreferencesToRealm(selectedPreferences);
-                    userPreferencesPresenterImpl.sendPreferencesToDB(chosenPreferences);
+                    presenter.commitSelectedPreferencesToRealm(selectedPreferences);
+                    presenter.sendPreferencesToDB(chosenPreferences);
                 }).setNegativeButton("NO", ((dialog, which) -> mBuilder.setCancelable(true)));
         AlertDialog dialog = mBuilder.create();
         dialog.show();

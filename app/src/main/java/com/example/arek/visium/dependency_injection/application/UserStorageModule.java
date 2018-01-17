@@ -2,6 +2,7 @@ package com.example.arek.visium.dependency_injection.application;
 
 import android.content.SharedPreferences;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.dependency_injection.application.VisiumApplicationScope;
 
@@ -26,6 +27,12 @@ public class UserStorageModule {
     @VisiumApplicationScope
     Realm provideRealm(){
         return Realm.getDefaultInstance();
+    }
+
+    @Provides
+    @VisiumApplicationScope
+    RealmService realmService(Realm realm){
+        return new RealmService(realm);
     }
 
 }

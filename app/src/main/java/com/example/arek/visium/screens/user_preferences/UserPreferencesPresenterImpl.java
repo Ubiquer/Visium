@@ -30,18 +30,13 @@ public class UserPreferencesPresenterImpl implements UserPreferencesPresenter, U
 
     @Override
     public void onDestroy() {
-
+        repository.onDestroy();
     }
 
     public void onAttach(UserPreferencesView userPreferencesView){
 //        this.view = userPreferencesView;
 //        repository = new UserPreferencesRepositoryImpl();
 
-    }
-
-    public void onDetach(){
-//        view = null;
-//        repository = null;
     }
 
     @Override

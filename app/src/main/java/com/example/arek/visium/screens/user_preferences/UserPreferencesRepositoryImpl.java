@@ -3,6 +3,7 @@ package com.example.arek.visium.screens.user_preferences;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.example.arek.visium.realm.CategoriesRealm;
@@ -28,15 +29,14 @@ import retrofit2.Response;
 public class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
 
     private final VisiumService visiumService;
-//    private final Realm realm;
-    private Realm realm;
+    private final RealmService realmService;
     private Call<String> sendPreferencesCall;
     private ArrayList<UserPreferencesWithImage> userPreferencesWithImages;
 
     @Inject
-    public UserPreferencesRepositoryImpl(VisiumService visiumService) {
+    public UserPreferencesRepositoryImpl(VisiumService visiumService, RealmService realmService) {
         this.visiumService = visiumService;
-//        this.realm = realm;
+        this.realmService = realmService;
     }
 
     @Override
@@ -62,48 +62,18 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     @Override
     public void commitSelectedCategoriesToRealm(List selectedCategories) {
 
-        RealmList<String> selectedPreferencesRealm = new RealmList<>();
-        for (int i = 0; i<selectedCategories.size(); i++ ){
-            String preferenceName = (String) selectedCategories.get(i);
-            selectedPreferencesRealm.add(preferenceName);
-        }
-        try{
-            Log.d("realm prefs: ",selectedPreferencesRealm.toArray().toString());
-            realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            UserPreferencesCategories categoriesList = realm.createObject(UserPreferencesCategories.class, UUID.randomUUID().toString());
-            categoriesList.setCategoriesList(selectedPreferencesRealm);
-            realm.commitTransaction();
-            realm.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        realmService.commitSelectedCategoriesToRealm(selectedCategories);
     }
 
     @Override
     public void commitAllCategoriesToRealm(List allCategories) {
 
-        RealmList<String> categories = new RealmList<>();
-        for (int i = 0; i<allCategories.size(); i++){
-            UserPreferencesWithImage userPreferencesWithImage = (UserPreferencesWithImage) allCategories.get(i);
-            String category = userPreferencesWithImage.getCategoryName();
-            categories.add(category);
-        }
-        realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
-        if (categoriesRealm == null)
-        {
-            categoriesRealm = realm.createObject(CategoriesRealm.class, UUID.randomUUID().toString());
-            categoriesRealm.setAllCategories(categories);
-        }
-        else
-        {
-            categoriesRealm.setAllCategories(categories);
-        }
-        realm.commitTransaction();
-        realm.close();
+        realmService.commitAllCategoriesToRealm(allCategories);
+    }
+
+    @Override
+    public void onDestroy() {
+        realmService.closeRealm();
     }
 
     @Override
