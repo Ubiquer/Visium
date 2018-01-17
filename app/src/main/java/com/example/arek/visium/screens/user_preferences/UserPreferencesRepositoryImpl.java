@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import retrofit2.Call;
@@ -25,17 +27,16 @@ import retrofit2.Response;
 
 public class UserPreferencesRepositoryImpl implements UserPreferencesRepository {
 
-    private VisiumService visiumService;
-    private Context context;
+    private final VisiumService visiumService;
+//    private final Realm realm;
     private Realm realm;
     private Call<String> sendPreferencesCall;
     private ArrayList<UserPreferencesWithImage> userPreferencesWithImages;
 
-    public UserPreferencesRepositoryImpl() {
-
-        context = VisiumApplication.getContext();
-        visiumService = ((VisiumApplication) context).getVisiumService();
-
+    @Inject
+    public UserPreferencesRepositoryImpl(VisiumService visiumService) {
+        this.visiumService = visiumService;
+//        this.realm = realm;
     }
 
     @Override
@@ -59,11 +60,11 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     }
 
     @Override
-    public void commitSelectedPreferencesToRealm(List selectedPreferences) {
+    public void commitSelectedCategoriesToRealm(List selectedCategories) {
 
         RealmList<String> selectedPreferencesRealm = new RealmList<>();
-        for (int i = 0; i<selectedPreferences.size(); i++ ){
-            String preferenceName = (String) selectedPreferences.get(i);
+        for (int i = 0; i<selectedCategories.size(); i++ ){
+            String preferenceName = (String) selectedCategories.get(i);
             selectedPreferencesRealm.add(preferenceName);
         }
         try{
@@ -81,11 +82,11 @@ public class UserPreferencesRepositoryImpl implements UserPreferencesRepository 
     }
 
     @Override
-    public void commitAllCategoriesToRealm(List allPreferences) {
+    public void commitAllCategoriesToRealm(List allCategories) {
 
         RealmList<String> categories = new RealmList<>();
-        for (int i = 0; i<allPreferences.size(); i++){
-            UserPreferencesWithImage userPreferencesWithImage = (UserPreferencesWithImage) allPreferences.get(i);
+        for (int i = 0; i<allCategories.size(); i++){
+            UserPreferencesWithImage userPreferencesWithImage = (UserPreferencesWithImage) allCategories.get(i);
             String category = userPreferencesWithImage.getCategoryName();
             categories.add(category);
         }

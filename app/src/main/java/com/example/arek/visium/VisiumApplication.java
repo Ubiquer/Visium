@@ -64,6 +64,8 @@ public class VisiumApplication extends Application {
         visiumService = visiumApplicationComponent.getVisiumService();
         picasso = visiumApplicationComponent.getPicasso();
 
+        initRealmConfiguration();
+
         final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -76,13 +78,19 @@ public class VisiumApplication extends Application {
         retrofit = builder.build();
         visiumService = retrofit.create(VisiumService.class);
 
-        Realm.init(this);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
-        Realm.setDefaultConfiguration(realmConfiguration);
-
         userStorage = new UserStorage(PreferenceManager.getDefaultSharedPreferences(this));
 //        registerActivityPresenterImpl = new RegisterActivityPresenterImpl(userStorage);
-        userPreferencesRepository = new UserPreferencesRepositoryImpl();
+//        userPreferencesRepository = new UserPreferencesRepositoryImpl();
+    }
+
+    private void initRealmConfiguration(){
+
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
     }
 
     public VisiumApplicationComponent component(){

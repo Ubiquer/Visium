@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arek.visium.VisiumApplication;
+import com.example.arek.visium.dependency_injection.screens.user_preferences_di.DaggerUserPreferencesActivityComponent;
+import com.example.arek.visium.dependency_injection.screens.user_preferences_di.UserPreferencesActivityComponent;
+import com.example.arek.visium.dependency_injection.screens.user_preferences_di.UserPreferencesActivityModule;
 import com.example.arek.visium.screens.menu.MenuActivity;
 import com.example.arek.visium.MyGridLayoutManager;
 import com.example.arek.visium.R;
@@ -21,6 +25,8 @@ import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,19 +46,31 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
     UserPreferencesRecyclerAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recyclerViewLayoutManager;
     private Context context;
-    private Intent baseOptionsActivityIntent;
+    private Intent menuActivityIntent;
     private static final int columnsNumber = 3;
-    private UserPreferencesPresenter userPreferencesPresenter;
+    private UserPreferencesPresenterImpl userPreferencesPresenterImpl;
     private ArrayList<Integer> chosenPreferences;
     int resId;
+
+    @Inject
+    UserPreferencesPresenter presenter;
+
+    private UserPreferencesActivityComponent component;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_start);
         ButterKnife.bind(this);
+
+        component = DaggerUserPreferencesActivityComponent.builder()
+                .userPreferencesActivityModule(new UserPreferencesActivityModule(this))
+                .visiumApplicationComponent(VisiumApplication.get(this).component())
+                .build();
+
+        component.injectUserPreferencesActivity(this);
+        presenter.onCreate();
         initRecyclerView();
-        userPreferencesPresenter = new UserPreferencesPresenter();
 
     }
 
@@ -67,19 +85,19 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
     @Override
     protected void onStart() {
         super.onStart();
-        userPreferencesPresenter.onAttach(this);
+//        userPreferencesPresenterImpl.onAttach(this);
     }
 
     @Override
     protected void onStop() {
-        userPreferencesPresenter.onDetach();
+//        userPreferencesPresenterImpl.onDetach();
         super.onStop();
         finish();
     }
 
     @OnClick(R.id.btn_confirm_preferences)
     public void confirmPreferences(){
-        baseOptionsActivityIntent = new Intent(getBaseContext(), MenuActivity.class);
+        menuActivityIntent = new Intent(getBaseContext(), MenuActivity.class);
         List selectedPreferences = recyclerViewAdapter.getSelectedItems();
         Log.d("Message", selectedPreferences.toString());
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(UserPreferencesActivity.this);
@@ -92,10 +110,10 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
                 selectedPreferences +
                 "\nDo you confirm chosen preferences?").setPositiveButton("YES",
                 (dialog, which) -> {
-                   startActivity(baseOptionsActivityIntent);
+                   startActivity(menuActivityIntent);
                     chosenPreferences = recyclerViewAdapter.getPreferences();
-                    userPreferencesPresenter.commitSelectedPreferencesToRealm(selectedPreferences);
-                    userPreferencesPresenter.sendPreferencesToDB(chosenPreferences);
+                    userPreferencesPresenterImpl.commitSelectedPreferencesToRealm(selectedPreferences);
+                    userPreferencesPresenterImpl.sendPreferencesToDB(chosenPreferences);
                 }).setNegativeButton("NO", ((dialog, which) -> mBuilder.setCancelable(true)));
         AlertDialog dialog = mBuilder.create();
         dialog.show();

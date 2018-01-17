@@ -13,7 +13,7 @@ public interface UserPreferencesRepository {
 
     void commitPreferencesToDB(ArrayList<Integer> chosenPreferences);
 
-    void commitSelectedPreferencesToRealm(List selectedPreferences);
+    void commitSelectedCategoriesToRealm(List selectedPreferences);
 
     void commitAllCategoriesToRealm(List allCategories);
 
