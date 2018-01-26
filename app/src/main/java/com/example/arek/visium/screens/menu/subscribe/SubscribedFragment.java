@@ -40,7 +40,7 @@ public class SubscribedFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -49,21 +49,21 @@ public class SubscribedFragment extends Fragment{
         return inflater.inflate(R.layout.fragment_subscribed, container, false);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.subscribed, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_add:
-                callback.goToUserPictures();
-                return true;
-            case R.id.action_sort:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.subscribed, menu);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.action_add:
+//                callback.goToUserPictures();
+//                return true;
+//            case R.id.action_sort:
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }

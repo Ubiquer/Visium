@@ -35,4 +35,8 @@ public class ImageCarouselPresenterImpl {
         imageCarouselRepository = null;
     }
 
+    public int getImageListSize(){
+        return imageCarouselRepository.getImagesFromExternalStorage().size();
+    }
+
 }

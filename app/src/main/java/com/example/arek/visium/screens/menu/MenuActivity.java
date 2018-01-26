@@ -9,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,9 +40,10 @@ import com.example.arek.visium.screens.user_pictures.UserPicturesFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback{
+        implements NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback, MenuFragment.OnMenuOptionClickedListener{
 
     //TODO: Implement MVP for this screen.
 
@@ -48,16 +51,16 @@ public class MenuActivity extends AppCompatActivity
     private static final int CAMERA_PERMISSION_REQUEST = 1;
     private boolean permissionGranted;
 
-    @BindView(R.id.app_logo)
-    ImageView logoImage;
-    @BindView(R.id.competition_button)
-    Button competitionButton;
-    @BindView(R.id.evaluation_button)
-    Button evaluationButton;
-    @BindView(R.id.rankings_button)
-    Button rankingsButton;
-    @BindView(R.id.drawer_relative)
-    RelativeLayout relativeLayout;
+//    @BindView(R.id.app_logo)
+//    ImageView logoImage;
+//    @BindView(R.id.competition_button)
+//    Button competitionButton;
+//    @BindView(R.id.evaluation_button)
+//    Button evaluationButton;
+//    @BindView(R.id.rankings_button)
+//    Button rankingsButton;
+//    @BindView(R.id.drawer_relative)
+//    RelativeLayout relativeLayout;
     private UserStorage userStorage;
 
     private Intent competitionActivity;
@@ -65,19 +68,28 @@ public class MenuActivity extends AppCompatActivity
     private Intent rankingsActivity;
     private NavigationView navigationView;
     private static final int CAMERA_PIC_REQUEST = 2;
+    private FragmentManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
+
+        if(savedInstanceState == null){
+            MenuFragment menuFragment = new MenuFragment();
+            manager = getSupportFragmentManager();
+            manager.beginTransaction()
+                    .add(R.id.container, menuFragment)
+//                    .addToBackStack(null)
+                    .commit();
+        }
 
          userStorage = ((VisiumApplication)getApplication()).getUserStorage();
 //        if (userStorage.noSessionToken()){
 //            goToLogin();
 //            return;
 //        }
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -92,7 +104,7 @@ public class MenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -106,10 +118,10 @@ public class MenuActivity extends AppCompatActivity
         drawerEmailTextView.setText(userStorage.getEmail());
     }
 
-    private void showSnackbar() {
-        Snackbar snackbar = Snackbar.make(relativeLayout, "Camera permission denied", Snackbar.LENGTH_LONG);
-        snackbar.show();
-    }
+//    private void showSnackbar() {
+//        Snackbar snackbar = Snackbar.make(relativeLayout, "Camera permission denied", Snackbar.LENGTH_LONG);
+//        snackbar.show();
+//    }
 
     private void goToLogin() {
         startActivity(new Intent(this, LoginActivity.class));
@@ -148,21 +160,6 @@ public class MenuActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.rankings_button)
-    public void navigateToRankingsActivity(){
-        rankingsActivity = new Intent(getBaseContext(), RankingsActivity.class);
-        startActivity(rankingsActivity);
-    }
-    @OnClick(R.id.evaluation_button)
-    public void navigateToImageDuelActivity(){
-        imageDuelActivity = new Intent(getBaseContext(), ImageDuelActivity.class);
-        startActivity(imageDuelActivity);
-    }
-    @OnClick(R.id.competition_button)
-    public void navigateToCompetitionActivity(){
-        competitionActivity = new Intent(getBaseContext(), ImageSelectionActivity.class);
-        startActivity(competitionActivity);
-    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -192,6 +189,7 @@ public class MenuActivity extends AppCompatActivity
     private void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
+                .addToBackStack(null)
                 .commit();
     }
     @Override
@@ -229,5 +227,23 @@ public class MenuActivity extends AppCompatActivity
 
         }
 
+    }
+
+    @Override
+    public void navigateToImageDuelActivity() {
+        imageDuelActivity = new Intent(this, ImageDuelActivity.class);
+        startActivity(imageDuelActivity);
+    }
+
+    @Override
+    public void navigateToRankingsActivity() {
+        rankingsActivity = new Intent(this, RankingsActivity.class);
+        startActivity(rankingsActivity);
+    }
+
+    @Override
+    public void navigateToCompetitionActivity() {
+        competitionActivity = new Intent(this, ImageSelectionActivity.class);
+        startActivity(competitionActivity);
     }
 }

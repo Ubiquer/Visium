@@ -111,13 +111,20 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
 
                 View view = snapHelper.findSnapView(linearLayoutManager);
                 int pos = mRecyclerView.getChildAdapterPosition(view);
+                int firstItemVisible = linearLayoutManager.findFirstVisibleItemPosition();
+
+                if (firstItemVisible != 0 && firstItemVisible % imageCarouselPresenterImpl.getImageListSize() == 0){
+                    adapter.notifyItemRangeChanged(0, adapter.getItemCount());
+                    mRecyclerView.getLayoutManager().scrollToPosition(0);
+                }
+
                 showEnlargedSnappedImage(pos);
             }
         });
     }
 
     private void showEnlargedSnappedImage(int pos) {
-
+        pos = pos % imagePathsList.size();
         imageUri = imagePathsList.get(pos);
         bitmap = BitmapFactory.decodeFile(imageUri);
         ImageView imageView = (ImageView) findViewById(R.id.test_image);

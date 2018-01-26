@@ -46,11 +46,6 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
         realmService = ((VisiumApplication) context).getRealmService();
     }
 
-
-//    File originalFile = FileUtils.getFile(this, fileUri);
-//    RequestBody filePart = RequestBody.create(
-//            MediaType.parse(context.getContentResolver().getType(fileUri)),
-//            originalFile);
     @Override
     public void uploadFile(String fileUri, String spinnerCategory, OnUploadFinishedListener onUploadFinishedListener) {
 
@@ -100,22 +95,7 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
     public ArrayList<Category> getCategoriesFromRealm() {
 
         return realmService.getCategories();
-//        ArrayList<Category> categoriesList = new ArrayList<>();
-//        realm = Realm.getDefaultInstance();
-//        realm.beginTransaction();
-//        CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
-//        RealmList<String> categories = categoriesRealm.getAllCategories();
-//
-//        for (int i=0; i<categories.size(); i++){
-//
-//            Category category = new Category();
-//            category.setCategoryName(categories.get(i));
-//            categoriesList.add(category);
-//        }
-//
-//        realm.commitTransaction();
-//        realm.close();
-//        return categoriesList;
+
     }
 
     public String getAccessToken(){

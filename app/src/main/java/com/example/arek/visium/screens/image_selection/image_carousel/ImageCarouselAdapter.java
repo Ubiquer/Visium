@@ -33,7 +33,7 @@ public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdap
     @Override
     public void onBindViewHolder(CarouselViewHolder holder, int position) {
 
-        final String picture = picsFromExternalStorage.get(position);
+        final String picture = picsFromExternalStorage.get(position % picsFromExternalStorage.size());
         Bitmap bitmap = BitmapFactory.decodeFile(picture);
         holder.carouselImage.setImageBitmap(bitmap);
 //        Picasso.with(holder.carouselImage.getContext())
@@ -44,7 +44,7 @@ public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdap
 
     @Override
     public int getItemCount() {
-        return picsFromExternalStorage.size();
+        return picsFromExternalStorage == null ? 0 : picsFromExternalStorage.size()*2;
     }
 
     public class CarouselViewHolder extends RecyclerView.ViewHolder{
@@ -60,6 +60,7 @@ public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdap
 
     public void setData(ArrayList<String> picsFromExternalStorage){
         this.picsFromExternalStorage = picsFromExternalStorage;
+        notifyDataSetChanged();
     }
 
 }

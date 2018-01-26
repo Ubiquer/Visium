@@ -1,5 +1,6 @@
 package com.example.arek.visium.dependency_injection.screens.login_di;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.screens.CredentialsValidator;
@@ -48,8 +49,8 @@ public class LoginActivityModule {
 
     @Provides
     @LoginActivityScope
-    LoginRepository repository(UserStorage userStorage, VisiumService visiumService, Realm realm){
-        return new LoginRepositoryImpl(userStorage, visiumService, realm);
+    LoginRepository repository(RealmService realmService, UserStorage userStorage, VisiumService visiumService, Realm realm){
+        return new LoginRepositoryImpl(realmService, userStorage, visiumService, realm);
     }
 
 }

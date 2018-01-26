@@ -5,7 +5,9 @@ import android.util.Log;
 import com.example.arek.visium.model.Category;
 import com.example.arek.visium.model.UserPreferencesWithImage;
 import com.example.arek.visium.realm.CategoriesRealm;
+import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.realm.UserPreferencesCategories;
+import com.example.arek.visium.screens.login.LoginRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,10 @@ import io.realm.RealmList;
 public class RealmService {
 
     private final Realm realm;
+
+    interface OnCheckSavedPreferences{
+        void checkSavedPreferences();
+    }
 
     public RealmService(Realm realm) {
         this.realm = realm;
@@ -95,6 +101,32 @@ public class RealmService {
 
         return categoriesList;
 
+    }
+
+    public void createOrUpdateToken(String token){
+
+        realm.executeTransaction(realm1 -> {
+            Token mToken = realm.where(Token.class).findFirst();
+            if (mToken == null){
+                mToken = realm.createObject(Token.class);
+                mToken.setM_token(token);
+            }else{
+                mToken.setM_token(token);
+                Log.d("my token: ", mToken.getM_token());
+            }
+        });
+    }
+
+    public void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences) {
+
+        realm.beginTransaction();
+        List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
+        if (listOfCategories.size() != 0){
+            onCheckSavedPreferences.savedPreferencesStatus(true);
+        }else {
+            onCheckSavedPreferences.savedPreferencesStatus(false);
+        }
+        realm.commitTransaction();
     }
 
 }

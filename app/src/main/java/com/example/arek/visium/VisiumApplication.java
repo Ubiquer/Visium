@@ -37,7 +37,6 @@ public class VisiumApplication extends Application {
 
    private Retrofit retrofit;
    private static Context context = null;
-   private UserPreferencesRepository userPreferencesRepository;
 
    private VisiumApplicationComponent visiumApplicationComponent;
    private Picasso picasso;
@@ -117,10 +116,6 @@ public class VisiumApplication extends Application {
 
     public static Context getContext() {
         return context;
-    }
-
-    public UserPreferencesRepository getUserPreferencesRepository() {
-        return userPreferencesRepository;
     }
 
     public RealmService getRealmService() {

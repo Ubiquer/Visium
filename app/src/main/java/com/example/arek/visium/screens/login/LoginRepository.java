@@ -10,7 +10,7 @@ public interface LoginRepository {
 
     void logIn(UserLogin userLogin, OnLoginListener onLoginListener);
 
-    void createOrUpdateToken(String token);
+//    void createOrUpdateToken(String token);
 
     void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences);
 

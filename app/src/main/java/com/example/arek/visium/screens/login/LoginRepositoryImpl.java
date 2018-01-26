@@ -2,6 +2,7 @@ package com.example.arek.visium.screens.login;
 
 import android.util.Log;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.model.UserLogin;
 import com.example.arek.visium.realm.Token;
@@ -28,11 +29,13 @@ public class LoginRepositoryImpl implements LoginRepository{
     private String token;
     private final VisiumService visiumService;
     private final UserStorage userStorage;
+    private final RealmService realmService;
 //    private UserLogin userLogin;
 
 
     @Inject
-    public LoginRepositoryImpl(UserStorage userStorage, VisiumService visiumService, Realm realm) {
+    public LoginRepositoryImpl(RealmService realmService, UserStorage userStorage, VisiumService visiumService, Realm realm) {
+        this.realmService = realmService;
         this.userStorage = userStorage;
         this.realm = realm;
         this.visiumService = visiumService;
@@ -53,7 +56,8 @@ public class LoginRepositoryImpl implements LoginRepository{
                     if (response.isSuccessful()){
                         token = response.body();
                         userStorage.login(userLogin, token);
-                        createOrUpdateToken(token);
+                        realmService.createOrUpdateToken(token);
+//                        createOrUpdateToken(token);
                         onLoginListener.onLoginFinished(true, ("success"));
 //                            ResponseBody responseBody = response.errorBody();
 //                            Converter<ResponseBody, ErrorResponse> converter = retrofit.responseBodyConverter(ErrorResponse.class, new Annotation[]{});
@@ -77,20 +81,20 @@ public class LoginRepositoryImpl implements LoginRepository{
             });
         }
     }
-    @Override
-    public void createOrUpdateToken(String token) {
-
-        Token mToken = realm.where(Token.class).findFirst();
-        realm.beginTransaction();
-        if (mToken == null){
-            mToken = realm.createObject(Token.class);
-            mToken.setM_token(token);
-        }else{
-            mToken.setM_token(token);
-            Log.d("my token: ", mToken.getM_token());
-        }
-        realm.commitTransaction();
-    }
+//    @Override
+//    public void createOrUpdateToken(String token) {
+//
+//        Token mToken = realm.where(Token.class).findFirst();
+//        realm.beginTransaction();
+//        if (mToken == null){
+//            mToken = realm.createObject(Token.class);
+//            mToken.setM_token(token);
+//        }else{
+//            mToken.setM_token(token);
+//            Log.d("my token: ", mToken.getM_token());
+//        }
+//        realm.commitTransaction();
+//    }
 
     @Override
     public void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences) {
