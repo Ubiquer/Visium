@@ -99,6 +99,10 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter, Login
         };
     }
 
+    @Override
+    public void deleteLoginToken() {
+        loginRepository.deleteToken();
+    }
 
     @Override
     public void onLoginProgress(boolean notLoggedIn) {

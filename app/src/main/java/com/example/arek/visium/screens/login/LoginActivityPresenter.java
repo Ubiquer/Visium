@@ -22,4 +22,5 @@ public interface LoginActivityPresenter {
     Function<CharSequence, Boolean> isPasswordValid();
     Consumer<Boolean> updateEmailViewState();
     Consumer<Boolean> updatePasswordViewState();
+    void deleteLoginToken();
 }

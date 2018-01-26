@@ -1,6 +1,7 @@
 package com.example.arek.visium.dependency_injection.screens.menu_di;
 
 import com.example.arek.visium.dependency_injection.application.VisiumApplicationComponent;
+import com.example.arek.visium.screens.menu.MenuActivity;
 
 import dagger.Component;
 
@@ -10,4 +11,7 @@ import dagger.Component;
 @MenuActivityScope
 @Component(modules = MenuActivityModule.class, dependencies = VisiumApplicationComponent.class)
 public interface MenuActivityComponent {
+
+    void injectMenuActivity(MenuActivity menuActivity);
+
 }

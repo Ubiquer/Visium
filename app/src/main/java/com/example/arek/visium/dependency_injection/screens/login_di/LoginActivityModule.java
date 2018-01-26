@@ -32,7 +32,7 @@ public class LoginActivityModule {
     @Provides
     @LoginActivityScope
     public LoginActivity loginActivity(){
-        return  loginActivity;
+        return loginActivity;
     }
 
     @Provides

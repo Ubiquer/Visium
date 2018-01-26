@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
 //            passwordText.setText(ApiKeys.GET_PASSWORD);
 //        }
         presenter.onCreate();
+        presenter.deleteLoginToken();
     }
 
     @Override
@@ -139,12 +140,12 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
 
     @Override
     public Observable<CharSequence> emailObservable() {
-        return RxTextView.textChanges(emailText).skip(1).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
+        return RxTextView.textChanges(emailText).skip(1).debounce(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable<CharSequence> passwordObservable() {
-        return RxTextView.textChanges(passwordText).skip(1).debounce(2, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
+        return RxTextView.textChanges(passwordText).skip(1).debounce(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread());
     }
 
 

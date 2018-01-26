@@ -21,15 +21,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.arek.visium.R;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.VisiumApplication;
+import com.example.arek.visium.dependency_injection.screens.menu_di.DaggerMenuActivityComponent;
+import com.example.arek.visium.dependency_injection.screens.menu_di.MenuActivityComponent;
+import com.example.arek.visium.dependency_injection.screens.menu_di.MenuActivityModule;
 import com.example.arek.visium.screens.image_selection.ImageSelectionActivity;
 import com.example.arek.visium.screens.image_duel.ImageDuelActivity;
 import com.example.arek.visium.screens.login.LoginActivity;
@@ -37,30 +37,16 @@ import com.example.arek.visium.screens.rankings.RankingsActivity;
 import com.example.arek.visium.screens.menu.subscribe.SubscribedFragment;
 import com.example.arek.visium.screens.user_pictures.UserPicturesFragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
+import javax.inject.Inject;
 
 public class MenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback, MenuFragment.OnMenuOptionClickedListener{
+        implements MenuActivityView, NavigationView.OnNavigationItemSelectedListener, SubscribedFragment.Callback, MenuFragment.OnMenuOptionClickedListener{
 
     //TODO: Implement MVP for this screen.
 
     private static final int SELECTION_REQUEST_CODE = 2;
     private static final int CAMERA_PERMISSION_REQUEST = 1;
     private boolean permissionGranted;
-
-//    @BindView(R.id.app_logo)
-//    ImageView logoImage;
-//    @BindView(R.id.competition_button)
-//    Button competitionButton;
-//    @BindView(R.id.evaluation_button)
-//    Button evaluationButton;
-//    @BindView(R.id.rankings_button)
-//    Button rankingsButton;
-//    @BindView(R.id.drawer_relative)
-//    RelativeLayout relativeLayout;
     private UserStorage userStorage;
 
     private Intent competitionActivity;
@@ -69,6 +55,13 @@ public class MenuActivity extends AppCompatActivity
     private NavigationView navigationView;
     private static final int CAMERA_PIC_REQUEST = 2;
     private FragmentManager manager;
+    private MenuActivityComponent component;
+
+    @Inject
+    MenuActivityView view;
+
+    @Inject
+    MenuActivityPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,20 +69,26 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
 //        ButterKnife.bind(this);
 
+
+        component = DaggerMenuActivityComponent.builder()
+                .menuActivityModule(new MenuActivityModule(this))
+                .visiumApplicationComponent(VisiumApplication.get(this).component())
+                .build();
+        component.injectMenuActivity(this);
+
         if(savedInstanceState == null){
             MenuFragment menuFragment = new MenuFragment();
             manager = getSupportFragmentManager();
             manager.beginTransaction()
                     .add(R.id.container, menuFragment)
-//                    .addToBackStack(null)
                     .commit();
         }
 
-         userStorage = ((VisiumApplication)getApplication()).getUserStorage();
-//        if (userStorage.noSessionToken()){
-//            goToLogin();
-//            return;
-//        }
+        if (!presenter.sessionTokenActive()){
+            goToLogin();
+            return;
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -115,7 +114,9 @@ public class MenuActivity extends AppCompatActivity
         TextView drawerEmailTextView = (TextView) headerView.findViewById(R.id.drawerEmailTextView);
 
         drawerNameTextView.setText(R.string.test_username);
-        drawerEmailTextView.setText(userStorage.getEmail());
+        drawerEmailTextView.setText("test");
+
+//        userStorage.getEmail()
     }
 
 //    private void showSnackbar() {
@@ -153,7 +154,7 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            userStorage.logout();
+//            userStorage.logout();
             goToLogin();
             return true;
         }
@@ -175,7 +176,7 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         } else if (id == R.id.nav_logout){
-            userStorage.logout();
+//            userStorage.logout();
             goToLogin();
         } else if (id == R.id.nav_subscribe){
             showFragment(new SubscribedFragment());
@@ -245,5 +246,11 @@ public class MenuActivity extends AppCompatActivity
     public void navigateToCompetitionActivity() {
         competitionActivity = new Intent(this, ImageSelectionActivity.class);
         startActivity(competitionActivity);
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.deleteSessionToken();
+        super.onDestroy();
     }
 }

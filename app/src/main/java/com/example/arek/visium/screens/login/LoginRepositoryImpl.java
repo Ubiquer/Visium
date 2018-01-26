@@ -99,14 +99,25 @@ public class LoginRepositoryImpl implements LoginRepository{
     @Override
     public void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences) {
 
-        realm.beginTransaction();
-        List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
-        if (listOfCategories.size() != 0){
+        if (realmService.checkSavedPreferences()){
             onCheckSavedPreferences.savedPreferencesStatus(true);
         }else {
             onCheckSavedPreferences.savedPreferencesStatus(false);
         }
-        realm.commitTransaction();
+//        realm.beginTransaction();
+//        List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
+//        if (listOfCategories.size() != 0){
+//            onCheckSavedPreferences.savedPreferencesStatus(true);
+//        }else {
+//            onCheckSavedPreferences.savedPreferencesStatus(false);
+//        }
+//        realm.commitTransaction();
     }
+
+    @Override
+    public void deleteToken() {
+        realmService.deleteToken();
+    }
+
 
 }

@@ -24,10 +24,6 @@ public class RealmService {
 
     private final Realm realm;
 
-    interface OnCheckSavedPreferences{
-        void checkSavedPreferences();
-    }
-
     public RealmService(Realm realm) {
         this.realm = realm;
     }
@@ -117,16 +113,43 @@ public class RealmService {
         });
     }
 
-    public void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences) {
+    public void deleteToken(){
+        realm.executeTransaction(realm1 -> {
+            Token mToken = realm.where(Token.class).findFirst();
+            if (mToken != null){
+                mToken = null;
+            }
+        });
+    }
 
-        realm.beginTransaction();
-        List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
-        if (listOfCategories.size() != 0){
-            onCheckSavedPreferences.savedPreferencesStatus(true);
-        }else {
-            onCheckSavedPreferences.savedPreferencesStatus(false);
-        }
-        realm.commitTransaction();
+    public boolean tokenActive(){
+
+        final boolean[] isActive = {true};
+
+        realm.executeTransaction(realm1 -> {
+            Token mToken = realm.where(Token.class).findFirst();
+            if (mToken == null){
+                isActive[0] = false;
+            }
+        });
+
+        return isActive[0];
+    }
+
+    public boolean checkSavedPreferences() {
+
+        final boolean[] preferencesExist = new boolean[1];
+
+        realm.executeTransaction(realm1 -> {
+            List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
+            if (listOfCategories.size() != 0){
+                preferencesExist[0] = true;
+            }else {
+                preferencesExist[0] = false;
+            }
+        });
+
+        return preferencesExist[0];
     }
 
 }

@@ -24,4 +24,6 @@ public interface LoginRepository {
         void savedPreferencesStatus(boolean status);
     }
 
+    void deleteToken();
+
 }
