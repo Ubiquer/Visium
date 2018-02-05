@@ -52,8 +52,9 @@ public class LoginRepositoryImpl implements LoginRepository{
                     loginCall = null;
                     onLoginListener.onLoginProgress(true);
                     if (response.isSuccessful()){
+
                         token = response.body();
-                        if (token.length()<28){
+                        if (token.contains("Error: UserIdentity == null")){
                             onLoginListener.onLoginFinished(false, ("Account doesn't exist"));
                         }else {
                             userStorage.login(userLogin, token);
