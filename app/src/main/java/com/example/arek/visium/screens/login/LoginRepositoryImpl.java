@@ -30,7 +30,6 @@ public class LoginRepositoryImpl implements LoginRepository{
     private final VisiumService visiumService;
     private final UserStorage userStorage;
     private final RealmService realmService;
-//    private UserLogin userLogin;
 
 
     @Inject
@@ -44,7 +43,6 @@ public class LoginRepositoryImpl implements LoginRepository{
     @Override
     public void logIn(UserLogin userLogin, OnLoginListener onLoginListener) {
 
-//        userLogin = new UserLogin(email, observePasswordText);
         if (loginCall == null){
             loginCall = visiumService.loginUser(userLogin);
             onLoginListener.onLoginProgress(false);
@@ -55,10 +53,13 @@ public class LoginRepositoryImpl implements LoginRepository{
                     onLoginListener.onLoginProgress(true);
                     if (response.isSuccessful()){
                         token = response.body();
-                        userStorage.login(userLogin, token);
-                        realmService.createOrUpdateToken(token);
-//                        createOrUpdateToken(token);
-                        onLoginListener.onLoginFinished(true, ("success"));
+                        if (token.length()<28){
+                            onLoginListener.onLoginFinished(false, ("Account doesn't exist"));
+                        }else {
+                            userStorage.login(userLogin, token);
+                            realmService.createOrUpdateToken(token);
+                            onLoginListener.onLoginFinished(true, ("success"));
+                        }
 //                            ResponseBody responseBody = response.errorBody();
 //                            Converter<ResponseBody, ErrorResponse> converter = retrofit.responseBodyConverter(ErrorResponse.class, new Annotation[]{});
 //                            try {

@@ -124,7 +124,7 @@ public class RealmService {
 
     public boolean tokenActive(){
 
-        final boolean[] isActive = {true};
+        boolean isActive[] = {true};
 
         realm.executeTransaction(realm1 -> {
             Token mToken = realm.where(Token.class).findFirst();
@@ -133,12 +133,13 @@ public class RealmService {
             }
         });
 
+        Log.d("active: ", String.valueOf(isActive[0]));
         return isActive[0];
     }
 
     public boolean checkSavedPreferences() {
 
-        final boolean[] preferencesExist = new boolean[1];
+        boolean[] preferencesExist = new boolean[1];
 
         realm.executeTransaction(realm1 -> {
             List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();

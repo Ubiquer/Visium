@@ -28,7 +28,7 @@ import retrofit2.http.Query;
 public interface VisiumService {
 
     @Headers("Content-Type:application/json")
-    @POST("api/Account/Authenticate")
+    @POST("api/Account/Register")
     Call<String> registerUser(@Body RegisterRequest registerRequest);
 
     @Headers("Content-Type:application/json")

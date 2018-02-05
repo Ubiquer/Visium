@@ -76,17 +76,17 @@ public class MenuActivity extends AppCompatActivity
                 .build();
         component.injectMenuActivity(this);
 
+        if (!presenter.sessionTokenActive()){
+            goToLogin();
+            return;
+        }
+
         if(savedInstanceState == null){
             MenuFragment menuFragment = new MenuFragment();
             manager = getSupportFragmentManager();
             manager.beginTransaction()
                     .add(R.id.container, menuFragment)
                     .commit();
-        }
-
-        if (!presenter.sessionTokenActive()){
-            goToLogin();
-            return;
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,8 +115,6 @@ public class MenuActivity extends AppCompatActivity
 
         drawerNameTextView.setText(R.string.test_username);
         drawerEmailTextView.setText("test");
-
-//        userStorage.getEmail()
     }
 
 //    private void showSnackbar() {

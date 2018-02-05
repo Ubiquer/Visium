@@ -11,10 +11,10 @@ import javax.inject.Inject;
 
 public class MenuActivityRepositoryImpl implements MenuActivityRepository {
 
-    final RealmService realmService;
+    private final RealmService realmService;
 
     @Inject
-    public MenuActivityRepositoryImpl(RealmService realmService) {
+    public MenuActivityRepositoryImpl(final RealmService realmService) {
         this.realmService = realmService;
     }
 

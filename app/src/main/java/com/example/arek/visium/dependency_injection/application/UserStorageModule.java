@@ -31,7 +31,7 @@ public class UserStorageModule {
 
     @Provides
     @VisiumApplicationScope
-    RealmService realmService(Realm realm){
+    RealmService realmService(final Realm realm){
         return new RealmService(realm);
     }
 
