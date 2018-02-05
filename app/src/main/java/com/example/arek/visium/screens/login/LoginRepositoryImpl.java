@@ -60,15 +60,6 @@ public class LoginRepositoryImpl implements LoginRepository{
                             realmService.createOrUpdateToken(token);
                             onLoginListener.onLoginFinished(true, ("success"));
                         }
-//                            ResponseBody responseBody = response.errorBody();
-//                            Converter<ResponseBody, ErrorResponse> converter = retrofit.responseBodyConverter(ErrorResponse.class, new Annotation[]{});
-//                            try {
-//                                ErrorResponse errorResponse = converter.convert(responseBody);
-//                                loginActivityView.onLoginFailed(errorResponse.error);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
                     }else {
                         onLoginListener.onLoginFinished(false, response.errorBody().toString());
                     }

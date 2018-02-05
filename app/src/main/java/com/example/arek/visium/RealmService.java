@@ -117,8 +117,9 @@ public class RealmService {
         realm.executeTransaction(realm1 -> {
             Token mToken = realm.where(Token.class).findFirst();
             if (mToken != null){
-                mToken = null;
+                mToken.deleteFromRealm();
             }
+
         });
     }
 

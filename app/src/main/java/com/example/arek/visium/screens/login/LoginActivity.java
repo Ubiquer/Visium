@@ -82,7 +82,6 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
 //            passwordText.setText(ApiKeys.GET_PASSWORD);
 //        }
         presenter.onCreate();
-//        presenter.deleteLoginToken();
     }
 
     @Override
