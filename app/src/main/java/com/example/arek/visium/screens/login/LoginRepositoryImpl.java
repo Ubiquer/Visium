@@ -72,24 +72,6 @@ public class LoginRepositoryImpl implements LoginRepository{
             });
         }
     }
-//    @Override
-//    public void createOrUpdateToken(String token) {
-//
-//        Token mToken = realm.where(Token.class).findFirst();
-//        realm.beginTransaction();
-//        if (mToken == null){
-//            mToken = realm.createObject(Token.class);
-//            mToken.setM_token(token);
-//        }else{
-//            mToken.setM_token(token);
-//            Log.d("my token: ", mToken.getM_token());
-//        }
-//        realm.commitTransaction();
-//    }
-
-//    public void openRealm(){
-//        realmService.
-//    }
 
     @Override
     public void checkSavedPreferences(OnCheckSavedPreferences onCheckSavedPreferences) {
@@ -99,19 +81,16 @@ public class LoginRepositoryImpl implements LoginRepository{
         }else {
             onCheckSavedPreferences.savedPreferencesStatus(false);
         }
-//        realm.beginTransaction();
-//        List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
-//        if (listOfCategories.size() != 0){
-//            onCheckSavedPreferences.savedPreferencesStatus(true);
-//        }else {
-//            onCheckSavedPreferences.savedPreferencesStatus(false);
-//        }
-//        realm.commitTransaction();
     }
 
     @Override
     public void deleteToken() {
         realmService.deleteToken();
+    }
+
+    @Override
+    public void closeRealm() {
+        realmService.closeRealm();
     }
 
 

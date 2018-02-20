@@ -25,5 +25,6 @@ public interface LoginRepository {
     }
 
     void deleteToken();
+    void closeRealm();
 
 }

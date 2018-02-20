@@ -59,6 +59,7 @@ public class LoginActivityPresenterImpl implements LoginActivityPresenter, Login
     @Override
     public void onDestroy(){
         compositeDisposable.clear();
+        loginRepository.closeRealm();
     }
 
     @Override
