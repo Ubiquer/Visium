@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.dependency_injection.network.VisiumServiceModule;
@@ -31,6 +33,6 @@ public interface VisiumApplicationComponent {
     Realm getRealm();
     ContentResolver getContentResolver();
     CredentialsValidator getCredentialsValidator();
-    CompositeDisposable getCompositeDisposable();
-
+//    CompositeDisposable getCompositeDisposable();
+//    RequestManager getRequestManager();
 }

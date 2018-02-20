@@ -38,27 +38,23 @@ public class RealmService {
 
         checkIfRealmIsOpened();
 
-        realm.executeTransaction(new Realm.Transaction(){
+        realm.executeTransaction(realm -> {
 
-            @Override
-            public void execute(final Realm realm) {
-
-                RealmList<String> categories = new RealmList<>();
-                for (int i = 0; i<allCategories.size(); i++){
-                    UserPreferencesWithImage userPreferencesWithImage = (UserPreferencesWithImage) allCategories.get(i);
-                    String category = userPreferencesWithImage.getCategoryName();
-                    categories.add(category);
-                }
-                CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
-                if (categoriesRealm == null)
-                {
-                    categoriesRealm = realm.createObject(CategoriesRealm.class, UUID.randomUUID().toString());
-                    categoriesRealm.setAllCategories(categories);
-                }
-                else
-                {
-                    categoriesRealm.setAllCategories(categories);
-                }
+            RealmList<String> categories = new RealmList<>();
+            for (int i = 0; i<allCategories.size(); i++){
+                UserPreferencesWithImage userPreferencesWithImage = (UserPreferencesWithImage) allCategories.get(i);
+                String category = userPreferencesWithImage.getCategoryName();
+                categories.add(category);
+            }
+            CategoriesRealm categoriesRealm = realm.where(CategoriesRealm.class).findFirst();
+            if (categoriesRealm == null)
+            {
+                categoriesRealm = realm.createObject(CategoriesRealm.class, UUID.randomUUID().toString());
+                categoriesRealm.setAllCategories(categories);
+            }
+            else
+            {
+                categoriesRealm.setAllCategories(categories);
             }
         });
 

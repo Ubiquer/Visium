@@ -37,7 +37,6 @@
                 android:foreground="?attr/selectableItemBackground"
                 style="@style/AppTheme.RoundedCornerMaterialButton"
                 android:text="Confirm" />
-
     <View
         android:id="@+id/reveal"
         android:visibility="invisible"

@@ -1,8 +1,12 @@
 package com.example.arek.visium.dependency_injection.screens.image_selection_di;
 
 import android.content.ContentResolver;
+import android.content.Context;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.arek.visium.RealmService;
+import com.example.arek.visium.dependency_injection.application.ApplicationContext;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.screens.image_selection.ImageSelectionActivity;
 import com.example.arek.visium.screens.image_selection.ImageSelectionPresenter;
@@ -10,6 +14,7 @@ import com.example.arek.visium.screens.image_selection.ImageSelectionPresenterIm
 import com.example.arek.visium.screens.image_selection.ImageSelectionRepository;
 import com.example.arek.visium.screens.image_selection.ImageSelectionRepositoryImpl;
 import com.example.arek.visium.screens.image_selection.ImageSelectionView;
+import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselAdapter;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenter;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenterImpl;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselRepository;
@@ -68,6 +73,12 @@ public class ImageSelectionModule {
     @ImageSelectionScope
     ImageCarouselPresenter imageCarouselPresenter(ImageCarouselView view, ImageCarouselRepository repository){
         return new ImageCarouselPresenterImpl(view, repository);
+    }
+
+    @Provides
+    @ImageSelectionScope
+    ImageCarouselAdapter adapter(){
+        return new ImageCarouselAdapter();
     }
 
 

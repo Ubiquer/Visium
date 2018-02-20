@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.arek.visium.R;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.dependency_injection.screens.image_selection_di.DaggerImageSelectionComponent;
@@ -65,7 +67,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     ProgressDialog progressDialog;
     private SpinnerAdapter spinnerAdapter;
 
-    private ImageCarouselAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
     private ArrayList<String> imagePathsList;
     private Bitmap bitmap;
@@ -79,6 +80,8 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     ImageSelectionPresenter imageSelectionPresenter;
     @Inject
     ImageSelectionView view;
+    @Inject
+    ImageCarouselAdapter adapter;
 
     @Override
     protected void onStart() {
@@ -102,7 +105,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
                     .build();
         component.injectImageSelectionActivity(this);
         testButton.setOnClickListener(v -> loadImage());
-//        progressDialog.dismiss();
         uploadButton.setOnClickListener(v -> imageSelectionPresenter.uploadImage(imageUri, spinnerCategory));
     }
 
@@ -112,8 +114,8 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setOnFlingListener(null);
         snapHelper.attachToRecyclerView(mRecyclerView);
-        adapter = new ImageCarouselAdapter();
         mRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -138,9 +140,13 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     private void showEnlargedSnappedImage(int pos) {
         pos = pos % imagePathsList.size();
         imageUri = imagePathsList.get(pos);
-        bitmap = BitmapFactory.decodeFile(imageUri);
-        ImageView imageView = (ImageView) findViewById(R.id.test_image);
+        ImageView imageView = findViewById(R.id.test_image);
         imageView.setImageBitmap(bitmap);
+        RequestOptions myOptions = new RequestOptions()
+                .fitCenter()
+                .override(450, 450);
+        Glide.with(this).asBitmap().apply(myOptions).load(imageUri).into(imageView);
+
 
     }
     private void loadImage(){
@@ -151,7 +157,8 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     }
 
     private void setUpSpinner(){
-        spinnerAdapter = new SpinnerAdapter(this, R.layout.item_spinner_dropdown, imageSelectionPresenter.getCategoriesFromRealm());
+        spinnerAdapter = new SpinnerAdapter(this, R.layout.item_spinner_dropdown,
+                imageSelectionPresenter.getCategoriesFromRealm());
         spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

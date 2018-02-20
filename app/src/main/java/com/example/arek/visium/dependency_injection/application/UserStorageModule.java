@@ -23,16 +23,4 @@ public class UserStorageModule {
         return userStorage;
     }
 
-//    @Provides
-//    @VisiumApplicationScope
-//    Realm provideRealm(){
-//        return Realm.getDefaultInstance();
-//    }
-//
-//    @Provides
-//    @VisiumApplicationScope
-//    RealmService realmService(final Realm realm){
-//        return new RealmService(realm);
-//    }
-
 }

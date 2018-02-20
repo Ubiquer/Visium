@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.example.arek.visium.dependency_injection.application.DaggerVisiumApplicationComponent;
 import com.example.arek.visium.dependency_injection.application.VisiumApplicationComponent;
 import com.example.arek.visium.dependency_injection.application.ApplicationModule;
@@ -29,7 +31,7 @@ public class VisiumApplication extends Application {
    private UserStorage userStorage;
    private VisiumService visiumService;
    private RealmService realmService;
-
+   private RequestManager requestManager;
    private Retrofit retrofit;
    private static Context context = null;
 
@@ -43,7 +45,6 @@ public class VisiumApplication extends Application {
    public static VisiumApplication get(Activity activity){
        return (VisiumApplication)activity.getApplication();
    }
-
 
     @Override
     public void onCreate() {
@@ -59,6 +60,7 @@ public class VisiumApplication extends Application {
         visiumService = visiumApplicationComponent.getVisiumService();
         picasso = visiumApplicationComponent.getPicasso();
         realmService = visiumApplicationComponent.getRealmService();
+//        requestManager = visiumApplicationComponent.getRequestManager();
 
         final HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -81,12 +83,13 @@ public class VisiumApplication extends Application {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
-
     }
 
     public VisiumApplicationComponent component(){
         return visiumApplicationComponent;
     }
+
+    /** This getters are still here, due to lack of dagger di implemented for some views **/
 
     public Retrofit getRetrofit() {
         return retrofit;
