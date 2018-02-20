@@ -74,15 +74,14 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
                     paint.setColor(Color.parseColor(rightColorCode));
                     RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                     c.drawRect(background, paint);
-                    mIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_provider);
+                    mIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_lock);
                     RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
                     c.drawBitmap(mIcon, null, icon_dest, paint);
                 } else {
-
                     paint.setColor(Color.parseColor(leftColorCode));
                     RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                     c.drawRect(background, paint);
-                    mIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_provider);
+                    mIcon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_lock);
                     RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
                     c.drawBitmap(mIcon, null, icon_dest, paint);
                 }

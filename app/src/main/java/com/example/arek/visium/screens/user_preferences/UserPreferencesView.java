@@ -14,4 +14,5 @@ public interface UserPreferencesView {
     void onPreferencesDownloadFailed(String message);
     void onResponseFailure(String message);
     void sendPreferencesToDB();
+
 }
