@@ -172,7 +172,6 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     public void enableLoginButton(boolean enable) {
 
         loginButton.setEnabled(enable);
-
     }
 
     @Override

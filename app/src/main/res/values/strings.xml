@@ -32,7 +32,7 @@
     <string name="points">Points: </string>
     <string name="successfully_logged_in">success</string>
     <string name="login_failed">failed logging in</string>
-    <string name="imageUploadedInfo">Image ready for duel!</string>
+    <string name="imageUploadedInfo">Image ready for a duel!</string>
     <string name="imageErrorInfo1">Upload error: </string>
     <string name="sign_up_failed_message">Failed due to:</string>
     <string name="api_connection_failure">Api connection failed:</string>
