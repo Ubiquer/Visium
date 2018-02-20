@@ -21,14 +21,11 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
 
 
     private ImageDuelViewAdapter mAdapter;
-//    private ItemSwipeHelperAdapter swipeHelperAdapter;
     private Context mContext;
     private Paint paint = new Paint();
     private String rightColorCode;
     private String leftColorCode;
     private ImageChooseListener listener;
-    private int viewholderAdapterPosition;
-    private SwipedItemParams swipedItemParams;
 
     public interface ImageChooseListener {
         void onImageChosen(int position, boolean winner);

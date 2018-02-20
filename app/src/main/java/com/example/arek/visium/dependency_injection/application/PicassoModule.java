@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.example.arek.visium.dependency_injection.network.NetworkModule;
 import com.jakewharton.picasso.OkHttp3Downloader;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import dagger.Module;
@@ -15,7 +14,7 @@ import okhttp3.OkHttpClient;
  * Created by arek on 12/5/2017.
  */
 
-@Module(includes = {ContextModule.class, NetworkModule.class})
+@Module(includes = {ApplicationModule.class, NetworkModule.class})
 public class PicassoModule {
 
     @Provides

@@ -64,16 +64,6 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
         Category category = categories.get(position);
         categoryText.setGravity(Gravity.CENTER);
         categoryText.setText(category.getCategoryName());
-//        return createItemViewBasic(position, convertView, parent);
-//        TextView label = new TextView(context);
-//        label.setTextColor(Color.CYAN);
-//        label.setGravity(Gravity.CENTER);
-//        label.setTextSize(16);
-//        label.setPadding(16,16,16,16);
-//        Category category = categories.get(position);
-////        label.setText("Category");
-//        label.setText(category.getCategoryName());
-//        return label;
         return row;
     }
 
@@ -98,12 +88,7 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
 
         if (position == categories.size() -1){
             underLine.setVisibility(View.GONE);
-//            params.setMargins();
         }
-
-//    }
-
         return row;
-
     }
 }

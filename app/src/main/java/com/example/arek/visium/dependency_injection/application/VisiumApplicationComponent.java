@@ -1,5 +1,7 @@
 package com.example.arek.visium.dependency_injection.application;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.arek.visium.RealmService;
@@ -17,9 +19,9 @@ import io.realm.Realm;
  * Created by arek on 12/2/2017.
  */
 @VisiumApplicationScope
-@Component(modules = {VisiumServiceModule.class, PicassoModule.class, SharedPreferencesModule.class, UserStorageModule.class, CredentialsValidationModule.class, CompositeDisposableModule.class})
+@Component(modules = {VisiumServiceModule.class, PicassoModule.class, SharedPreferencesModule.class, UserStorageModule.class,
+        CredentialsValidationModule.class, CompositeDisposableModule.class, ContentResolverModule.class})
 public interface VisiumApplicationComponent {
-
 
     SharedPreferences getSharedPreferences();
     Picasso getPicasso();
@@ -27,6 +29,7 @@ public interface VisiumApplicationComponent {
     RealmService getRealmService();
     UserStorage getUserStorage();
     Realm getRealm();
+    ContentResolver getContentResolver();
     CredentialsValidator getCredentialsValidator();
     CompositeDisposable getCompositeDisposable();
 

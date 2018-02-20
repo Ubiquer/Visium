@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.support.annotation.UiThread;
 
 import com.example.arek.visium.dependency_injection.application.DaggerVisiumApplicationComponent;
 import com.example.arek.visium.dependency_injection.application.VisiumApplicationComponent;
-import com.example.arek.visium.dependency_injection.application.ContextModule;
+import com.example.arek.visium.dependency_injection.application.ApplicationModule;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.rest.ApiKeys;
-import com.example.arek.visium.screens.image_duel.ImageDuelPresenter;
 import com.example.arek.visium.screens.register.RegisterActivityPresenterImpl;
-import com.example.arek.visium.screens.user_preferences.UserPreferencesRepository;
-import com.example.arek.visium.screens.user_preferences.UserPreferencesRepositoryImpl;
 import com.squareup.picasso.Picasso;
 
 import io.realm.Realm;
@@ -31,7 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class VisiumApplication extends Application {
 
    private UserStorage userStorage;
-   private RegisterActivityPresenterImpl registerActivityPresenterImpl;
    private VisiumService visiumService;
    private RealmService realmService;
 
@@ -41,7 +36,6 @@ public class VisiumApplication extends Application {
    private VisiumApplicationComponent visiumApplicationComponent;
    private Picasso picasso;
 
-    @UiThread
     public VisiumApplicationComponent getVisiumApplicationComponent(){
         return visiumApplicationComponent;
     }
@@ -50,18 +44,17 @@ public class VisiumApplication extends Application {
        return (VisiumApplication)activity.getApplication();
    }
 
-   private ImageDuelPresenter imageDuelPresenter;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
 
-        visiumApplicationComponent = DaggerVisiumApplicationComponent.builder()
-                .contextModule(new ContextModule(this))
-                .build();
-
         initRealmConfiguration();
+
+        visiumApplicationComponent = DaggerVisiumApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
 
         visiumService = visiumApplicationComponent.getVisiumService();
         picasso = visiumApplicationComponent.getPicasso();
@@ -99,19 +92,12 @@ public class VisiumApplication extends Application {
         return retrofit;
     }
 
-    public RegisterActivityPresenterImpl getRegisterActivityPresenterImpl(){
-        return registerActivityPresenterImpl;
-    }
     public UserStorage getUserStorage() {
         return userStorage;
     }
 
     public VisiumService getVisiumService(){
         return visiumService;
-    }
-
-    public ImageDuelPresenter getImageDuelPresenter() {
-        return imageDuelPresenter;
     }
 
     public static Context getContext() {
@@ -121,6 +107,5 @@ public class VisiumApplication extends Application {
     public RealmService getRealmService() {
         return realmService;
     }
-
 
 }

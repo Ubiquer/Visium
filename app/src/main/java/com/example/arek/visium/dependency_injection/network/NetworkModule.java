@@ -1,31 +1,23 @@
 package com.example.arek.visium.dependency_injection.network;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.example.arek.visium.dependency_injection.application.ApplicationContext;
-import com.example.arek.visium.dependency_injection.application.ContextModule;
+import com.example.arek.visium.dependency_injection.application.ApplicationModule;
 import com.example.arek.visium.dependency_injection.application.VisiumApplicationScope;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by arek on 12/4/2017.
  */
-@Module(includes = ContextModule.class)
+@Module(includes = ApplicationModule.class)
 public class NetworkModule {
 
     @Provides

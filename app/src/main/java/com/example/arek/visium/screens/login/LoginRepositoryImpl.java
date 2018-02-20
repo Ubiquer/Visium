@@ -25,7 +25,6 @@ import retrofit2.Response;
 public class LoginRepositoryImpl implements LoginRepository{
 
     private Call<String> loginCall;
-    private final Realm realm;
     private String token;
     private final VisiumService visiumService;
     private final UserStorage userStorage;
@@ -33,10 +32,9 @@ public class LoginRepositoryImpl implements LoginRepository{
 
 
     @Inject
-    public LoginRepositoryImpl(RealmService realmService, UserStorage userStorage, VisiumService visiumService, Realm realm) {
+    public LoginRepositoryImpl(RealmService realmService, UserStorage userStorage, VisiumService visiumService) {
         this.realmService = realmService;
         this.userStorage = userStorage;
-        this.realm = realm;
         this.visiumService = visiumService;
     }
 
@@ -87,6 +85,10 @@ public class LoginRepositoryImpl implements LoginRepository{
 //            Log.d("my token: ", mToken.getM_token());
 //        }
 //        realm.commitTransaction();
+//    }
+
+//    public void openRealm(){
+//        realmService.
 //    }
 
     @Override

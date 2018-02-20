@@ -62,4 +62,8 @@
         <item name="colorAccent">@color/lazur</item>
     </style>
 
+    <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/gradient_stroke</item>
+    </style>
+
 </resources>

@@ -49,8 +49,8 @@ public class LoginActivityModule {
 
     @Provides
     @LoginActivityScope
-    LoginRepository repository(RealmService realmService, UserStorage userStorage, VisiumService visiumService, Realm realm){
-        return new LoginRepositoryImpl(realmService, userStorage, visiumService, realm);
+    LoginRepository repository(final RealmService realmService, UserStorage userStorage, VisiumService visiumService){
+        return new LoginRepositoryImpl(realmService, userStorage, visiumService);
     }
 
 }

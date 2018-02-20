@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/tools"
     android:elevation="@dimen/card_margin"
-    android:layout_marginBottom="6dp"
+    android:layout_marginBottom="8dp"
     app:cardElevation="5dp"
     card_view:cardPreventCornerOverlap="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -13,7 +13,7 @@
         android:id="@+id/card_relative"
         android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
-        android:layout_height="160dp">
+        android:layout_height="120dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:layout_width="@dimen/circularPhotographersAvatarWidth"
@@ -26,7 +26,7 @@
             app:civ_shadow="true"
             app:civ_shadow_radius="10"
             android:paddingLeft="6dp"
-            app:civ_shadow_color="#8BC34A"/>
+            app:civ_shadow_color="@color/lazur"/>
 
         <LinearLayout
             android:id="@+id/details_photographers"

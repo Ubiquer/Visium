@@ -30,8 +30,6 @@ public class ImageDuelPresenter {
     private static final String CATEGORY_MOUNTAINS = "Góry";
     private ImageDuelViewAdapter imageDuelViewAdapter;
     private ArrayList<DuelImage> duelImage;
-    private final String rightColorCode = String.valueOf(R.string.rightColorCode);
-    private final String leftColorCode = String.valueOf(R.string.leftColorCode);
     private ImageDuelView mImageDuelView;
 
     public ImageDuelPresenter(VisiumService mVisiumService, Retrofit retrofit) {
@@ -49,7 +47,6 @@ public class ImageDuelPresenter {
     }
 
     private void getDuelImages(){
-//        mImageDuelView.showProgressDialog();
         if (imagesCall == null){
             imagesCall = mVisiumService.getDuelImages(CATEGORY_MOUNTAINS);
             imagesCall.enqueue(new Callback<List<DuelImage>>() {
@@ -57,19 +54,7 @@ public class ImageDuelPresenter {
                 public void onResponse(Call<List<DuelImage>> call, Response<List<DuelImage>> response) {
                     if (response.isSuccessful()){
                         duelImage = (ArrayList<DuelImage>) response.body();
-//                        mImageDuelView.onImagesAccessed();
                         mImageDuelView.showData(duelImage);
-//                        RxBus.swipeActionObservable().subscribe(new Consumer<SwipedItemParams>() {
-//                            @Override
-//                            public void accept(SwipedItemParams swipedItemParams) {
-//                               viewHolderAdapterPosition = swipedItemParams.getViewholderAdapterPosition();
-//                               swipeDirection = swipedItemParams.getDirection();
-//                               duelImage.get(viewHolderAdapterPosition);
-//                                if (swipeDirection == LEFT){
-//                                }
-//                               duelImage.get(viewHolderAdapterPosition);
-//                            }
-//                        });
                     }else {
                         Log.d("failure: ", "");
                     }

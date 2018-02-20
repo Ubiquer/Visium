@@ -4,30 +4,22 @@ import com.example.arek.visium.model.Category;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by arek on 11/12/2017.
  */
 
 public class ImageSelectionPresenterImpl implements ImageSelectionPresenter, ImageSelectionRepository.OnUploadFinishedListener {
 
-    private ImageSelectionView imageSelectionView;
-    private ImageSelectionRepositoryImpl imageSelectionRepositoryImpl;
+    private final ImageSelectionView view;
+    private final ImageSelectionRepository repository;
     private String mToken;
 
-    public ImageSelectionPresenterImpl(ImageSelectionView imageSelectionView) {
-        this.imageSelectionView = imageSelectionView;
-    }
-
-    @Override
-    public void onAttach(ImageSelectionView imageSelectionView) {
-        this.imageSelectionView = imageSelectionView;
-        imageSelectionRepositoryImpl = new ImageSelectionRepositoryImpl();
-    }
-
-    @Override
-    public void onDetach() {
-        imageSelectionView = null;
-        imageSelectionRepositoryImpl = null;
+    @Inject
+    public ImageSelectionPresenterImpl(ImageSelectionRepository repository, ImageSelectionView view) {
+        this.view = view;
+        this.repository = repository;
     }
 
     @Override
@@ -35,33 +27,33 @@ public class ImageSelectionPresenterImpl implements ImageSelectionPresenter, Ima
 
         if (fileUri == null){
 
-            imageSelectionView.insufficientData("Select image");
+            view.insufficientData("Select image");
 
         } else if (spinnerCategory == null){
 
-            imageSelectionView.insufficientData("Select category");
+            view.insufficientData("Select category");
 
         } else if (fileUri ==null && spinnerCategory == null){
 
-            imageSelectionView.insufficientData("Select image and category");
+            view.insufficientData("Select image and category");
 
         } else{
-            imageSelectionRepositoryImpl.uploadFile(fileUri, spinnerCategory, this);
+            repository.uploadFile(fileUri, spinnerCategory, this);
         }
     }
 
     @Override
     public ArrayList<Category> getCategoriesFromRealm() {
-        return imageSelectionRepositoryImpl.getCategoriesFromRealm();
+        return repository.getCategoriesFromRealm();
     }
 
     @Override
     public void onUploadFinished(boolean uploadSuccessful, String message) {
 
         if (uploadSuccessful){
-            imageSelectionView.onSuccessfulUpload(message);
+            view.onSuccessfulUpload(message);
         }else{
-            imageSelectionView.onUploadError(message);
+            view.onUploadError(message);
         }
 
     }

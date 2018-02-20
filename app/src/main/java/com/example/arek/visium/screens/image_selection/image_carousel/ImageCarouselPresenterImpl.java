@@ -8,35 +8,40 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.example.arek.visium.VisiumApplication;
+import com.example.arek.visium.screens.image_selection.ImageSelectionPresenter;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 /**
  * Created by arek on 7/27/2017.
  */
 
-public class ImageCarouselPresenterImpl {
+public class ImageCarouselPresenterImpl implements ImageCarouselPresenter{
 
-    private ImageCarouselView imageCarouselView;
-    private ImageCarouselRepository imageCarouselRepository;
+    private final ImageCarouselView view;
+    private final ImageCarouselRepository repository;
 
-    public ImageCarouselPresenterImpl() {
+    @Inject
+    public ImageCarouselPresenterImpl(ImageCarouselView view,ImageCarouselRepository repository) {
+        this.view = view;
+        this.repository = repository;
     }
 
-    public void onAttach(ImageCarouselView imageCarouselView){
-        this.imageCarouselView = imageCarouselView;
-        imageCarouselRepository = new ImageCarouselRepository();
-        imageCarouselView.showImages(imageCarouselRepository.getImagesFromExternalStorage());
-    }
-
+    @Override
     public void onDetach(){
-        imageCarouselView = null;
-        imageCarouselRepository = null;
     }
 
+    @Override
     public int getImageListSize(){
-        return imageCarouselRepository.getImagesFromExternalStorage().size();
+        return repository.getImagesFromExternalStorage().size();
+    }
+
+    @Override
+    public void showImages() {
+        view.showImages(repository.getImagesFromExternalStorage());
     }
 
 }

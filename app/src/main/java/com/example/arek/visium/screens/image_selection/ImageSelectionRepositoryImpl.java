@@ -14,6 +14,8 @@ import com.example.arek.visium.rest.VisiumService;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import okhttp3.MediaType;
@@ -34,16 +36,16 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
     private String mToken;
     private Context context;
     private Call<ResponseBody> uploadImageCall;
-    private VisiumService visiumService;
-    private RealmService realmService;
+    private final VisiumService visiumService;
+    private final RealmService realmService;
     private String token;
     private String fileUri;
     private static final int MY_PERMISSIONS_REQUEST = 100;
 
-    public ImageSelectionRepositoryImpl() {
-        context = VisiumApplication.getContext();
-        visiumService = ((VisiumApplication) context).getVisiumService();
-        realmService = ((VisiumApplication) context).getRealmService();
+    @Inject
+    public ImageSelectionRepositoryImpl(VisiumService visiumService, RealmService realmService) {
+        this.visiumService = visiumService;
+        this.realmService = realmService;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
 
             File file = new File(fileUri);
             File originalFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileUri);
-            token = getAccessToken();
+            token = realmService.getAccessToken();
             String originalFileName = originalFile.getName();
             Log.d("fName: ", originalFileName);
             RequestBody filePart = RequestBody.create(
@@ -65,14 +67,11 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
 
             MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
             uploadImageCall = visiumService.uploadImage(token, spinnerCategory, fileToUpload);
-
                 uploadImageCall.enqueue(new Callback<ResponseBody>() {
-
                     boolean uploadSuccessful = false;
 
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                         if (response.isSuccessful()){
                             uploadSuccessful = true;
                             onUploadFinishedListener.onUploadFinished(uploadSuccessful, response.message());
@@ -81,13 +80,11 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
                             onUploadFinishedListener.onUploadFinished(uploadSuccessful, response.message());
                         }
                     }
-
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         onUploadFinishedListener.onUploadFinished(uploadSuccessful, t.getMessage());
                     }
                 });
-
         }
     }
 
@@ -96,17 +93,5 @@ public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
 
         return realmService.getCategories();
 
-    }
-
-    public String getAccessToken(){
-
-        realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        Token token = realm.where(Token.class).findFirst();
-        mToken = token.getM_token();
-        realm.commitTransaction();
-        realm.close();
-
-        return mToken;
     }
 }

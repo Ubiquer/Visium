@@ -13,4 +13,5 @@ public interface UserPreferencesView {
     void showData(ArrayList<UserPreferencesWithImage> userPreferencesWithImages);
     void onPreferencesDownloadFailed(String message);
     void onResponseFailure(String message);
+    void sendPreferencesToDB();
 }

@@ -16,7 +16,6 @@ public class CompositeDisposableModule {
 
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         return compositeDisposable;
-
     }
 
 }

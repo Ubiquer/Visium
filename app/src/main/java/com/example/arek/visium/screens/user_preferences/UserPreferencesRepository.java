@@ -18,11 +18,9 @@ public interface UserPreferencesRepository {
     void commitAllCategoriesToRealm(List allCategories);
 
     interface OnDownLoadFinishedListener {
-
         void onLoadPreferences(ArrayList<UserPreferencesWithImage> allPreferences);
         void onLoadFailed(String message);
         void onLoadResponseFailure(String message);
-
     }
 
     void onDestroy();

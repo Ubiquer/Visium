@@ -1,5 +1,6 @@
 package com.example.arek.visium.screens.image_selection.image_carousel;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
@@ -8,6 +9,8 @@ import com.example.arek.visium.VisiumApplication;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by arek on 11/13/2017.
  */
@@ -15,16 +18,19 @@ import java.util.ArrayList;
 public class ImageCarouselRepository {
 
     private ArrayList<String> arrPath;
-    private Context context;
+    private final ContentResolver resolver;
+
+    @Inject
+    public ImageCarouselRepository(ContentResolver resolver) {
+        this.resolver = resolver;
+    }
 
     public ArrayList<String> getImagesFromExternalStorage() {
-
-        context = VisiumApplication.getContext();
 
         final String[] columns = { MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID };
         final String orderBy = MediaStore.Images.Media._ID;
 
-        Cursor cursor = context.getContentResolver().query(
+        Cursor cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
                 null, orderBy);
 
@@ -36,8 +42,6 @@ public class ImageCarouselRepository {
             arrPath.add(i, cursor.getString(dataColumnIndex));
         }
         cursor.close();
-        context = null;
-
         return arrPath;
     }
 

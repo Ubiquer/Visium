@@ -22,7 +22,7 @@ import io.realm.RealmList;
 
 public class RealmService {
 
-    private final Realm realm;
+    private Realm realm;
 
     public RealmService(Realm realm) {
         this.realm = realm;
@@ -32,7 +32,11 @@ public class RealmService {
         realm.close();
     }
 
+    /**CATEGORIES METHODS**/
+
     public void commitAllCategoriesToRealm(List allCategories){
+
+        checkIfRealmIsOpened();
 
         realm.executeTransaction(new Realm.Transaction(){
 
@@ -62,6 +66,8 @@ public class RealmService {
 
     public void commitSelectedCategoriesToRealm(List selectedCategories) {
 
+        checkIfRealmIsOpened();
+
         realm.executeTransaction(realm1 -> {
 
             RealmList<String> selectedPreferencesRealm = new RealmList<>();
@@ -81,6 +87,8 @@ public class RealmService {
 
     public ArrayList<Category> getCategories(){
 
+        checkIfRealmIsOpened();
+
         ArrayList<Category> categoriesList = new ArrayList<>();
 
         realm.executeTransaction(realm1 -> {
@@ -99,7 +107,11 @@ public class RealmService {
 
     }
 
+    /**TOKEN METHODS**/
+
     public void createOrUpdateToken(String token){
+
+        checkIfRealmIsOpened();
 
         realm.executeTransaction(realm1 -> {
             Token mToken = realm.where(Token.class).findFirst();
@@ -113,7 +125,19 @@ public class RealmService {
         });
     }
 
+    public String getAccessToken(){
+    ArrayList<String> token = new ArrayList<>();
+        realm.executeTransaction(realm1 -> {
+            Token mToken = realm.where(Token.class).findFirst();
+            token.add(mToken.getM_token());
+        });
+        return token.get(0);
+    }
+
     public void deleteToken(){
+
+        checkIfRealmIsOpened();
+
         realm.executeTransaction(realm1 -> {
             Token mToken = realm.where(Token.class).findFirst();
             if (mToken != null){
@@ -127,6 +151,8 @@ public class RealmService {
 
         boolean isActive[] = {true};
 
+        checkIfRealmIsOpened();
+
         realm.executeTransaction(realm1 -> {
             Token mToken = realm.where(Token.class).findFirst();
             if (mToken == null){
@@ -138,9 +164,13 @@ public class RealmService {
         return isActive[0];
     }
 
+    /**PREFERENCES METHODS**/
+
     public boolean checkSavedPreferences() {
 
         boolean[] preferencesExist = new boolean[1];
+
+        checkIfRealmIsOpened();
 
         realm.executeTransaction(realm1 -> {
             List<UserPreferencesCategories> listOfCategories = realm.where(UserPreferencesCategories.class).findAll();
@@ -152,6 +182,12 @@ public class RealmService {
         });
 
         return preferencesExist[0];
+    }
+
+    private void checkIfRealmIsOpened(){
+        if (realm != Realm.getDefaultInstance()){
+            realm = Realm.getDefaultInstance();
+        }
     }
 
 }

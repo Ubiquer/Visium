@@ -33,25 +33,25 @@ public class UserPreferencesPresenterImplTest {
     }
 
 
-    private class MockView implements UserPreferencesView{
-
-        boolean passed;
-
-        @Override
-        public void showData(ArrayList<UserPreferencesWithImage> userPreferencesWithImages) {
-            passed = true;
-        }
-
-        @Override
-        public void onPreferencesDownloadFailed(String message) {
-
-        }
-
-        @Override
-        public void onResponseFailure(String message) {
-
-        }
-    }
+//    private class MockView implements UserPreferencesView{
+//
+//        boolean passed;
+//
+//        @Override
+//        public void showData(ArrayList<UserPreferencesWithImage> userPreferencesWithImages) {
+//            passed = true;
+//        }
+//
+//        @Override
+//        public void onPreferencesDownloadFailed(String message) {
+//
+//        }
+//
+//        @Override
+//        public void onResponseFailure(String message) {
+//
+//        }
+//    }
 
     private class MockPreferencesRepository implements UserPreferencesRepository {
 

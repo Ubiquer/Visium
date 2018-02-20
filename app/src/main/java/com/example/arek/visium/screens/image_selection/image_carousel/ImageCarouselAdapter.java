@@ -36,10 +36,6 @@ public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdap
         final String picture = picsFromExternalStorage.get(position % picsFromExternalStorage.size());
         Bitmap bitmap = BitmapFactory.decodeFile(picture);
         holder.carouselImage.setImageBitmap(bitmap);
-//        Picasso.with(holder.carouselImage.getContext())
-//                .load(picture)
-//                .into(holder.carouselImage);
-//        holder.carouselImage.setOnScrollChangeListener();
     }
 
     @Override

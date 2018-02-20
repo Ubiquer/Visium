@@ -10,5 +10,4 @@ import java.util.ArrayList;
 public interface ImageCarouselView  {
 
     void showImages(ArrayList<String> imagePathsList);
-
 }

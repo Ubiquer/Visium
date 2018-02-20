@@ -25,12 +25,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.arek.visium.R;
+import com.example.arek.visium.VisiumApplication;
+import com.example.arek.visium.dependency_injection.screens.image_selection_di.DaggerImageSelectionComponent;
+import com.example.arek.visium.dependency_injection.screens.image_selection_di.ImageSelectionComponent;
+import com.example.arek.visium.dependency_injection.screens.image_selection_di.ImageSelectionModule;
 import com.example.arek.visium.model.Category;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselAdapter;
+import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenter;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenterImpl;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselView;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,20 +59,26 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     @BindView(R.id.test_image)
     ImageView testImage;
     @BindView(R.id.upload_button) Button uploadButton;
-
-    ProgressDialog progressDialog;
-    private Realm realm;
-    private SpinnerAdapter spinnerAdapter;
-
     @BindView(R.id.carousel_recycler_view)
     RecyclerView mRecyclerView;
+
+    ProgressDialog progressDialog;
+    private SpinnerAdapter spinnerAdapter;
+
     private ImageCarouselAdapter adapter;
-    private Boolean isSDPresent;
     private LinearLayoutManager linearLayoutManager;
-    private ImageCarouselPresenterImpl imageCarouselPresenterImpl;
-    private ImageSelectionPresenterImpl imageSelectionPresenterImpl;
     private ArrayList<String> imagePathsList;
     private Bitmap bitmap;
+    private ImageSelectionComponent component;
+
+    @Inject
+    ImageCarouselPresenter imageCarouselPresenter;
+    @Inject
+    ImageCarouselView imageCarouselView;
+    @Inject
+    ImageSelectionPresenter imageSelectionPresenter;
+    @Inject
+    ImageSelectionView view;
 
     @Override
     protected void onStart() {
@@ -75,8 +88,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
 
     @Override
     protected void onStop() {
-        imageCarouselPresenterImpl.onDetach();
-        imageSelectionPresenterImpl.onDetach();
         super.onStop();
     }
 
@@ -85,12 +96,14 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_selection);
         ButterKnife.bind(this);
-
-        imageSelectionPresenterImpl = new ImageSelectionPresenterImpl(this);
-        imageCarouselPresenterImpl = new ImageCarouselPresenterImpl();
+        component = DaggerImageSelectionComponent.builder()
+                    .imageSelectionModule(new ImageSelectionModule(this))
+                    .visiumApplicationComponent(VisiumApplication.get(this).component())
+                    .build();
+        component.injectImageSelectionActivity(this);
         testButton.setOnClickListener(v -> loadImage());
 //        progressDialog.dismiss();
-        uploadButton.setOnClickListener(v -> imageSelectionPresenterImpl.uploadImage(imageUri, spinnerCategory));
+        uploadButton.setOnClickListener(v -> imageSelectionPresenter.uploadImage(imageUri, spinnerCategory));
     }
 
     private void initRecyclerView(){
@@ -113,11 +126,10 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
                 int pos = mRecyclerView.getChildAdapterPosition(view);
                 int firstItemVisible = linearLayoutManager.findFirstVisibleItemPosition();
 
-                if (firstItemVisible != 0 && firstItemVisible % imageCarouselPresenterImpl.getImageListSize() == 0){
+                if (firstItemVisible != 0 && firstItemVisible % imageCarouselPresenter.getImageListSize() == 0){
                     adapter.notifyItemRangeChanged(0, adapter.getItemCount());
                     mRecyclerView.getLayoutManager().scrollToPosition(0);
                 }
-
                 showEnlargedSnappedImage(pos);
             }
         });
@@ -131,7 +143,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
         imageView.setImageBitmap(bitmap);
 
     }
-
     private void loadImage(){
 
         Intent i = new Intent(Intent.ACTION_PICK,
@@ -140,7 +151,7 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     }
 
     private void setUpSpinner(){
-        spinnerAdapter = new SpinnerAdapter(this, R.layout.item_spinner_dropdown, imageSelectionPresenterImpl.getCategoriesFromRealm());
+        spinnerAdapter = new SpinnerAdapter(this, R.layout.item_spinner_dropdown, imageSelectionPresenter.getCategoriesFromRealm());
         spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -169,7 +180,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            attachPresenters();
             setUpSpinner();
         }else{
             finish();
@@ -227,16 +237,8 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
                         new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST);
         }else {
-            attachPresenters();
+            imageCarouselPresenter.showImages();
             setUpSpinner();
         }
     }
-
-    private void attachPresenters(){
-
-        imageCarouselPresenterImpl.onAttach(this);
-        imageSelectionPresenterImpl.onAttach(this);
-
-    }
-
 }

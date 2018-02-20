@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public interface ImageSelectionPresenter {
 
-    void onAttach(ImageSelectionView imageSelectionView);
-    void onDetach();
     void uploadImage(String fileUri, String spinnerCategory);
     ArrayList<Category> getCategoriesFromRealm();
 
