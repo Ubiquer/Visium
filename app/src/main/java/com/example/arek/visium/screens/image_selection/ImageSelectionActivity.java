@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -25,16 +24,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.arek.visium.R;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.dependency_injection.screens.image_selection_di.DaggerImageSelectionComponent;
 import com.example.arek.visium.dependency_injection.screens.image_selection_di.ImageSelectionComponent;
 import com.example.arek.visium.dependency_injection.screens.image_selection_di.ImageSelectionModule;
-import com.example.arek.visium.model.Category;
+import com.example.arek.visium.dao.Category;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselAdapter;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenter;
-import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselPresenterImpl;
 import com.example.arek.visium.screens.image_selection.image_carousel.ImageCarouselView;
 
 import java.util.ArrayList;
@@ -43,7 +43,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class ImageSelectionActivity extends AppCompatActivity implements ImageCarouselView, ImageSelectionView {
 
@@ -64,7 +63,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
     @BindView(R.id.carousel_recycler_view)
     RecyclerView mRecyclerView;
 
-    ProgressDialog progressDialog;
     private SpinnerAdapter spinnerAdapter;
 
     private LinearLayoutManager linearLayoutManager;
@@ -145,10 +143,12 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
         RequestOptions myOptions = new RequestOptions()
                 .fitCenter()
                 .override(450, 450);
-        Glide.with(this).asBitmap().apply(myOptions).load(imageUri).into(imageView);
-
-
+        Glide.with(this).asBitmap()
+                .transition(new BitmapTransitionOptions().crossFade(2000))
+                .apply(myOptions).load(imageUri)
+                .into(imageView);
     }
+
     private void loadImage(){
 
         Intent i = new Intent(Intent.ACTION_PICK,

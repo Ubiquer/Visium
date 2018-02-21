@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.arek.visium.R;
 import com.example.arek.visium.rest.ApiKeys;
-import com.example.arek.visium.model.UserPreferencesWithImage;
+import com.example.arek.visium.dao.UserPreferencesWithImage;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;

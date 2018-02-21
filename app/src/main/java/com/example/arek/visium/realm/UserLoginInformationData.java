@@ -6,7 +6,7 @@ import io.realm.RealmObject;
  * Created by arek on 7/25/2017.
  */
 
-public class UserLoginInformartionData extends RealmObject {
+public class UserLoginInformationData extends RealmObject {
 
     private String m_token;
     private String m_email;

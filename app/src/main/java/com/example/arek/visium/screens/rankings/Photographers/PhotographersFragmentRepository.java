@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.rankings.Photographers;
 
-import com.example.arek.visium.model.Photographer;
+import com.example.arek.visium.dao.Photographer;
 
 import java.util.ArrayList;
 

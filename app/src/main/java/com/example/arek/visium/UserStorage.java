@@ -3,7 +3,7 @@ package com.example.arek.visium;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.dao.UserLogin;
 
 
 /**

@@ -1,19 +1,12 @@
 package com.example.arek.visium.screens.login;
 
-import android.util.Log;
-
 import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
-import com.example.arek.visium.model.UserLogin;
-import com.example.arek.visium.realm.Token;
-import com.example.arek.visium.realm.UserPreferencesCategories;
+import com.example.arek.visium.dao.UserLogin;
 import com.example.arek.visium.rest.VisiumService;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

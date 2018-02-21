@@ -1,14 +1,10 @@
 package com.example.arek.visium.screens.image_selection;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
 import com.example.arek.visium.RealmService;
-import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.Category;
-import com.example.arek.visium.realm.CategoriesRealm;
-import com.example.arek.visium.realm.Token;
+import com.example.arek.visium.dao.Category;
 import com.example.arek.visium.rest.VisiumService;
 
 import java.io.File;
@@ -16,8 +12,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -32,15 +26,11 @@ import retrofit2.Response;
 
 public class ImageSelectionRepositoryImpl implements ImageSelectionRepository{
 
-    private Realm realm;
-    private String mToken;
-    private Context context;
     private Call<ResponseBody> uploadImageCall;
     private final VisiumService visiumService;
     private final RealmService realmService;
     private String token;
     private String fileUri;
-    private static final int MY_PERMISSIONS_REQUEST = 100;
 
     @Inject
     public ImageSelectionRepositoryImpl(VisiumService visiumService, RealmService realmService) {

@@ -1,6 +1,6 @@
 package com.example.arek.visium;
 
-import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.dao.UserLogin;
 import com.example.arek.visium.rest.ApiKeys;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.screens.login.LoginActivityPresenter;
@@ -21,7 +21,6 @@ import org.mockito.junit.MockitoRule;
 import retrofit2.Call;
 import retrofit2.Response;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;

@@ -1,6 +1,5 @@
 package com.example.arek.visium.screens.rankings.Pictures;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,12 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.RankingImageByCategory;
+import com.example.arek.visium.dao.RankingImageByCategory;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,6 @@
-package com.example.arek.visium.model;
+package com.example.arek.visium.dao;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
 
 /**
  * Created by arek on 10/31/2017.

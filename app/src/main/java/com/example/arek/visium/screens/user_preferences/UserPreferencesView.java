@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.user_preferences;
 
-import com.example.arek.visium.model.UserPreferencesWithImage;
+import com.example.arek.visium.dao.UserPreferencesWithImage;
 
 import java.util.ArrayList;
 

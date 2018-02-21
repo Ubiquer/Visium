@@ -1,9 +1,7 @@
 package com.example.arek.visium.screens.login;
 
-import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.dao.UserLogin;
 import com.example.arek.visium.screens.CredentialsValidator;
-
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 

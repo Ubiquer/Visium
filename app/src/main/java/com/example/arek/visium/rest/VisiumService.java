@@ -1,11 +1,11 @@
 package com.example.arek.visium.rest;
 
-import com.example.arek.visium.model.DuelImage;
-import com.example.arek.visium.model.Photographer;
-import com.example.arek.visium.model.RankingImageByCategory;
-import com.example.arek.visium.model.RegisterRequest;
-import com.example.arek.visium.model.UserLogin;
-import com.example.arek.visium.model.UserPreferencesWithImage;
+import com.example.arek.visium.dao.DuelImage;
+import com.example.arek.visium.dao.Photographer;
+import com.example.arek.visium.dao.RankingImageByCategory;
+import com.example.arek.visium.dao.RegisterRequest;
+import com.example.arek.visium.dao.UserLogin;
+import com.example.arek.visium.dao.UserPreferencesWithImage;
 
 import java.util.List;
 
@@ -35,7 +35,6 @@ public interface VisiumService {
     @POST("api/Account/Authenticate")
     Call<String> loginUser(@Body UserLogin userLogin);
 
-//    @Headers("Content-Type:application/json")
     @GET("/api/Account/ValidateToken")
     Call<String> validateToken(@Header("Authorization") String authToken);
 
@@ -50,11 +49,9 @@ public interface VisiumService {
     @POST("/api/User/AddCategories")
     Call<String> sendPreferences(@Body List<Integer> userPreferencesSelectedList);
 
-//    @Headers("Content-Type:application/json")
     @GET("/api/Basic/GetTwoImagesFromCategory")
     Call<List<DuelImage>> getDuelImages(@Query("category") String category);
 
-//    @Multipart
     @Headers("Content-Type:application/json")
     @POST("api/Basic/AddResultOfImagesBattle")
     Call<ResponseBody> postDuelResult(@Query("looserPictureId") int looserPictureId, @Query("winnerPictureId") int winnerPictureId);

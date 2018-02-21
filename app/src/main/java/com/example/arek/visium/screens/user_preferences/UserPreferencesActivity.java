@@ -6,23 +6,22 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.arek.visium.MyAlertDialogFragment;
+import com.example.arek.visium.PreferencesConfirmationDialog;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.dependency_injection.screens.user_preferences_di.DaggerUserPreferencesActivityComponent;
 import com.example.arek.visium.dependency_injection.screens.user_preferences_di.UserPreferencesActivityComponent;
@@ -30,7 +29,7 @@ import com.example.arek.visium.dependency_injection.screens.user_preferences_di.
 import com.example.arek.visium.screens.menu.MenuActivity;
 import com.example.arek.visium.MyGridLayoutManager;
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.UserPreferencesWithImage;
+import com.example.arek.visium.dao.UserPreferencesWithImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -38,12 +37,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.R.attr.startX;
-import static android.R.attr.startY;
 import static android.view.View.VISIBLE;
 
 
-public class UserPreferencesActivity extends Activity implements UserPreferencesView {
+public class UserPreferencesActivity extends Activity implements UserPreferencesView, MyAlertDialogFragment.OnSubmitListener {
 
     @BindView(R.id.preferences_recyclerview)
     public RecyclerView recyclerView;
@@ -117,11 +114,7 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
 
     @OnClick(R.id.btn_confirm_preferences)
     public void confirmPreferences(){
-        menuActivityIntent = new Intent(getBaseContext(), MenuActivity.class);
-        animateButtonWidth();
-        fadeOutText();
-        nextAction();
-//        showAlertDialog();
+        showAlertDialog();
     }
 
     private void fadeOutText() {
@@ -206,26 +199,49 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
 
     private void showAlertDialog() {
         List selectedPreferences = recyclerViewAdapter.getSelectedItems();
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(UserPreferencesActivity.this);
-        mBuilder.setTitle("Chosen preferences");
-        mBuilder.setMessage("Number of preferences: " + recyclerViewAdapter.getItemCount());
-        mBuilder.setMessage("Preferences: " +  selectedPreferences);
-        mBuilder.setMessage("Number of preferences: " +
-                selectedPreferences.size() +
-                "\nChosen preferences: " +
-                selectedPreferences +
-                "\nDo you confirm chosen preferences?").setPositiveButton("YES",
-                (dialog, which) -> {
-                    startActivity(menuActivityIntent);
-                    chosenPreferences = recyclerViewAdapter.getPreferences();
-                    presenter.commitSelectedPreferencesToRealm(selectedPreferences);
-                    presenter.sendPreferencesToDB(chosenPreferences);
-                }).setNegativeButton("NO", ((dialog, which) -> mBuilder.setCancelable(true)));
-        AlertDialog dialog = mBuilder.create();
-        dialog.show();
-        Log.d("Message", selectedPreferences.toString());
-    }
+        FragmentManager manager = getFragmentManager();
+        Fragment frag = manager.findFragmentByTag("fragment_preferences");
+        Bundle args = new Bundle();
+        args.putStringArrayList("preferences_list", (ArrayList<String>) selectedPreferences);
 
+        if (frag != null) {
+            manager.beginTransaction().remove(frag).commit();
+        }
+        MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
+        alertDialogFragment.setArguments(args);
+        alertDialogFragment.show(manager, "fragment_preferences");
+
+        }
+
+    @Override
+    public void onSubmitPreferences(String myPreferences) {
+        menuActivityIntent = new Intent(getBaseContext(), MenuActivity.class);
+        animateButtonWidth();
+        fadeOutText();
+        nextAction();
+    }
 }
+
+//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(UserPreferencesActivity.this);
+//        mBuilder.setTitle("Chosen preferences");
+//        mBuilder.setMessage("Number of preferences: " + recyclerViewAdapter.getItemCount());
+//        mBuilder.setMessage("Preferences: " +  selectedPreferences);
+//        mBuilder.setMessage("Number of preferences: " +
+//                selectedPreferences.size() +
+//                "\nChosen preferences: " +
+//                selectedPreferences +
+//                "\nDo you confirm chosen preferences?").setPositiveButton("YES",
+//                (dialog, which) -> {
+//                    startActivity(menuActivityIntent);
+//                    chosenPreferences = recyclerViewAdapter.getPreferences();
+//                    presenter.commitSelectedPreferencesToRealm(selectedPreferences);
+//                    presenter.sendPreferencesToDB(chosenPreferences);
+//                }).setNegativeButton("NO", ((dialog, which) -> mBuilder.setCancelable(true)));
+//        AlertDialog dialog = mBuilder.create();
+//        dialog.show();
+//        Log.d("Message", selectedPreferences.toString());
+//    }
+//
+//}
 
 

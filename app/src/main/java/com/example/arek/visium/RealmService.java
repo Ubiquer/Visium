@@ -2,12 +2,11 @@ package com.example.arek.visium;
 
 import android.util.Log;
 
-import com.example.arek.visium.model.Category;
-import com.example.arek.visium.model.UserPreferencesWithImage;
+import com.example.arek.visium.dao.Category;
+import com.example.arek.visium.dao.UserPreferencesWithImage;
 import com.example.arek.visium.realm.CategoriesRealm;
 import com.example.arek.visium.realm.Token;
 import com.example.arek.visium.realm.UserPreferencesCategories;
-import com.example.arek.visium.screens.login.LoginRepository;
 
 import java.util.ArrayList;
 import java.util.List;

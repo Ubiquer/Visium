@@ -1,6 +1,4 @@
-package com.example.arek.visium.model;
-
-import java.util.ArrayList;
+package com.example.arek.visium.dao;
 
 /**
  * Created by arek on 11/23/2017.

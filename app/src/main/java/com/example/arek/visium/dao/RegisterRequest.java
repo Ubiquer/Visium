@@ -1,10 +1,7 @@
-package com.example.arek.visium.model;
+package com.example.arek.visium.dao;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Arek on 2017-06-25.

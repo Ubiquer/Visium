@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.RankingImageByCategory;
+import com.example.arek.visium.dao.RankingImageByCategory;
 import com.example.arek.visium.rest.ApiKeys;
 import com.squareup.picasso.Picasso;
 

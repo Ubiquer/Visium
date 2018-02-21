@@ -1,4 +1,4 @@
-package com.example.arek.visium.model;
+package com.example.arek.visium.dao;
 
 import android.os.Parcel;
 import android.os.Parcelable;

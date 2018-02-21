@@ -3,8 +3,7 @@ package com.example.arek.visium.screens.image_duel;
 
 import android.util.Log;
 
-import com.example.arek.visium.R;
-import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.dao.DuelImage;
 import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;

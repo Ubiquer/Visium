@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.image_selection;
 
-import com.example.arek.visium.model.Category;
+import com.example.arek.visium.dao.Category;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,6 @@
 package com.example.arek.visium.screens.image_selection;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.Category;
+import com.example.arek.visium.dao.Category;
 
 import java.util.ArrayList;
 
@@ -60,7 +59,7 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
         View row;
 
         row = inflater.inflate(R.layout.item_spinner_row, parent, false);
-        categoryText = (TextView) row.findViewById(R.id.tv_spinner_item);
+        categoryText = row.findViewById(R.id.tv_spinner_item);
         Category category = categories.get(position);
         categoryText.setGravity(Gravity.CENTER);
         categoryText.setText(category.getCategoryName());
@@ -73,12 +72,12 @@ public class SpinnerAdapter extends ArrayAdapter<Category> {
         View row;
 
         row = View.inflate(context, R.layout.item_spinner_dropdown, null);
-        llWrapper = (LinearLayout) row.findViewById(R.id.ll_wrapper);
-        tvDropDownItem = (TextView) row.findViewById(R.id.tv_dropdown_item);
+        llWrapper = row.findViewById(R.id.ll_wrapper);
+        tvDropDownItem = row.findViewById(R.id.tv_dropdown_item);
         Category category = categories.get(position);
         tvDropDownItem.setText(category.getCategoryName());
         tvDropDownItem.setGravity(Gravity.CENTER);
-        underLine = (ImageView) row.findViewById(R.id.tv_underline);
+        underLine = row.findViewById(R.id.tv_underline);
         llWrapper.setPadding(16,16,16,16);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

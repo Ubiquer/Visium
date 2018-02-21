@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.register;
 import com.example.arek.visium.UserStorage;
-import com.example.arek.visium.model.RegisterRequest;
+import com.example.arek.visium.dao.RegisterRequest;
 import com.example.arek.visium.rest.VisiumService;
 import javax.inject.Inject;
 import okhttp3.ResponseBody;

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.Photographer;
+import com.example.arek.visium.dao.Photographer;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.util.ArrayList;

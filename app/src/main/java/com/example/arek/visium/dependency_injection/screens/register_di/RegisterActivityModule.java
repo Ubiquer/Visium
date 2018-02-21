@@ -1,7 +1,7 @@
 package com.example.arek.visium.dependency_injection.screens.register_di;
 
 import com.example.arek.visium.UserStorage;
-import com.example.arek.visium.model.RegisterRequest;
+import com.example.arek.visium.dao.RegisterRequest;
 import com.example.arek.visium.rest.VisiumService;
 import com.example.arek.visium.screens.CredentialsValidator;
 import com.example.arek.visium.screens.register.RegisterActivity;
@@ -13,7 +13,6 @@ import com.example.arek.visium.screens.register.RegisterRepositoryImpl;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by arek on 12/12/2017.

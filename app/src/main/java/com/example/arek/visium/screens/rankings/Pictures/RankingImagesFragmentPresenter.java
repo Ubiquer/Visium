@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.rankings.Pictures;
 
-import com.example.arek.visium.model.RankingImageByCategory;
+import com.example.arek.visium.dao.RankingImageByCategory;
 
 import java.util.ArrayList;
 

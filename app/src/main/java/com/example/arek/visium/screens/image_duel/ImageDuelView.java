@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.image_duel;
 
-import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.dao.DuelImage;
 
 import java.util.ArrayList;
 

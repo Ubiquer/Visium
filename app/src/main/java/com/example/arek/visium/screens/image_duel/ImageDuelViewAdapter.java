@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.arek.visium.R;
-import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.dao.DuelImage;
 import com.example.arek.visium.rest.ApiKeys;
 import com.squareup.picasso.Picasso;
 

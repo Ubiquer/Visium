@@ -1,6 +1,6 @@
 package com.example.arek.visium.screens.login;
 
-import com.example.arek.visium.model.UserLogin;
+import com.example.arek.visium.dao.UserLogin;
 
 /**
  * Created by arek on 11/16/2017.

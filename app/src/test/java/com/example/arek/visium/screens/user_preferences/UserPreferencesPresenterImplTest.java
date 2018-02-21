@@ -1,9 +1,5 @@
 package com.example.arek.visium.screens.user_preferences;
 
-import com.example.arek.visium.model.UserPreferencesWithImage;
-
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import java.util.ArrayList;

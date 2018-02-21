@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.dao.DuelImage;
 import com.example.arek.visium.rest.ApiAdapter;
 import com.example.arek.visium.rest.VisiumService;
 

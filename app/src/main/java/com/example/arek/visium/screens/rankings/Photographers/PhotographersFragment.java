@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.arek.visium.R;
 import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.Photographer;
+import com.example.arek.visium.dao.Photographer;
 
 import java.util.ArrayList;
 

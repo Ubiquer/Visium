@@ -1,23 +1,16 @@
 package com.example.arek.visium.screens.user_preferences;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.example.arek.visium.RealmService;
-import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.UserPreferencesWithImage;
-import com.example.arek.visium.realm.CategoriesRealm;
-import com.example.arek.visium.realm.UserPreferencesCategories;
+import com.example.arek.visium.dao.UserPreferencesWithImage;
 import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-import io.realm.RealmList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

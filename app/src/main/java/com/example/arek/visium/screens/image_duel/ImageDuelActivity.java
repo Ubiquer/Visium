@@ -14,7 +14,7 @@ import android.view.Display;
 
 import com.example.arek.visium.R;
 import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.DuelImage;
+import com.example.arek.visium.dao.DuelImage;
 
 import java.util.ArrayList;
 
@@ -33,8 +33,6 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
     private int displayWidth;
     private LinearLayoutManager mLinearLayoutManager;
     private ItemSwipeHelper itemSwipeHelper;
-    private final String rightColorCode = "#388E3C";
-    private final String leftColorCode = "#D32F2F";
     private ProgressDialog progressDialog;
     private ImageDuelPresenter imageDuelPresenter;
     private ImageDuelViewAdapter imageDuelViewAdapter;
@@ -66,6 +64,7 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
         mRecyclerView.setAdapter(imageDuelViewAdapter);
         initSwipeHelper();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -89,7 +88,7 @@ public class ImageDuelActivity extends AppCompatActivity implements ImageDuelVie
     }
 
     public void initSwipeHelper(){
-        itemSwipeHelper = new ItemSwipeHelper(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT, mRecyclerAdapter, mContext,rightColorCode, leftColorCode, this);
+        itemSwipeHelper = new ItemSwipeHelper(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT, mRecyclerAdapter, mContext, this);
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(itemSwipeHelper);
         mItemTouchHelper.attachToRecyclerView(mRecyclerView);
     }

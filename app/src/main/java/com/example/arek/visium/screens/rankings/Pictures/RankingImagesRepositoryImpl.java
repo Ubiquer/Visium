@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.arek.visium.VisiumApplication;
-import com.example.arek.visium.model.RankingImageByCategory;
+import com.example.arek.visium.dao.RankingImageByCategory;
 import com.example.arek.visium.rest.VisiumService;
 
 import java.util.ArrayList;

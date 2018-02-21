@@ -23,21 +23,19 @@ public class ItemSwipeHelper extends ItemTouchHelper.SimpleCallback{
     private ImageDuelViewAdapter mAdapter;
     private Context mContext;
     private Paint paint = new Paint();
-    private String rightColorCode;
-    private String leftColorCode;
+    private final String rightColorCode = "#388E3C";
+    private final String leftColorCode = "#D32F2F";
     private ImageChooseListener listener;
 
     public interface ImageChooseListener {
         void onImageChosen(int position, boolean winner);
     }
 
-    public ItemSwipeHelper(int dragDirs, int swipeDirs, ImageDuelViewAdapter adapter,Context context, String rightColorCode, String leftColorCode, ImageChooseListener listener) {
+    public ItemSwipeHelper(int dragDirs, int swipeDirs, ImageDuelViewAdapter adapter,Context context, ImageChooseListener listener) {
 
         super(dragDirs, swipeDirs);
         this.mAdapter = adapter;
         this.mContext = context;
-        this.rightColorCode = rightColorCode;
-        this.leftColorCode = leftColorCode;
         this.listener = listener;
     }
 
