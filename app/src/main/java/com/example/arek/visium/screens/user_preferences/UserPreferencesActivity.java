@@ -222,26 +222,4 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
     }
 }
 
-//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(UserPreferencesActivity.this);
-//        mBuilder.setTitle("Chosen preferences");
-//        mBuilder.setMessage("Number of preferences: " + recyclerViewAdapter.getItemCount());
-//        mBuilder.setMessage("Preferences: " +  selectedPreferences);
-//        mBuilder.setMessage("Number of preferences: " +
-//                selectedPreferences.size() +
-//                "\nChosen preferences: " +
-//                selectedPreferences +
-//                "\nDo you confirm chosen preferences?").setPositiveButton("YES",
-//                (dialog, which) -> {
-//                    startActivity(menuActivityIntent);
-//                    chosenPreferences = recyclerViewAdapter.getPreferences();
-//                    presenter.commitSelectedPreferencesToRealm(selectedPreferences);
-//                    presenter.sendPreferencesToDB(chosenPreferences);
-//                }).setNegativeButton("NO", ((dialog, which) -> mBuilder.setCancelable(true)));
-//        AlertDialog dialog = mBuilder.create();
-//        dialog.show();
-//        Log.d("Message", selectedPreferences.toString());
-//    }
-//
-//}
-
 
