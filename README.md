@@ -11,4 +11,4 @@ Technologies used:
   - Realm
   - Retrofit 2
   - Glide/Picasso
-  - MVP (unfortunately not implemented everywhere
+  - MVP (unfortunately not implemented everywhere)
