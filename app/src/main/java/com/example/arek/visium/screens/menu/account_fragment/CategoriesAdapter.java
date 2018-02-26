@@ -58,37 +58,3 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         this.preferenceList = preferenceList;
     }
 }
-
-//    public CategoriesAdapter(Context mContext, ArrayList<String> categories) {
-//        this.mContext = mContext;
-//        this.categories = categories;
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return categories.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int position) {
-//        return categories.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int i) {
-//        return i;
-//    }
-//
-//    @Override
-//    public View getView(int i, View view, ViewGroup viewGroup) {
-//
-//        if (view == null) {
-//            final LayoutInflater layoutInflater = LayoutInflater.from(view.getContext());
-//            view = layoutInflater.inflate(R.layout.category_grid_item, null);
-//        }
-//
-//        TextView categoryTextView = view.findViewById(R.id.grid_preference_name);
-//        categoryTextView.setText(categories.get(i));
-//
-//        return categoryTextView;
-
