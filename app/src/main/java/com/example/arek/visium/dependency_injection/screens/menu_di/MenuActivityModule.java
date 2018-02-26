@@ -8,6 +8,8 @@ import com.example.arek.visium.screens.menu.MenuActivityPresenterImpl;
 import com.example.arek.visium.screens.menu.MenuActivityRepository;
 import com.example.arek.visium.screens.menu.MenuActivityRepositoryImpl;
 import com.example.arek.visium.screens.menu.MenuActivityView;
+import com.example.arek.visium.screens.menu.account_fragment.AccountFragmentPresenter;
+import com.example.arek.visium.screens.menu.account_fragment.AccountFragmentPresenterImpl;
 
 import dagger.Module;
 import dagger.Provides;
@@ -48,6 +50,12 @@ public class MenuActivityModule {
     @MenuActivityScope
     MenuActivityRepository repository(RealmService realmService){
         return new MenuActivityRepositoryImpl(realmService);
+    }
+
+    @Provides
+    @MenuActivityScope
+    AccountFragmentPresenter accountPresenter(RealmService realmService){
+        return new AccountFragmentPresenterImpl(realmService);
     }
 
 

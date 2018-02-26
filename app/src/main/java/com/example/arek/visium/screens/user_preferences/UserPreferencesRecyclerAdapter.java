@@ -1,5 +1,6 @@
 package com.example.arek.visium.screens.user_preferences;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,8 +29,12 @@ public class UserPreferencesRecyclerAdapter extends RecyclerView.Adapter<UserPre
 
     private ArrayList<UserPreferencesWithImage> categories;
     private ArrayList<Integer> selectedPreferencesIds;
+    private int width, height;
 
     public UserPreferencesRecyclerAdapter(){
+
+         width=Resources.getSystem().getDisplayMetrics().widthPixels;
+         height= Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
     @Override
@@ -45,7 +50,7 @@ public class UserPreferencesRecyclerAdapter extends RecyclerView.Adapter<UserPre
         holder.preferenceName.setText(preferenceItem.getCategoryName());
         Picasso.with(holder.image.getContext())
                 .load(ApiKeys.BASE_URL + preferenceItem.getImagePath())
-                .resize(300, 300)
+                .resize(width/3, height/6)
                 .centerInside()
                 .into(holder.image);
 

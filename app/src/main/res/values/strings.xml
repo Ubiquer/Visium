@@ -39,4 +39,7 @@
     <string name="loading_preferences_failure">Failed loading preferences:</string>
     <string name="on_passwords_differ">Confirmation password differs from password</string>
     <string name="incorrect_email">Incorrect email</string>
+    <string name="camera_permission_denied">Camera permission denied</string>
+    <string name="no_preferences">You haven\'t selected preferences yet!</string>
+    <string name="favourite_categories">Favourite categories</string>
 </resources>

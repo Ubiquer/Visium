@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
@@ -50,7 +51,12 @@ public class LoginActivityPresenterTest {
     LoginRepository.OnLoginListener listener;
 
     @Before
-    public void setUp() throws Exception{
+    public void setup() throws Exception{
+
+        MockitoAnnotations.initMocks(this);
+
+
+
         presenter.onCreate();
         verify(presenter).onCreate();
 

@@ -1,5 +1,6 @@
 package com.example.arek.visium.dependency_injection.screens.register_di;
 
+import com.example.arek.visium.RealmService;
 import com.example.arek.visium.UserStorage;
 import com.example.arek.visium.dao.RegisterRequest;
 import com.example.arek.visium.rest.VisiumService;
@@ -52,8 +53,8 @@ public class RegisterActivityModule {
 
     @Provides
     @RegisterActivityScope
-    RegisterRepository repository(UserStorage userStorage, VisiumService visiumService, RegisterRequest registerRequest){
-        return new RegisterRepositoryImpl(userStorage, visiumService, registerRequest);
+    RegisterRepository repository(RealmService realmService, VisiumService visiumService, RegisterRequest registerRequest){
+        return new RegisterRepositoryImpl(realmService, visiumService, registerRequest);
     }
 
 

@@ -37,7 +37,7 @@
 
     <TextView
         android:textColor="@color/light"
-        android:text="Competition"
+        android:text="Compete"
         android:textSize="20dp"
         android:id="@+id/competition_textview"
         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
 
     <TextView
         android:textColor="@color/light"
-        android:text="Evaluation"
+        android:text="Evaluate"
         android:textSize="20dp"
         android:onClick="true"
         android:id="@+id/evaluatiion_textview"

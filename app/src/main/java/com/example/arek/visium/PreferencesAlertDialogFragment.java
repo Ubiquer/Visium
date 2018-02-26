@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by arek on 2/21/2018.
  */
 
-public class MyAlertDialogFragment extends DialogFragment {
+public class PreferencesAlertDialogFragment extends DialogFragment {
 
     OnSubmitListener listener;
     private String myPreferences="";

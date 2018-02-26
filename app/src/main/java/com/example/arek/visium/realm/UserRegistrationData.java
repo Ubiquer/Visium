@@ -8,31 +8,40 @@ import io.realm.RealmObject;
 
 public class UserRegistrationData extends RealmObject {
 
-    private String mEmail;
-    private String mPassword;
-    private String mConfirmPassword;
+    private String email;
+    private String password;
+    private String name;
+    private String secondName;
 
-    public String getmEmail() {
-        return mEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getmPassword() {
-        return mPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setmPassword(String mPassword) {
-        this.mPassword = mPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getmConfirmPassword() {
-        return mConfirmPassword;
+    public String getName() {
+        return name;
     }
 
-    public void setmConfirmPassword(String mConfirmPassword) {
-        this.mConfirmPassword = mConfirmPassword;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 }

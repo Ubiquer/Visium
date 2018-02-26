@@ -15,6 +15,8 @@ import retrofit2.Response;
  * Created by arek on 11/16/2017.
  */
 
+//TODO: remove userStorage -> replace with realm storage.
+
 public class LoginRepositoryImpl implements LoginRepository{
 
     private Call<String> loginCall;
@@ -43,7 +45,6 @@ public class LoginRepositoryImpl implements LoginRepository{
                     loginCall = null;
                     onLoginListener.onLoginProgress(true);
                     if (response.isSuccessful()){
-
                         token = response.body();
                         if (token.contains("Error: UserIdentity == null")){
                             onLoginListener.onLoginFinished(false, ("Account doesn't exist"));

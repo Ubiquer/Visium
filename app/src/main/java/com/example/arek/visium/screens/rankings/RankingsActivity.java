@@ -28,10 +28,10 @@ public class RankingsActivity extends AppCompatActivity {
     }
 
     private void initViewPager(){
-        viewpager = (ViewPager) findViewById(R.id.viewPager);
+        viewpager = findViewById(R.id.viewPager);
         viewPagerAdapter = new RankingViewPagerAdapter(getSupportFragmentManager());
         viewpager.setAdapter(viewPagerAdapter);
-        tablayout = (TabLayout) findViewById(R.id.tabs);
+        tablayout = findViewById(R.id.tabs);
         tablayout.setupWithViewPager(viewpager);
     }
 
@@ -43,13 +43,4 @@ public class RankingsActivity extends AppCompatActivity {
         }
     }
 
-//    private void setUpCustomTabs() {
-//        for (int i = 0; i < tabArray.length; i++) {
-//            TextView customTab = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab_layout, null);//get custom view
-//            customTab.setText(tabArray[i]);//set text over view
-//            customTab.setCompoundDrawablesWithIntrinsicBounds(0, tabIcons[i], 0, 0);//set icon above the view
-//            TabLayout.Tab tab = tabLayout.getTabAt(i);//get tab via position
-//            if (tab != null)
-//                tab.setCustomView(customTab);//set custom view
-//        }
 }

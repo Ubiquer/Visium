@@ -218,7 +218,6 @@ public class ImageSelectionActivity extends AppCompatActivity implements ImageCa
         adapter.setData(imagePathsList);
     }
 
-
     @Override
     public void onSuccessfulUpload(String message) {
         Toast.makeText(this, R.string.imageUploadedInfo, Toast.LENGTH_SHORT).show();

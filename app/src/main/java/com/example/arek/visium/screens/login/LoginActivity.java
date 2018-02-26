@@ -1,11 +1,19 @@
 package com.example.arek.visium.screens.login;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
+import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +39,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+
+import static android.view.View.VISIBLE;
 
 public class LoginActivity extends AppCompatActivity implements LoginActivityView {
 
@@ -70,17 +80,12 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
         ButterKnife.bind(this);
 
         passwordText.setTransformationMethod(new PasswordTransformationMethod());
-
         loginActivityComponent = DaggerLoginActivityComponent.builder()
                 .loginActivityModule(new LoginActivityModule(this))
                 .visiumApplicationComponent(VisiumApplication.get(this).component())
                 .build();
         loginActivityComponent.injectLoginActivity(this);
         loginButton.setEnabled(false);
-//        if (BuildConfig.DEBUG){
-//            emailText.setText(ApiKeys.GET_EMAIL);
-//            passwordText.setText(ApiKeys.GET_PASSWORD);
-//        }
         presenter.onCreate();
     }
 
@@ -178,4 +183,5 @@ public class LoginActivity extends AppCompatActivity implements LoginActivityVie
     public void userPreferencesStatus(boolean status) {
         this.preferencesDefined = status;
     }
+
 }

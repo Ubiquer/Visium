@@ -23,8 +23,8 @@ import butterknife.ButterKnife;
 
 public class RankingImagesFragment extends Fragment implements RankingImagesFragmentView {
 
-    private RankingImagesFragmentPresenter rankingImagesFragmentPresenter;
-    private RankingImagesRecyclerAdapter rankingImagesRecyclerAdapter;
+    private RankingImagesFragmentPresenter presenter;
+    private RankingImagesRecyclerAdapter adapter;
     @BindView(R.id.ranking_images_rv)
     RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -33,19 +33,19 @@ public class RankingImagesFragment extends Fragment implements RankingImagesFrag
     @Override
     public void onStart() {
         super.onStart();
-        rankingImagesFragmentPresenter.onAttach(this);
+        presenter.onAttach(this);
     }
 
     @Override
     public void onStop() {
-        rankingImagesFragmentPresenter.onDetach();
+        presenter.onDetach();
         super.onStop();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rankingImagesFragmentPresenter = new RankingImagesFragmentPresenter();
+        presenter = new RankingImagesFragmentPresenter();
     }
 
     @Nullable
@@ -65,7 +65,7 @@ public class RankingImagesFragment extends Fragment implements RankingImagesFrag
     @Override
     public void showData(ArrayList<RankingImageByCategory> rankingImagesByCategories) {
         initRecyclerView();
-        rankingImagesRecyclerAdapter.setData(rankingImagesByCategories);
+        adapter.setData(rankingImagesByCategories);
     }
 
     private void initRecyclerView() {
@@ -73,10 +73,7 @@ public class RankingImagesFragment extends Fragment implements RankingImagesFrag
         linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        rankingImagesRecyclerAdapter = new RankingImagesRecyclerAdapter();
-//        resId = R.anim.layout_animation_fall_down;
-//        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity().getApplicationContext(),resId);
-        recyclerView.setAdapter(rankingImagesRecyclerAdapter);
-//        recyclerView.setLayoutAnimation(animation);
+        adapter = new RankingImagesRecyclerAdapter();
+        recyclerView.setAdapter(adapter);
     }
 }

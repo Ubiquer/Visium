@@ -64,5 +64,4 @@ public interface VisiumService {
     @GET("api/Basic/GetUsersRanking")
     Call<List<Photographer>> getAllPhotographers();
 
-
 }

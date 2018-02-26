@@ -20,8 +20,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.arek.visium.MyAlertDialogFragment;
-import com.example.arek.visium.PreferencesConfirmationDialog;
+import com.example.arek.visium.PreferencesAlertDialogFragment;
 import com.example.arek.visium.VisiumApplication;
 import com.example.arek.visium.dependency_injection.screens.user_preferences_di.DaggerUserPreferencesActivityComponent;
 import com.example.arek.visium.dependency_injection.screens.user_preferences_di.UserPreferencesActivityComponent;
@@ -40,7 +39,7 @@ import butterknife.OnClick;
 import static android.view.View.VISIBLE;
 
 
-public class UserPreferencesActivity extends Activity implements UserPreferencesView, MyAlertDialogFragment.OnSubmitListener {
+public class UserPreferencesActivity extends Activity implements UserPreferencesView, PreferencesAlertDialogFragment.OnSubmitListener {
 
     @BindView(R.id.preferences_recyclerview)
     public RecyclerView recyclerView;
@@ -207,7 +206,7 @@ public class UserPreferencesActivity extends Activity implements UserPreferences
         if (frag != null) {
             manager.beginTransaction().remove(frag).commit();
         }
-        MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
+        PreferencesAlertDialogFragment alertDialogFragment = new PreferencesAlertDialogFragment();
         alertDialogFragment.setArguments(args);
         alertDialogFragment.show(manager, "fragment_preferences");
 

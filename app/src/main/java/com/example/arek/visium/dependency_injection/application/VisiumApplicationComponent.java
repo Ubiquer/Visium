@@ -33,6 +33,4 @@ public interface VisiumApplicationComponent {
     Realm getRealm();
     ContentResolver getContentResolver();
     CredentialsValidator getCredentialsValidator();
-//    CompositeDisposable getCompositeDisposable();
-//    RequestManager getRequestManager();
 }

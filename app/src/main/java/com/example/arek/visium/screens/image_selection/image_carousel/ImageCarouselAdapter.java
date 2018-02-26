@@ -1,6 +1,7 @@
 package com.example.arek.visium.screens.image_selection.image_carousel;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
 public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdapter.CarouselViewHolder> {
 
     private ArrayList<String> picsFromExternalStorage;
+    private int height;
 //    private final RequestManager requestManager;
 
     @Override
@@ -45,9 +47,11 @@ public class ImageCarouselAdapter extends RecyclerView.Adapter<ImageCarouselAdap
     @Override
     public void onBindViewHolder(CarouselViewHolder holder, int position) {
 
+        height= Resources.getSystem().getDisplayMetrics().heightPixels;
+
         RequestOptions myOptions = new RequestOptions()
                 .fitCenter()
-                .override(250, 250);
+                .override(height/5, height/5);
 
         final String picture = picsFromExternalStorage.get(position % picsFromExternalStorage.size());
         Glide.with(VisiumApplication.getContext()).asBitmap().apply(myOptions).load(picture).into(holder.carouselImage);

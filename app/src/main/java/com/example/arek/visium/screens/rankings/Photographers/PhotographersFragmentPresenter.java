@@ -19,7 +19,7 @@ public class PhotographersFragmentPresenter implements PhotographersFragmentRepo
     private Retrofit retrofit;
     private Call<List<Photographer>> photographersCall;
     private ArrayList<Photographer> photographersList;
-    private PhotographersFragmentView photographersFragmentView;
+    private PhotographersFragmentView view;
     private PhotographersFragmentRepositoryImpl repository;
 
     public PhotographersFragmentPresenter(VisiumService visiumService, Retrofit retrofit) {
@@ -28,24 +28,22 @@ public class PhotographersFragmentPresenter implements PhotographersFragmentRepo
     }
 
     public void onAttach(PhotographersFragmentView photographersFragmentView){
-      this.photographersFragmentView = photographersFragmentView;
+      this.view = photographersFragmentView;
       photographersCall = null;
       downloadPhotographers();
     }
 
     public void onDetach() {
-        this.photographersFragmentView = null;
+        this.view = null;
     }
 
     private void downloadPhotographers() {
-
         repository = new PhotographersFragmentRepositoryImpl();
         repository.downloadPhotographers(this);
-
     }
 
     @Override
     public void getPhotographers(ArrayList<Photographer> photographers) {
-        photographersFragmentView.showPhotographersData(photographers);
+        view.showPhotographersData(photographers);
     }
 }
