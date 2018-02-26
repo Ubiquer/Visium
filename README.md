@@ -12,5 +12,3 @@ Technologies used:
   - Retrofit 2
   - Glide/Picasso
   - MVP (unfortunately not implemented everywhere)
-  
-  ![login_screen](https://user-images.githubusercontent.com/11335882/36654217-5422a466-1abb-11e8-954f-328dc346f148.PNG)
