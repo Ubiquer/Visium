@@ -12,3 +12,7 @@ Technologies used:
   - Retrofit 2
   - Glide/Picasso
   - MVP (unfortunately not implemented everywhere)
+
+
+
+<a href="https://imgflip.com/gif/25b1x7"><img src="https://i.imgflip.com/25b1x7.gif" title="made at imgflip.com"/></a>
